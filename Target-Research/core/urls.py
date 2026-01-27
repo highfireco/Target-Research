@@ -20,3 +20,8 @@ from django.urls import path
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
+
+from dashboard.views import dashboard_view
+urlpatterns = [
+    path('', dashboard_view, name='dashboard'),
+]
