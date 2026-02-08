@@ -6,7 +6,6 @@ def dashboard_view(request):
     return render(request, 'test.html')
 # Create your views here.
 
-
 def verify_firebase(request):
     if db is None:
         return HttpResponse("❌ เชื่อมต่อ Firebase ไม่สำเร็จ: กรุณาตรวจสอบไฟล์ .env หรือ Path ของไฟล์ JSON")
