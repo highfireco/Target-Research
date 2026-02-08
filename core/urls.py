@@ -22,5 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('hire/', include('hire_project.urls')),
     path('', include('dashboard.urls')),
+    path('survey/', include('survey_builder.urls')),
 ]
 
