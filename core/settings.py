@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'hire_project',
+    'survey_builder',
     'dashboard_page',
 ]
 

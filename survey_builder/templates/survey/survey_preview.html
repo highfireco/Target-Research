@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preview: แบบสำรวจกลุ่มเป้าหมาย</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #F3C5D3; /* สีชมพูพื้นหลังตามรูป */
+            --card-bg: #ffffff;
+            --input-bg: #FDF5F7;
+            --primary-btn: #000000;
+            --secondary-btn: #E5A9BC;
+        }
+
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            width: 100%;
+            max-width: 800px;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .question-card {
+            background-color: var(--input-bg);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .question-title {
+            font-weight: 500;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .option-item {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .option-item:hover {
+            border-color: var(--secondary-btn);
+            background-color: #fff9fa;
+        }
+
+        .footer-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 10px 25px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-family: 'Kanit', sans-serif;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .btn-outline {
+            background: white;
+            border: 1px solid #ddd;
+            color: #666;
+        }
+
+        .btn-primary {
+            background-color: var(--secondary-btn);
+            color: white;
+            font-weight: 500;
+        }
+
+        .btn-primary:hover {
+            background-color: #d88da3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>แสดงตัวอย่างแบบสอบถาม (Target Research)</h2>
+
+    <div class="question-card">
+        <span class="question-title">1. ปัจจัยใดสำคัญที่สุดในการตัดสินใจเลือกซื้อสินค้าของเรา?</span>
+        <div class="options-list">
+            <div class="option-item">○ ราคาคุ้มค่า</div>
+            <div class="option-item">○ คุณภาพและความทนทาน</div>
+            <div class="option-item">○ การออกแบบ/ดีไซน์</div>
+            <div class="option-item">○ การบริการหลังการขาย</div>
+        </div>
+    </div>
+
+    <div class="question-card">
+        <span class="question-title">2. คุณมักจะรับข่าวสารเกี่ยวกับโปรโมชั่นผ่านช่องทางใด?</span>
+        <div class="options-list">
+            <div class="option-item">○ Facebook / Instagram</div>
+            <div class="option-item">○ TikTok</div>
+            <div class="option-item">○ Line Official Account</div>
+            <div class="option-item">○ อีเมลประชาสัมพันธ์</div>
+        </div>
+    </div>
+
+    <div class="question-card">
+        <span class="question-title">3. ความถี่ในการใช้บริการสินค้าประเภทนี้ของคุณคือ?</span>
+        <div class="options-list">
+            <div class="option-item">○ ทุกวัน</div>
+            <div class="option-item">○ สัปดาห์ละ 1-2 ครั้ง</div>
+            <div class="option-item">○ เดือนละครั้ง</div>
+            <div class="option-item">○ นานๆ ครั้ง / ตามโอกาสพิเศษ</div>
+        </div>
+    </div>
+
+    <div class="footer-buttons">
+        <button class="btn btn-outline">ย้อนกลับ</button>
+        <button class="btn btn-primary">ส่งแบบสอบถาม</button>
+    </div>
+</div>
+
+</body>
+</html>
