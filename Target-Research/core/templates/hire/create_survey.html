@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Create Survey</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen flex items-center justify-center" style="background:#EEB1C6;">
+
+<div class="w-[1000px] min-h-[600px] bg-white rounded-3xl p-6">
+
+<h1 class="text-2xl font-semibold mb-4">สร้างแบบสอบถาม</h1>
+
+<div class="grid grid-cols-2 gap-6">
+
+<div class="p-4 rounded-xl bg-[#F8EDEC]">
+<h2 class="font-semibold mb-2">คำถาม</h2>
+
+<input class="w-full p-2 rounded border mb-2" placeholder="พิมพ์คำถาม..." />
+
+<select class="w-full p-2 rounded border mb-2">
+<option>ปรนัย (ตัวเลือก)</option>
+<option>อัตนัย (พิมพ์ตอบ)</option>
+<option>ระดับความพึงพอใจ (Scale)</option>
+</select>
+
+<button class="w-full p-2 rounded bg-black text-white">
+เพิ่มคำถาม
+</button>
+</div>
+
+<div class="p-4 rounded-xl bg-[#F8EDEC]">
+<h2 class="font-semibold mb-2">รายการคำถาม</h2>
+<div class="text-sm text-gray-500">ยังไม่มีคำถาม</div>
+</div>
+
+</div>
+
+<div class="flex justify-end mt-6 gap-3">
+<button class="px-6 py-2 rounded border">ย้อนกลับ</button>
+<button class="px-6 py-2 rounded bg-[#EEB1C6] font-semibold">บันทึกแบบสอบถาม</button>
+</div>
+
+</div>
+</body>
+</html>
