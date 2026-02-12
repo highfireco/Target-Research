@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'hire_project',
     'survey_builder',
+    'Home_Layout',
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f6f6f6;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: #f7dce3;
+            padding: 20px;
+            height: 100vh;
+        }
+
+        .profile {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            background: #8e6bbd;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile p {
+            margin: 4px 0;
+        }
+
+        .menu {
+            margin-top: 40px;
+        }
+
+        .menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 0;
+            text-decoration: none;
+            color: black;
+            font-weight: 500;
+        }
+
+        .main {
+            flex: 1;
+            padding: 40px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .table-wrapper {
+            background: white;
+            border-radius: 20px;
+            border: 2px solid #4a90e2;
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #e0e0e0;
+        }
+
+        th, td {
+            padding: 14px;
+            border-bottom: 1px solid #ccc;
+            text-align: left;
+        }
+
+        th {
+            font-weight: bold;
+        }
+
+        .status-active {
+            color: green;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            color: goldenrod;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="profile">
+            <div class="avatar">Profile</div>
+            <p><strong>IDEKHERE</strong></p>
+            <p style="font-size: 14px;">ILOVE.ROBLOX@gmail.com</p>
+        </div>
+
+        <div class="menu">
+            <a href="#">📊 Dashboard</a>
+            <a href="#">💬 Chat</a>
+            <a href="#">💳 Finance</a>
+            <a href="#">👥 Hire / Create Project</a>
+        </div>
+    </div>
+
+    <div class="main">
+        <h1>My Projects</h1>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Project</th>
+                        <th>Status</th>
+                        <th>Samples</th>
+                        <th>Last Update</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            ความพึงพอใจในมหา<br>
+                            วิทยาลัยของนิสิต
+                        </td>
+                        <td class="status-active">Active</td>
+                        <td>150 คน</td>
+                        <td>01 ม.ค. 2569</td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            จำนวนชั่วโมงที่ชอบ<br>
+                            เล่นเกมตอนพัก
+                        </td>
+                        <td class="status-pending">รอชำระเงิน</td>
+                        <td>250 คน</td>
+                        <td>01 ม.ค. 2569</td>
+                    </tr>
+
+                
+                    <tr><td colspan="4">&nbsp;</td></tr>
+                    <tr><td colspan="4">&nbsp;</td></tr>
+                    <tr><td colspan="4">&nbsp;</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>
