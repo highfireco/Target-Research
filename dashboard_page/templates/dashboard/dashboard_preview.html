@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<style>
+    body {
+        font-family: 'Inter', sans-serif;
+        padding: 0;
+        margin: 0;
+    }
+</style>
+
+<body>
+    <header
+        class="bg-[#fcfcfc] border-b border-gray-200 px-4 py-4 sm:px-6 lg:px-8 font-semibold text-[#a280c4] items-center justify-between flex relative shadow-md">
+        <a href="#" class="flex items-center gap-2 group">
+            <div class="flex items-center gap-5 text-2xl">
+                <img src="https://via.placeholder.com/40" alt="logo"
+                    class="w-10 h-10 rounded-full object-cover border-2 border-gray-300">
+                <span class="font-bold text-2xl">[Product Name]</span>
+            </div>
+        </a>
+        <div class="flex gap-4 items-center">
+            <button class="p-2 hover:bg-gray-100 rounded-full transition">
+                <span class="text-xl">Noti icon</span>
+            </button>
+            <div class="relative">
+                <button onclick="toggleDropDown(event)" class="p-1 hover:bg-gray-100 rounded-full transition">
+                    <img src="https://via.placeholder.com/40" alt="user-profile"
+                        class="w-10 h-10 rounded-full object-cover border-2 border-gray-300">
+                </button>
+                <div id="dropdownMenu"
+                    class="hidden absolute right-1 mt-1 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+                    <a href="https://via.placeholder.com/40" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                        <span>icon</span>Profile
+                    </a>
+                    <a href="https://via.placeholder.com/40" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                        <span>icon</span>Settings
+                    </a>
+                    <a href="https://via.placeholder.com/40" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                        <span>icon</span>Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main class="p-4 sm:p-6 lg:p-8 bg-[#E8DEF3] min-h-screen" id="dashboard-content">
+        <div class="flex justify-between items-center mb-5">
+            <div class="mb-2">
+                <h1 class="text-2xl font-bold mb-1">Dashboard</h1>
+                <p class="text-sm text-gray-600">ภาพรวมแบบสอบถามและผลลัพธ์ที่คุณสร้างขึ้น</p>
+            </div>
+            <div class="flex gap-3 mt-3">
+                <!-- <button onclick="exportAllCSV()"
+                    class="bg-white text-sm text-black px-4 py-2 rounded-xl hover:bg-[#f5eef8] transition"
+                    id="allCSV"><span>icon</span>
+                    ส่งออก csv</button> -->
+                <button onclick="exportAllPDF()"
+                    class="bg-[#8a6bb8] text-sm text-white px-4 py-2 rounded-xl hover:bg-[#7a5aa8] transition"
+                    id="allPDF"><span>icon</span>
+                    ส่งออก pdf</button>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h3 class="text-sm mb-2 text-gray-400">จำนวนคำตอบที่ได้รับ</h3>
+                <p class="text-gray-600 text-2xl">{count}</p>
+                <span>icon</span>
+                <p class="text-green-500 text-sm">{growth rate}</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h3 class="text-sm mb-2 text-gray-400">จำนวนคำตอบที่ได้รับ</h3>
+                <p class="text-gray-600 text-2xl">{count}</p>
+                <span>icon</span>
+                <p class="text-green-500 text-sm">{growth rate}</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h3 class="text-sm mb-2 text-gray-400">จำนวนคำตอบที่ได้รับ</h3>
+                <p class="text-gray-600 text-2xl">{count}</p>
+                <span>icon</span>
+                <p class="text-green-500 text-sm">{growth rate}</p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-purple-100">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="text-lg font-bold">คำตอบที่คุณได้รับ</h3>
+                            <p class="text-gray-400 text-sm">จำนวนคำตอบจากแบบสอบถามของคุณใน 12 เดือนที่ผ่านมา</p>
+                        </div>
+                        <select class="text-sm border-gray-300 rounded-md shadow-sm p-1">
+                            <option>รายเดือน</option>
+                            <option>รายสัปดาห์</option>
+                        </select>
+                    </div>
+                    <div class="relative h-[350px] w-full">
+                        <canvas id="researchChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-purple-100">
+                    <h3 class="text-lg font-bold mb-4">หมวดหมู่ของคุณ</h3>
+                    <div class="relative h-[250px] flex items-center justify-center">
+                        <canvas id="doughnutChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-5">
+            <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-sm border border-purple-100">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-bold text-gray-800">สรุปหมวดหมู่</h3>
+                    <a href="#" class="text-sm text-purple-500 font-medium hover:underline">ดูทั้งหมด</a>
+                </div>
+                <div class="space-y-6">
+                    <div class="flex items-center gap-4">
+                        <div class="p-3 bg-purple-50 rounded-xl text-purple-500 text-xl">📦</div>
+                        <div class="flex-1">
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm font-semibold text-gray-700">กลุ่มตัวอย่างหลัก</span>
+                                <span class="text-sm text-gray-500">540 หน่วย</span>
+                            </div>
+                            <div class="w-full bg-gray-100 rounded-full h-2">
+                                <div class="bg-purple-400 h-2 rounded-full" style="width: 80%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-purple-100 overflow-hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold text-gray-800">คำตอบล่าสุดของคุณ</h3>
+                    <div class="flex gap-2">
+                        <input type="text" placeholder="ค้นหา..."
+                            class="text-xs border border-gray-200 rounded-lg px-3 py-1 outline-none focus:ring-1 focus:ring-purple-400">
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="exportTableCSV()"
+                            class="flex items-center gap-2 px-3 py-1.5 border border-gray-200 rounded-lg text-xs font-medium hover:bg-gray-50 transition"
+                            id="tableCSV">
+                            <span class="text-green-600">📊</span> CSV
+                        </button>
+                        <button onclick="exportTablePDF()"
+                            class="flex items-center gap-2 px-3 py-1.5 border border-gray-200 rounded-lg text-xs font-medium hover:bg-gray-50 transition"
+                            id="tablePDF">
+                            <span class="text-red-500">📄</span> PDF
+                        </button>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="text-gray-400 text-xs uppercase tracking-wider border-b border-gray-50">
+                                <th class="pb-3 font-medium">รหัสการตอบ</th>
+                                <th class="pb-3 font-medium">ผู้ตอบ</th>
+                                <th class="pb-3 font-medium">วันที่</th>
+                                <th class="pb-3 font-medium">แบบสอบถาม</th>
+                                <th class="pb-3 font-medium text-center">สถานะ</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm text-gray-700">
+                            <tr class="border-b border-gray-50 hover:bg-gray-50 transition">
+                                <td class="py-4 font-medium text-gray-900">#RSP-1024</td>
+                                <td class="py-4 text-gray-600">ผู้ตอบ A</td>
+                                <td class="py-4 text-gray-400 text-xs">12/2/2026</td>
+                                <td class="py-4 font-semibold">ความพึงพอใจอาหาร</td>
+                                <td class="py-4 text-center">
+                                    <span
+                                        class="px-3 py-1 rounded-full text-[10px] bg-green-100 text-green-600 font-bold">เสร็จสิ้น</span>
+                                </td>
+                            </tr>
+                            <tr class="border-b border-gray-50 hover:bg-gray-50 transition">
+                                <td class="py-4 font-medium text-gray-900">#RSP-1027</td>
+                                <td class="py-4 text-gray-600">ผู้ตอบ D</td>
+                                <td class="py-4 text-gray-400 text-xs">12/2/2026</td>
+                                <td class="py-4 font-semibold text-gray-400">สิ่งแวดล้อม</td>
+                                <td class="py-4 text-center">
+                                    <span
+                                        class="px-3 py-1 rounded-full text-[10px] bg-yellow-100 text-yellow-600 font-bold">กำลังดำเนินรายการ</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        function toggleDropDown(event) {
+            event.stopPropagation();
+            const dropDown = document.getElementById('dropdownMenu');
+            dropDown.classList.toggle('hidden');
+        }
+        window.onclick = function (event) {
+            if (!event.target.matches('button')) {
+                const dropdowns = document.getElementById('dropdownMenu');
+                if (dropdowns && !dropdowns.classList.contains('hidden')) {
+                    dropdowns.classList.add('hidden');
+                }
+            }
+        }
+        function exportAllPDF() {
+            const exportpdfButton = document.getElementById('dashboard-content');
+            const options = {
+                margin: [10, 10, 10, 10],
+                filename: 'Target_Research_Full_Report.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: {
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                    letterRendering: true,
+                    // เพิ่ม scrollY: 0 เพื่อป้องกันปัญหาภาพเลื่อนถ้าหน้าจอยาว
+                    scrollY: 0
+                },
+                jsPDF: {
+                    unit: 'mm',
+                    format: 'a4',
+                    // หาก Dashboard กว้างมาก แนะนำใช้ 'landscape' (แนวนอน)
+                    // แต่ถ้าต้องการเน้นดูแบบเอกสารยาวๆ ใช้ 'portrait' (แนวตั้ง)
+                    orientation: 'portrait'
+                }
+            };
+            html2pdf().set(options).from(exportpdfButton).save('Dashboard.pdf');
+        }
+        // function exportTableCSV(){
+        //     alert("Export table data as CSV");
+        // }
+        // function exportTablePDF(){
+        //     alert("Export table data as PDF");
+        // }
+    </script>
+</body>
+
+</html>
