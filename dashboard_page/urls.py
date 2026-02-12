@@ -2,7 +2,7 @@ from django.urls import path
 from dashboard_page.views import dashboard_view
 
 urlpatterns = [
-    path('dashboard/', dashboard_view, name='dashboard'),
+    path('dashboard-view/', dashboard_view, name='dashboard'),
 ]
 
 from dashboard_page.views import verify_firebase

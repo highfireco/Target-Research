@@ -3,7 +3,7 @@ from django.shortcuts import render
 from core.firebase_config import db
 
 def dashboard_view(request):
-    return render(request, 'dashboard/test.html')
+    return render(request, 'dashboard/dashboard_preview.html')
 # Create your views here.
 
 def verify_firebase(request):
