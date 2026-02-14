@@ -5,3 +5,4 @@ __pycache__/
 db.sqlite3
 node_modules/
 target-research-183e0-firebase-adminsdk-fbsvc-20db294096.json
+firebase_key.json
