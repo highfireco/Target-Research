@@ -1,0 +1,259 @@
+/* ---------------------------------- */
+/* Project / Survey Card CSS           */
+/* ---------------------------------- */
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: #F7EDED;
+    min-height: 100vh;
+}
+
+.container {
+    width: 100%;
+    max-width: 1400px;
+    padding: 16px;
+    margin: 0 auto;
+}
+
+.header-section {
+    padding: 20px 20px 30px; /* ลด padding บน/ล่าง */
+    margin-bottom: 20px;     /* ลด margin ล่าง */
+    position: relative;
+}
+
+.back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: #ffffff;
+    border: 2px solid #8162A9;
+    color: #8162A9;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.back-button:hover {
+    background-color: #8162A9;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(129, 98, 169, 0.3);
+}
+
+.back-button svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+}
+
+.icon-wrapper {
+    width: 90px;
+    height: 90px;
+    background-color: #8162A9;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px; /* ลด margin-bottom */
+    box-shadow: 0 8px 32px rgba(129, 98, 169, 0.3);
+}
+
+.icon-wrapper svg {
+    width: 48px;
+    height: 48px;
+    stroke: #fff;
+    stroke-width: 2;
+}
+
+h1 {
+    text-align: center;
+    font-size: 36px;
+    font-weight: 700;
+    margin: 0 0 6px; /* กระชับกับ subtitle */
+    color: #8162A9;
+}
+
+.subtitle {
+    text-align: center;
+    font-size: 16px;
+    margin: 0 0 20px; /* กระชับ */
+    color: #4a5568;
+    font-weight: 400;
+}
+
+/* Categories / Filter buttons */
+.categories {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.category-btn {
+    background: #fff;
+    color: #4a5568;
+    border: 2px solid #BAADAE;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.category-btn.active {
+    background-color: #8162A9;
+    color: #fff;
+    border-color: #8162A9;
+    box-shadow: 0 6px 20px rgba(129, 98, 169, 0.3);
+}
+
+/* Card */
+.card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 16px; /* กระชับ */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.badge-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.badge {
+    font-size: 13px;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-weight: 600;
+}
+
+/* Info row */
+.info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.info-left,
+.info-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: #f7fafc;
+    border-radius: 50px;
+}
+
+.info svg {
+    width: 18px;
+    height: 18px;
+    stroke: #A780DA;
+}
+
+.extra-info {
+    padding-top: 16px;
+    margin-bottom: 16px;
+    border-top: 1px solid #e2e8f0;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Detail content */
+.detail-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 50px;
+    background-color: #FEEBCB;
+    font-size: 14px;
+    color: #8162A9;
+    margin-bottom: 12px;
+    font-weight: 600;
+    border: 1px solid #BAADAE;
+}
+
+.detail-desc {
+    font-size: 15px;
+    color: #4a5568;
+    line-height: 1.5;
+    margin-bottom: 16px;
+}
+
+/* Buttons */
+.button-group {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.btn {
+    padding: 12px;
+    border-radius: 14px;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    flex: 2;
+    background-color: #8162A9;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    background-color: #6e52a0;
+}
+
+.btn-secondary {
+    flex: 1;
+    background-color: #fff;
+    color: #8162A9;
+    border: 2px solid #8162A9;
+}
+
+.btn-secondary:hover {
+    background-color: #f7fafc;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container { padding: 12px; }
+    h1 { font-size: 28px; }
+    .subtitle { font-size: 14px; }
+    .card { padding: 16px; }
+    .categories { justify-content: center; }
+    .button-group { flex-direction: column; }
+    .btn { width: 100%; }
+    .back-button { top: 10px; left: 10px; padding: 6px 12px; font-size: 13px; }
+}

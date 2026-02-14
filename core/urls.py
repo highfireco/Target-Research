@@ -24,5 +24,6 @@ urlpatterns = [
     path('dashboard/', include('dashboard_page.urls')),
     path('survey/', include('survey_builder.urls')),
     path('home/', include('Home_Layout.urls')),
-]
+    path('notifications/', include('notifications.urls')),
 
+]
