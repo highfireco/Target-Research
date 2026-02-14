@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'hire_project',
     'survey_builder',
     'dashboard_page',
+    'Home_Layout',
 ]
 
 MIDDLEWARE = [
