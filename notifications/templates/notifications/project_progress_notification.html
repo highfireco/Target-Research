@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ความคืบหน้าโครงการ</title>
+
+    <!-- Inter Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: #F7EDED;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            padding: 24px;
+            margin: 0 auto;
+        }
+
+        .header-section {
+            padding: 40px;
+            margin-bottom: 32px;
+            position: relative;
+        }
+
+        /* Back button */
+        .back-button {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            background: #ffffff;
+            border: 2px solid #8162A9;
+            color: #8162A9;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-button:hover {
+            background-color: #8162A9;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(129, 98, 169, 0.3);
+        }
+
+        .back-button svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+        }
+
+        .icon-wrapper {
+            width: 96px;
+            height: 96px;
+            background-color: #8162A9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 8px 32px rgba(129, 98, 169, 0.3);
+        }
+
+        .icon-wrapper svg {
+            width: 48px;
+            height: 48px;
+            stroke: #fff;
+            stroke-width: 2;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 42px;
+            font-weight: 700;
+            margin: 0 0 8px;
+            color: #8162A9;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 18px;
+            margin: 0;
+            color: #4a5568;
+            font-weight: 400;
+        }
+
+        /* Filter buttons */
+        .categories {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            background: #ffffff;
+            color: #4a5568;
+            border: 2px solid #BAADAE;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .category-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .category-btn.active {
+            background-color: #8162A9;
+            color: #fff;
+            border-color: #8162A9;
+            box-shadow: 0 6px 24px rgba(129, 98, 169, 0.4);
+        }
+
+        /* Project Card */
+        .project-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+            position: relative;
+            max-width: 1317px;
+            margin-left: auto;
+            margin-right: auto;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+
+        /* Project Header */
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            gap: 16px;
+        }
+
+        .project-info {
+            flex: 1;
+        }
+
+        .project-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2d3748;
+            margin: 0 0 8px;
+        }
+
+        .project-desc {
+            font-size: 15px;
+            color: #718096;
+            margin: 0 0 12px;
+            line-height: 1.5;
+        }
+
+        .project-meta {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: #4a5568;
+        }
+
+        .meta-item svg {
+            width: 16px;
+            height: 16px;
+            stroke: #A780DA;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .status-in-progress {
+            background-color: rgba(129, 98, 169, 0.15);
+            color: #8162A9;
+        }
+
+        .status-review {
+            background-color: rgba(251, 191, 36, 0.15);
+            color: #D97706;
+        }
+
+        .status-completed {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: #059669;
+        }
+
+        .status-delayed {
+            background-color: rgba(238, 29, 82, 0.15);
+            color: #EE1D52;
+        }
+
+        /* Progress Section */
+        .progress-section {
+            margin-bottom: 24px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .progress-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .progress-percentage {
+            font-size: 24px;
+            font-weight: 700;
+            color: #8162A9;
+        }
+
+        /* Progress Bar */
+        .progress-bar-container {
+            width: 100%;
+            height: 24px;
+            background-color: #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #8162A9 0%, #A780DA 100%);
+            border-radius: 12px;
+            transition: width 1s ease;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(129, 98, 169, 0.3);
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255, 255, 255, 0.3) 50%, 
+                transparent 100%);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+
+            .subtitle {
+                font-size: 16px;
+            }
+
+            .project-card {
+                padding: 24px;
+            }
+
+            .project-header {
+                flex-direction: column;
+            }
+
+            .project-title {
+                font-size: 20px;
+            }
+
+            .progress-percentage {
+                font-size: 20px;
+            }
+
+            .back-button {
+                top: 20px;
+                left: 20px;
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <!-- Header Section -->
+    <div class="header-section">
+        <!-- Back Button -->
+        <button class="back-button" onclick="goBack()">
+            <i data-lucide="arrow-left"></i>
+            กลับ
+        </button>
+
+        <div class="icon-wrapper">
+            <i data-lucide="trending-up"></i>
+        </div>
+
+        <h1>ความคืบหน้าโครงการ</h1>
+        <div class="subtitle">ติดตามความคืบหน้าโครงการทั้งหมดของคุณ</div>
+    </div>
+
+    <!-- Filter -->
+    <div class="categories">
+        <button class="category-btn active" data-filter="all">ทั้งหมด (4)</button>
+        <button class="category-btn" data-filter="in-progress">กำลังดำเนินการ (3)</button>
+        <button class="category-btn" data-filter="completed">เสร็จสิ้น (1)</button>
+    </div>
+
+    <!-- PROJECT 1: In Progress -->
+    <div class="project-card" data-status="in-progress">
+        <div class="project-header">
+            <div class="project-info">
+                <h2 class="project-title">แบบสำรวจพฤติกรรมการใช้แอปพลิเคชัน</h2>
+                <p class="project-desc">เก็บข้อมูลการใช้งานแอปพลิเคชันของนิสิตเพื่อปรับปรุงประสบการณ์การใช้งาน</p>
+                <div class="project-meta">
+                    <div class="meta-item">
+                        <i data-lucide="calendar"></i>
+                        <span>เริ่ม: 1 ม.ค. 2567</span>
+                    </div>
+                    <div class="meta-item">
+                        <i data-lucide="flag"></i>
+                        <span>สิ้นสุด: 31 มี.ค. 2567</span>
+                    </div>
+                    <div class="meta-item">
+                        <i data-lucide="users"></i>
+                        <span>237/500 คน</span>
+                    </div>
+                </div>
+            </div>
+            <span class="status-badge status-in-progress">กำลังดำเนินการ</span>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-header">
+                <span class="progress-label">ความคืบหน้า</span>
+                <span class="progress-percentage">47%</span>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" style="width: 47%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROJECT 2: In Progress -->
+    <div class="project-card" data-status="in-progress">
+        <div class="project-header">
+            <div class="project-info">
+                <h2 class="project-title">แบบสำรวจความพึงพอใจการให้บริการ</h2>
+                <p class="project-desc">ประเมินความพึงพอใจการใช้บริการต่างๆ ภายในมหาวิทยาลัย</p>
+                <div class="project-meta">
+                    <div class="meta-item">
+                        <i data-lucide="calendar"></i>
+                        <span>เริ่ม: 1 ธ.ค. 2566</span>
+                    </div>
+                    <div class="meta-item">
+                        <i data-lucide="flag"></i>
+                        <span>สิ้นสุด: 28 ก.พ. 2567</span>
+                    </div>
+                    <div class="meta-item">
+                        <i data-lucide="users"></i>
+                        <span>892/1000 คน</span>
+                    </div>
+                </div>
+            </div>
+            <span class="status-badge status-in-progress">กำลังดำเนินการ</span>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-header">
+                <span class="progress-label">ความคืบหน้า</span>
+                <span class="progress-percentage">89%</span>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" style="width: 89%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROJECT 3: In Progress -->
+    <div class="project-card" data-status="in-progress">
+        <div class="project-header">
+            <div class="project-info">
+                <h2 class="project-title">แบบสำรวจความต้องการฟีเจอร์ใหม่</h2>
+                <p class="project-desc">รวบรวมความคิดเห็นเกี่ยวกับฟีเจอร์ที่นิสิตต้องการเพิ่มเติม</p>
+                <div class="project-meta">
+                    <div class="meta-item">
+                        <i data-lucide="calendar"></i>
+                        <span>เริ่ม: 15 ม.ค. 2567</span>
+                    </div>
+                    <div class="meta-item">
+                        <i data-lucide="flag"></i>
+                        <span>สิ้นสุด: 30 เม.ย. 2567</span>
+                    </div>
+                    <div class="meta-item">
+                        <i data-lucide="users"></i>
+                        <span>124/400 คน</span>
+                    </div>
+                </div>
+            </div>
+            <span class="status-badge status-in-progress">กำลังดำเนินการ</span>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-header">
+                <span class="progress-label">ความคืบหน้า</span>
+                <span class="progress-percentage">31%</span>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" style="width: 31%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROJECT 4: Completed -->
+    <div class="project-card" data-status="completed">
+        <div class="project-header">
+            <div class="project-info">
+                <h2 class="project-title">แบบสำรวจประสบการณ์การใช้สินค้า</h2>
+                <p class="project-desc">รวบรวมข้อมูลการใช้ผลิตภัณฑ์จากร้านค้าในมหาวิทยาลัย</p>
+                <div class="project-meta">
+                    <div class="meta-item">
+                        <i data-lucide="calendar"></i>
+                        <span>เริ่ม: 1 ต.ค. 2566</span>
+                    </div>
+                    <div class="meta-item">
+                        <i data-lucide="flag"></i>
+                        <span>สิ้นสุด: 31 ธ.ค. 2566</span>
+                    </div>
+                    <div class="meta-item">
+                        <i data-lucide="users"></i>
+                        <span>650/650 คน</span>
+                    </div>
+                </div>
+            </div>
+            <span class="status-badge status-completed">เสร็จสิ้น</span>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-header">
+                <span class="progress-label">ความคืบหน้า</span>
+                <span class="progress-percentage">100%</span>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" style="width: 100%"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    lucide.createIcons();
+
+    function goBack() {
+    window.location.href = "{% url 'notification_home' %}";
+}
+
+
+    // FILTER
+    const buttons = document.querySelectorAll('.category-btn');
+    const cards = document.querySelectorAll('.project-card');
+
+    buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            buttons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const filter = btn.dataset.filter;
+
+            cards.forEach(card => {
+                const status = card.dataset.status;
+                
+                if (filter === 'all') {
+                    card.style.display = 'block';
+                } else if (filter === 'in-progress' && status === 'in-progress') {
+                    card.style.display = 'block';
+                } else if (filter === 'completed' && status === 'completed') {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // Animate progress bars on load
+    window.addEventListener('load', () => {
+        const progressBars = document.querySelectorAll('.progress-bar');
+        progressBars.forEach(bar => {
+            const width = bar.style.width;
+            bar.style.width = '0%';
+            setTimeout(() => {
+                bar.style.width = width;
+            }, 100);
+        });
+    });
+</script>
+
+</body>
+</html>
