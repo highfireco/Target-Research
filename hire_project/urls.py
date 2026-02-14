@@ -1,14 +1,12 @@
 from django.urls import path
-from .views import (
-    create_project_view,
-    create_project_api,
-    convert_to_project,
-    draft_history_view,   # ⬅ เพิ่มตัวนี้
-)
+from . import views
 
 urlpatterns = [
-    path('create-project/', create_project_view, name='create_project'),
-    path('create-project-api/', create_project_api, name='create_project_api'),
-    path('convert/<int:draft_id>/', convert_to_project, name='convert_project'),
-    path('drafts/', draft_history_view, name='draft_history'),  # ⬅ เพิ่มบรรทัดนี้
+    path("create-project/",                views.create_project_view,  name="create_project"),
+    path("create-project-api/",            views.create_project_api,   name="create_project_api"),
+    path("drafts/",                        views.draft_history_view,   name="draft_history"),
+    path("drafts/<int:draft_id>/convert/", views.convert_to_project,   name="convert_to_project"),
+    path("drafts/<int:draft_id>/delete/",  views.delete_draft,         name="delete_draft"),
+    path("my-projects/",                   views.my_projects_view,     name="my_projects"),
+    path("project-list/",                  views.project_list_view,    name="project_list"),
 ]

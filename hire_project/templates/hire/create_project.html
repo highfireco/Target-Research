@@ -91,6 +91,157 @@ input::placeholder, textarea::placeholder { color: #BDBDBD; }
   color: #BDBDBD;
   margin-top: 4px;
 }
+
+/* ── Occupation multi-select ── */
+.occ-dropdown { position: relative; }
+
+.occ-trigger {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  border: 2px solid #E5E5E5;
+  background: #fff;
+  font-family: 'Prompt', sans-serif;
+  font-size: 0.875rem;
+  color: #4A4A4A;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  transition: all 0.3s ease;
+  text-align: left;
+  user-select: none;
+}
+.occ-trigger:hover,
+.occ-trigger.open {
+  border-color: #EEB1C6;
+  box-shadow: 0 0 0 3px rgba(238,177,198,0.12);
+}
+
+.occ-trigger-label {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #BDBDBD;
+}
+.occ-trigger-label.has-value { color: #4A4A4A; }
+
+.occ-chevron {
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+  color: #C47898;
+}
+.occ-trigger.open .occ-chevron { transform: rotate(180deg); }
+
+.occ-panel {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 2px solid #EEB1C6;
+  border-radius: 0.75rem;
+  box-shadow: 0 12px 32px rgba(238,177,198,0.25);
+  z-index: 50;
+  overflow: hidden;
+  animation: panelOpen 0.2s ease;
+}
+@keyframes panelOpen {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.occ-panel.open { display: block; }
+
+.occ-select-all {
+  padding: 8px 14px;
+  background: rgba(238,177,198,0.08);
+  border-bottom: 1px solid #F5E8EE;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #C47898;
+  transition: background 0.15s;
+}
+.occ-select-all:hover { background: rgba(238,177,198,0.18); }
+
+.occ-list { max-height: 220px; overflow-y: auto; }
+.occ-list::-webkit-scrollbar { width: 4px; }
+.occ-list::-webkit-scrollbar-thumb { background: #EEB1C6; border-radius: 4px; }
+
+.occ-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  cursor: pointer;
+  font-size: 0.83rem;
+  color: #4A4A4A;
+  transition: background 0.15s;
+  border-bottom: 1px solid #FDF0F4;
+}
+.occ-item:last-child { border-bottom: none; }
+.occ-item:hover { background: rgba(238,177,198,0.08); }
+.occ-item.checked { background: rgba(238,177,198,0.12); color: #C47898; font-weight: 500; }
+
+.occ-check {
+  width: 16px; height: 16px;
+  border: 2px solid #DDD;
+  border-radius: 4px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  background: #fff;
+}
+.occ-item.checked .occ-check { background: #EEB1C6; border-color: #EEB1C6; }
+.occ-item.checked .occ-check::after {
+  content: '';
+  width: 4px; height: 7px;
+  border: 2px solid #fff;
+  border-top: none; border-left: none;
+  transform: rotate(45deg) translateY(-1px);
+}
+
+.occ-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; min-height: 0; }
+.occ-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(238,177,198,0.2);
+  color: #C47898;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 9px 3px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(238,177,198,0.4);
+  animation: tagPop 0.2s ease;
+}
+@keyframes tagPop {
+  from { opacity:0; transform: scale(0.8); }
+  to   { opacity:1; transform: scale(1); }
+}
+.occ-tag-remove {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  opacity: 0.6;
+  transition: opacity 0.15s;
+  font-size: 0.9rem;
+  line-height: 1;
+}
+.occ-tag-remove:hover { opacity: 1; }
+
+/* ── My Projects button (special teal style) ── */
+.btn-my-projects {
+  background: linear-gradient(135deg, #5BA4A4 0%, #3D8080 100%);
+}
 </style>
 </head>
 
@@ -128,17 +279,14 @@ input::placeholder, textarea::placeholder { color: #BDBDBD; }
       <i data-lucide="file-text" style="width:13px;height:13px;"></i>
       ข้อมูลโครงการ
     </div>
-
     <div class="mb-4">
       <label>ชื่อโครงการ <span style="color:#EEB1C6;">*</span></label>
       <input id="title" class="w-full p-3 rounded-xl border-2" placeholder="ระบุชื่อโครงการวิจัยของคุณ...">
     </div>
-
     <div class="mb-4">
       <label>วัตถุประสงค์ <span style="color:#EEB1C6;">*</span></label>
       <textarea id="objective" class="w-full p-3 rounded-xl border-2" rows="2" placeholder="ระบุวัตถุประสงค์ของการวิจัย..."></textarea>
     </div>
-
     <div>
       <label>รายละเอียดโครงการ</label>
       <textarea id="description" class="w-full p-3 rounded-xl border-2" rows="4" placeholder="อธิบายรายละเอียดโครงการวิจัยของคุณ..."></textarea>
@@ -151,7 +299,6 @@ input::placeholder, textarea::placeholder { color: #BDBDBD; }
       <i data-lucide="building-2" style="width:13px;height:13px;"></i>
       ข้อมูลองค์กร / ผู้จ้าง
     </div>
-
     <div class="grid grid-cols-2 gap-4 mb-4">
       <div>
         <label>ชื่อองค์กร / หน่วยงาน <span style="color:#EEB1C6;">*</span></label>
@@ -170,7 +317,6 @@ input::placeholder, textarea::placeholder { color: #BDBDBD; }
         </select>
       </div>
     </div>
-
     <div>
       <label>คณะ / ฝ่าย / แผนก</label>
       <input id="org_dept" class="w-full p-3 rounded-xl border-2" placeholder="เช่น คณะวิทยาศาสตร์สุขภาพ">
@@ -184,7 +330,6 @@ input::placeholder, textarea::placeholder { color: #BDBDBD; }
       <i data-lucide="calendar" style="width:13px;height:13px;"></i>
       ระยะเวลาโครงการ
     </div>
-
     <div class="grid grid-cols-2 gap-4">
       <div>
         <label>วันเริ่มรับข้อมูล <span style="color:#EEB1C6;">*</span></label>
@@ -225,6 +370,32 @@ input::placeholder, textarea::placeholder { color: #BDBDBD; }
       </select>
     </div>
 
+    <!-- อาชีพ multi-select -->
+    <div>
+      <label>
+        อาชีพ
+        <span class="hint" style="display:inline;margin-left:6px;">เลือกได้หลายอาชีพ</span>
+      </label>
+      <div class="occ-dropdown" id="occDropdown">
+        <button type="button" class="occ-trigger" id="occTrigger" onclick="toggleOccPanel()">
+          <span class="occ-trigger-label" id="occTriggerLabel">เลือกอาชีพ (ค่าเริ่มต้น: ทุกอาชีพ)</span>
+          <svg class="occ-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div class="occ-panel" id="occPanel">
+          <div class="occ-select-all" id="selectAllRow" onclick="toggleSelectAll()">
+            <div class="occ-check" id="selectAllCheck"></div>
+            <span>ทุกอาชีพ</span>
+          </div>
+          <div class="occ-list" id="occList"></div>
+        </div>
+      </div>
+      <div class="occ-tags" id="occTags"></div>
+      <p class="hint">ระบุเพื่อ filter ผู้ตอบแบบสอบถามที่ตรงกลุ่มเป้าหมาย</p>
+    </div>
+
     <div>
       <label>พื้นที่</label>
       <input id="location" class="w-full p-3 rounded-xl border-2" placeholder="เช่น กรุงเทพฯ, เชียงใหม่">
@@ -242,12 +413,10 @@ input::placeholder, textarea::placeholder { color: #BDBDBD; }
       <i data-lucide="list-checks" style="width:13px;height:13px;"></i>
       ข้อมูลแบบสอบถาม
     </div>
-
     <div>
       <label>จำนวนคำถามโดยประมาณ</label>
       <input id="question_count" type="number" class="w-full p-3 rounded-xl border-2" placeholder="เช่น 12">
     </div>
-
     <div>
       <label>เวลาที่ใช้ทำโดยประมาณ (นาที)</label>
       <input id="est_minutes" type="number" class="w-full p-3 rounded-xl border-2" placeholder="เช่น 10">
@@ -257,7 +426,7 @@ input::placeholder, textarea::placeholder { color: #BDBDBD; }
 
   <div class="section-divider"></div>
 
-  <!-- ปุ่ม -->
+  <!-- ── ปุ่ม ── -->
   <button type="button" onclick="saveDraft()" class="p-4 rounded-xl bg-white border-2 border-gray-300 font-semibold text-gray-600 hover:bg-gray-50 btn-hover icon-bounce flex items-center justify-center gap-2">
     <i data-lucide="save" style="width:17px;height:17px;"></i> บันทึกแบบร่าง
   </button>
@@ -268,6 +437,11 @@ input::placeholder, textarea::placeholder { color: #BDBDBD; }
 
   <button type="button" onclick="goSurvey()" class="p-4 rounded-xl bg-gradient-to-r from-gray-800 to-black text-white font-semibold btn-hover flex items-center justify-center gap-2">
     <i data-lucide="arrow-right" style="width:17px;height:17px;"></i> ไปหน้าสร้างแบบสอบถาม
+  </button>
+
+  <!-- ปุ่ม My Projects (ใหม่) -->
+  <button type="button" onclick="goMyProjects()" class="p-4 rounded-xl text-white font-semibold btn-hover flex items-center justify-center gap-2 btn-my-projects">
+    <i data-lucide="folder-kanban" style="width:17px;height:17px;"></i> โครงการของฉัน
   </button>
 
   <button type="button" onclick="goDraftHistory()" class="p-4 rounded-xl bg-gradient-to-r from-gray-600 to-gray-700 text-white font-semibold btn-hover flex items-center justify-center gap-2">
@@ -285,16 +459,127 @@ input::placeholder, textarea::placeholder { color: #BDBDBD; }
 <script>
 lucide.createIcons();
 
-function showToast(msg){
+/* ── Occupation options ── */
+const OCC_OPTIONS = [
+  { value: "Government",       label: "ข้าราชการ / รัฐวิสาหกิจ" },
+  { value: "Private Employee", label: "พนักงานเอกชน" },
+  { value: "Business Owner",   label: "เจ้าของกิจการ" },
+  { value: "Freelance",        label: "ฟรีแลนซ์" },
+  { value: "Agriculture",      label: "เกษตรกร" },
+  { value: "Labor",            label: "แรงงาน" },
+  { value: "Professional",     label: "วิชาชีพ (แพทย์ ทนาย ฯลฯ)" },
+  { value: "Student",          label: "นักเรียน / นักศึกษา" },
+  { value: "Unemployed",       label: "ไม่ได้ทำงาน" },
+  { value: "Other",            label: "อื่นๆ" },
+];
+
+let selectedOcc = new Set();
+
+const occList = document.getElementById("occList");
+OCC_OPTIONS.forEach(opt => {
+  const item = document.createElement("div");
+  item.className = "occ-item";
+  item.dataset.value = opt.value;
+  item.innerHTML = `<div class="occ-check"></div><span>${opt.label}</span>`;
+  item.addEventListener("click", () => toggleOcc(opt.value, opt.label, item));
+  occList.appendChild(item);
+});
+
+function toggleOcc(value, label, el) {
+  if (selectedOcc.has(value)) { selectedOcc.delete(value); el.classList.remove("checked"); }
+  else { selectedOcc.add(value); el.classList.add("checked"); }
+  updateSelectAll(); renderTags(); updateTriggerLabel();
+}
+
+function toggleSelectAll() {
+  const all = selectedOcc.size === OCC_OPTIONS.length;
+  if (all) {
+    selectedOcc.clear();
+    document.querySelectorAll(".occ-item").forEach(el => el.classList.remove("checked"));
+  } else {
+    OCC_OPTIONS.forEach(o => selectedOcc.add(o.value));
+    document.querySelectorAll(".occ-item").forEach(el => el.classList.add("checked"));
+  }
+  updateSelectAll(); renderTags(); updateTriggerLabel();
+}
+
+function updateSelectAll() {
+  const check = document.getElementById("selectAllCheck");
+  const all = selectedOcc.size === OCC_OPTIONS.length;
+  const none = selectedOcc.size === 0;
+  check.style.background  = all ? "#EEB1C6" : none ? "#fff" : "rgba(238,177,198,0.4)";
+  check.style.borderColor = (all || !none) ? "#EEB1C6" : "#DDD";
+  check.innerHTML = all
+    ? `<span style="display:block;width:4px;height:7px;border:2px solid #fff;border-top:none;border-left:none;transform:rotate(45deg) translateY(-1px);"></span>`
+    : none ? "" : `<span style="display:block;width:8px;height:2px;background:#fff;border-radius:2px;"></span>`;
+}
+
+function renderTags() {
+  const container = document.getElementById("occTags");
+  container.innerHTML = "";
+  selectedOcc.forEach(val => {
+    const opt = OCC_OPTIONS.find(o => o.value === val);
+    if (!opt) return;
+    const tag = document.createElement("span");
+    tag.className = "occ-tag";
+    tag.innerHTML = `${opt.label}<span class="occ-tag-remove" title="ลบ" onclick="removeOcc('${val}')">×</span>`;
+    container.appendChild(tag);
+  });
+}
+
+function removeOcc(value) {
+  selectedOcc.delete(value);
+  const el = occList.querySelector(`[data-value="${value}"]`);
+  if (el) el.classList.remove("checked");
+  updateSelectAll(); renderTags(); updateTriggerLabel();
+}
+
+function updateTriggerLabel() {
+  const lbl = document.getElementById("occTriggerLabel");
+  if (selectedOcc.size === 0) {
+    lbl.textContent = "เลือกอาชีพ (ค่าเริ่มต้น: ทุกอาชีพ)";
+    lbl.classList.remove("has-value");
+  } else if (selectedOcc.size === OCC_OPTIONS.length) {
+    lbl.textContent = "ทุกอาชีพ";
+    lbl.classList.add("has-value");
+  } else {
+    lbl.textContent = `เลือกแล้ว ${selectedOcc.size} อาชีพ`;
+    lbl.classList.add("has-value");
+  }
+}
+
+function toggleOccPanel() {
+  const panel   = document.getElementById("occPanel");
+  const trigger = document.getElementById("occTrigger");
+  const isOpen  = panel.classList.toggle("open");
+  trigger.classList.toggle("open", isOpen);
+}
+
+document.addEventListener("click", e => {
+  if (!document.getElementById("occDropdown").contains(e.target)) {
+    document.getElementById("occPanel").classList.remove("open");
+    document.getElementById("occTrigger").classList.remove("open");
+  }
+});
+
+/* ── Toast ── */
+function showToast(msg) {
   const t = document.getElementById("toast");
   t.innerText = msg;
   t.classList.remove("hidden");
   t.classList.add("toast-show");
-  setTimeout(()=>{ t.classList.add("hidden"); t.classList.remove("toast-show"); }, 2500);
+  setTimeout(() => { t.classList.add("hidden"); t.classList.remove("toast-show"); }, 2500);
 }
 
-async function send(status){
-  const data = {
+function resetOcc() {
+  selectedOcc.clear();
+  document.querySelectorAll(".occ-item").forEach(el => el.classList.remove("checked"));
+  renderTags(); updateTriggerLabel(); updateSelectAll();
+}
+
+/* ── Gather data ── */
+function getData(status) {
+  return {
     title:          document.getElementById("title").value,
     objective:      document.getElementById("objective").value,
     description:    document.getElementById("description").value,
@@ -305,17 +590,20 @@ async function send(status){
     deadline:       document.getElementById("deadline").value,
     age_range:      document.getElementById("age_range").value,
     gender:         document.getElementById("gender").value,
+    occupations:    selectedOcc.size === 0 ? ["all"] : [...selectedOcc],
     location:       document.getElementById("location").value,
     sample_size:    document.getElementById("sample_size").value,
     question_count: document.getElementById("question_count").value,
     est_minutes:    document.getElementById("est_minutes").value,
-    status:         status
+    status,
   };
+}
 
+async function send(status) {
   const res = await fetch("/hire/create-project-api/", {
-    method: "POST",
+    method:  "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
+    body:    JSON.stringify(getData(status)),
   });
   return await res.json();
 }
@@ -323,20 +611,28 @@ async function send(status){
 document.getElementById("projectForm").addEventListener("submit", async e => {
   e.preventDefault();
   const r = await send("active");
-  if(r.status === "success"){ showToast("✅ บันทึกโครงการแล้ว"); projectForm.reset(); }
-  else { showToast("❌ เกิดข้อผิดพลาด"); }
+  if (r.status === "success") {
+    showToast("✅ สร้างโครงการแล้ว");
+    projectForm.reset();
+    resetOcc();
+    // redirect ไป My Projects หลัง toast หาย
+    setTimeout(() => { window.location.href = "/hire/my-projects/"; }, 2600);
+  } else {
+    showToast("❌ เกิดข้อผิดพลาด");
+  }
 });
 
-async function saveDraft(){
+async function saveDraft() {
   const r = await send("draft");
-  if(r.status === "success"){ showToast("💾 บันทึกแบบร่างแล้ว"); projectForm.reset(); }
+  if (r.status === "success") { showToast("💾 บันทึกแบบร่างแล้ว"); projectForm.reset(); resetOcc(); }
   else { showToast("❌ เซฟไม่สำเร็จ"); }
 }
 
+function goMyProjects()   { window.location.href = "/hire/my-projects/"; }
 function goSurvey()       { window.location.href = "/hire/create-survey/"; }
 function goDraftHistory() { window.location.href = "/hire/drafts/"; }
-function goHome()          { window.location.href = "/"; }
-function goSettings()      { window.location.href = "/settings/"; }
+function goHome()         { window.location.href = "/"; }
+function goSettings()     { window.location.href = "/settings/"; }
 </script>
 
 </body>
