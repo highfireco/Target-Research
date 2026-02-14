@@ -23,5 +23,6 @@ urlpatterns = [
     path('hire/', include('hire_project.urls')),
     path('dashboard/', include('dashboard_page.urls')),
     path('survey/', include('survey_builder.urls')),
+    path("account/", include("account.urls")),
 ]
 

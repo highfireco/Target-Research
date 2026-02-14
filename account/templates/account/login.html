@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Login</title>
+</head>
+<body>
+
+<h2>Login</h2>
+
+<form id="loginForm">
+    {% csrf_token %}
+
+```
+<label>Email</label><br>
+<input type="email" id="email" required><br><br>
+
+<label>Password</label><br>
+<input type="password" id="password" required><br><br>
+
+<button type="submit">Login</button>
+```
+
+</form>
+
+<p><a href="{% url 'signup' %}">Create new account</a></p>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+    apiKey: "AIzaSyCg7IuGA_dR-O3lSsbQb4lR4OwpgjkNvTA",
+    authDomain: "target-research-6b556.firebaseapp.com",
+};
+
+firebase.initializeApp(firebaseConfig);
+
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    try {
+        const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+        const idToken = await userCredential.user.getIdToken();
+
+        const response = await fetch("{% url 'verify_token' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: "idToken=" + idToken
+        });
+
+        const data = await response.json();
+
+        if (data.status === "success") {
+            window.location.href = "/account/dashboard_view/";
+        } else {
+            alert("Login failed");
+        }
+
+    } catch (error) {
+        alert(error.message);
+    }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Signup</title>
+</head>
+<body>
+<h2>Signup</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    <label>Email</label><br>
+    <input type="email" name="email" required><br><br>
+
+```
+<button type="submit" name="send_pin">Send Verification Code</button>
+```
+
+</form>
+
+<p><a href="{% url 'login' %}">Already have an account? Login</a></p>
+</body>
+</html>
