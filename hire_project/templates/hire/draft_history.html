@@ -1,0 +1,23 @@
+<h1>Draft History</h1>
+
+<hr>
+
+{% for draft in drafts %}
+    <div style="border:1px solid #ccc; padding:15px; margin-bottom:15px; border-radius:8px;">
+        <h3>{{ draft.title }}</h3>
+        <p>{{ draft.description }}</p>
+
+        <p>Status: <strong>{{ draft.status }}</strong></p>
+        <small>Created: {{ draft.created_at }}</small>
+        <br><br>
+
+        <a href="/hire/convert/{{ draft.id }}/">
+            Convert to Project
+        </a>
+    </div>
+{% empty %}
+    <p>No drafts yet.</p>
+{% endfor %}
+
+<hr>
+<a href="/hire/create-project/">+ Create New Project</a>

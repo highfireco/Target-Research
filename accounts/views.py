@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from .firebase_config import auth, db
 
 def signup(request):
     error = ""

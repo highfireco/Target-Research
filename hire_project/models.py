@@ -1,6 +1,14 @@
 from django.db import models
 
+
 class ResearchProject(models.Model):
+
+    STATUS_CHOICES = [
+        ('draft', 'Draft'),
+        ('active', 'Active'),
+        ('completed', 'Completed'),
+    ]
+
     title = models.CharField(max_length=255)
     objective = models.TextField(null=True, blank=True)
     description = models.TextField(null=True, blank=True)
@@ -11,11 +19,38 @@ class ResearchProject(models.Model):
 
     sample_size = models.IntegerField(default=0)
 
-    status = models.CharField(max_length=20, default="draft")  
-    owner_id = models.CharField(max_length=100)
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="draft"
+    )
+
+    owner_id = models.CharField(max_length=100, default="anonymous")
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+
+
+class ResearchDraft(models.Model):
+
+    STATUS_CHOICES = [
+        ('draft', 'Draft'),
+        ('submitted', 'Submitted'),
+    ]
+
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='draft'
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title

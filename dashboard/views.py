@@ -24,3 +24,6 @@ def verify_firebase(request):
             
     except Exception as e:
         return HttpResponse(f"❌ เกิดข้อผิดพลาดขณะดึงข้อมูล: {e}")
+    
+
+    
