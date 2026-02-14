@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Payment</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: #f6dce2;
+}
+
+.wrapper {
+  max-width: 1200px;
+  margin: 40px auto;
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.header {
+  background: #f3f3f3;
+  padding: 15px 25px;
+  border-radius: 50px;
+  margin-bottom: 25px;
+}
+
+.content {
+  display: flex;
+  gap: 20px;
+}
+
+.left { flex: 2; }
+.right { flex: 1; }
+
+.card {
+  background: #f7eaea;
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 15px;
+}
+
+.payment-option {
+  border: 1px solid #ccc;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.payment-option input {
+  margin-right: 10px;
+}
+
+.hidden {
+  display: none;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: #3f7de0;
+  color: white;
+}
+
+.btn-secondary {
+  background: #ddd;
+}
+
+.price {
+  font-size: 20px;
+  font-weight: bold;
+  color: #3f7de0;
+}
+</style>
+
+<script>
+function showMethod(method) {
+  document.getElementById("cardForm").classList.add("hidden");
+  document.getElementById("bankForm").classList.add("hidden");
+  document.getElementById("qrForm").classList.add("hidden");
+
+  document.getElementById(method).classList.remove("hidden");
+}
+</script>
+
+</head>
+
+<body>
+
+<div class="wrapper">
+
+<div class="header">
+<h2>Payment</h2>
+</div>
+
+<div class="content">
+
+<!-- LEFT SIDE -->
+<div class="left">
+
+<div class="card">
+<h3>เลือกช่องทางการชำระเงิน</h3>
+
+<label class="payment-option">
+<input type="radio" name="pay" onclick="showMethod('cardForm')" checked>
+บัตรเครดิต / เดบิต
+</label>
+
+<label class="payment-option">
+<input type="radio" name="pay" onclick="showMethod('bankForm')">
+โอนผ่านธนาคาร
+</label>
+
+<label class="payment-option">
+<input type="radio" name="pay" onclick="showMethod('qrForm')">
+QR code / Mobile Banking
+</label>
+</div>
+
+<!-- CARD FORM -->
+<div id="cardForm" class="card">
+<h3>ข้อมูลบัตร</h3>
+<input placeholder="ชื่อบนบัตร" style="width:100%;padding:10px;margin:5px 0;">
+<input placeholder="หมายเลขบัตร" style="width:100%;padding:10px;margin:5px 0;">
+<input placeholder="วันหมดอายุ" style="width:48%;padding:10px;margin:5px 1%;">
+<input placeholder="CCV" style="width:48%;padding:10px;margin:5px 1%;">
+</div>
+
+<!-- BANK FORM -->
+<div id="bankForm" class="card hidden">
+<h3>โอนผ่านธนาคาร</h3>
+<p>ธนาคาร: ไทยพาณิชย์</p>
+<p>เลขบัญชี: 123-456-7890</p>
+<p>ชื่อบัญชี: บริษัท Target Research</p>
+<input type="file">
+</div>
+
+<!-- QR FORM -->
+<div id="qrForm" class="card hidden">
+<h3>QR Code</h3>
+<div style="background:#eee;height:150px;display:flex;align-items:center;justify-content:center;">
+QR CODE
+</div>
+<input type="file">
+</div>
+
+<div class="card">
+<h3>ยืนยันการทำรายการ</h3>
+<label><input type="checkbox"> ยอมรับเงื่อนไข</label><br>
+<label><input type="checkbox"> ยืนยันข้อมูลถูกต้อง</label>
+</div>
+
+</div>
+
+<!-- RIGHT SIDE -->
+<div class="right">
+
+<div class="card">
+<h3>สรุปคำสั่งซื้อ</h3>
+<p>ค่าดำเนินการ: ฿125,000</p>
+<p>VAT: ฿10,062</p>
+<hr>
+<p class="price">รวม ฿153,812</p>
+</div>
+
+<button class="btn-primary">ชำระเงินและเปิดโครงการ</button>
+<button class="btn-secondary">ย้อนกลับ</button>
+
+</div>
+
+</div>
+</div>
+
+</body>
+</html>
