@@ -1,169 +1,96 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Home</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        body {
-            margin: 0;
-            background: #f6f6f6;
-            display: flex;
-        }
-
-        .sidebar {
-            width: 260px;
-            background: #f7dce3;
-            padding: 20px;
-            height: 100vh;
-        }
-
-        .profile {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .avatar {
-            width: 120px;
-            height: 120px;
-            background: #8e6bbd;
-            border-radius: 50%;
-            margin: 0 auto 10px;
-            color: white;
-            font-size: 22px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .profile p {
-            margin: 4px 0;
-        }
-
-        .menu {
-            margin-top: 40px;
-        }
-
-        .menu a {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 0;
-            text-decoration: none;
-            color: black;
-            font-weight: 500;
-        }
-
-        .main {
-            flex: 1;
-            padding: 40px;
-        }
-
-        h1 {
-            margin-bottom: 20px;
-        }
-
-        .table-wrapper {
-            background: white;
-            border-radius: 20px;
-            border: 2px solid #4a90e2;
-            overflow: hidden;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        thead {
-            background: #e0e0e0;
-        }
-
-        th, td {
-            padding: 14px;
-            border-bottom: 1px solid #ccc;
-            text-align: left;
-        }
-
-        th {
-            font-weight: bold;
-        }
-
-        .status-active {
-            color: green;
-            font-weight: bold;
-        }
-
-        .status-pending {
-            color: goldenrod;
-            font-weight: bold;
-        }
-    </style>
+    <title>DevPlatform</title>
+    <link rel="icon" type="image/png" href="{% static 'Picture/icon.png' %}">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
 
-    <div class="sidebar">
-        <div class="profile">
-            <div class="avatar">Profile</div>
-            <p><strong>IDEKHERE</strong></p>
-            <p style="font-size: 14px;">ILOVE.ROBLOX@gmail.com</p>
+<body class="bg-[#FFF5F9] font-sans">
+
+<nav class="bg-white shadow-sm">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center">
+
+        <!-- Logo -->
+        <div class="flex items-center space-x-3">
+            <img src="{% static 'Picture/icon.png' %}" class="w-10 h-10">
+            <span class="text-2xl font-bold text-[#EEB1C6]">
+                DevPlatform
+            </span>
         </div>
 
-        <div class="menu">
-            <a href="#">📊 Dashboard</a>
-            <a href="#">💬 Chat</a>
-            <a href="#">💳 Finance</a>
-            <a href="#">👥 Hire / Create Project</a>
+        <!-- Menu -->
+        <div class="ml-10 space-x-6 hidden md:flex">
+            <a href="#" class="text-gray-600 hover:text-[#EEB1C6]">
+                Dashboard
+            </a>
+            <a href="{% url 'create_project' %}" class="text-gray-600 hover:text-[#EEB1C6]">
+                Hire / Create Project
+            </a>
         </div>
+
+        <!-- Right Side (สำคัญ) -->
+        <div class="ml-auto flex space-x-4">
+            <a href="#" class="bg-[#EEB1C6] text-white px-4 py-2 rounded-lg hover:opacity-90">
+                Sign Up
+            </a>
+
+            <a href="#" 
+               class="bg-[#EEB1C6] text-white px-4 py-2 rounded-lg hover:opacity-90">
+                Login
+            </a>
+        </div>
+
     </div>
+</nav>
 
-    <div class="main">
-        <h1>My Projects</h1>
 
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Project</th>
-                        <th>Status</th>
-                        <th>Samples</th>
-                        <th>Last Update</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            ความพึงพอใจในมหา<br>
-                            วิทยาลัยของนิสิต
-                        </td>
-                        <td class="status-active">Active</td>
-                        <td>150 คน</td>
-                        <td>01 ม.ค. 2569</td>
-                    </tr>
+<!-- Hero Section -->
+<section class="bg-[#EEB1C6] text-white py-28 text-center">
+    <h1 class="text-5xl font-bold mb-6">
+        Login / Sign-up first.
+    </h1>
+    <p class="text-lg mb-8 opacity-90">
+        For a more efficient user experience.
+    </p>
 
-                    <tr>
-                        <td>
-                            จำนวนชั่วโมงที่ชอบ<br>
-                            เล่นเกมตอนพัก
-                        </td>
-                        <td class="status-pending">รอชำระเงิน</td>
-                        <td>250 คน</td>
-                        <td>01 ม.ค. 2569</td>
-                    </tr>
+</section>
 
-                
-                    <tr><td colspan="4">&nbsp;</td></tr>
-                    <tr><td colspan="4">&nbsp;</td></tr>
-                    <tr><td colspan="4">&nbsp;</td></tr>
-                </tbody>
-            </table>
+<!-- Feature Cards -->
+<section class="py-20">
+    <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-8 px-6">
+
+        <div class="bg-white p-8 rounded-2xl shadow-md">
+            <h3 class="text-xl font-bold text-[#EEB1C6] mb-4">
+                Dashboard
+            </h3>
+            <p class="text-gray-600 mb-4">
+                Track your projects, analytics and performance.
+            </p>
         </div>
+
+        <div class="bg-white p-8 rounded-2xl shadow-md">
+            <h3 class="text-xl font-bold text-[#EEB1C6] mb-4">
+                Hire
+            </h3>
+            <p class="text-gray-600 mb-4">
+                Find skilled developers for your next big idea.
+            </p>
+        </div>
+
+        <div class="bg-white p-8 rounded-2xl shadow-md">
+            <h3 class="text-xl font-bold text-[#EEB1C6] mb-4">
+                Create Project
+            </h3>
+            <p class="text-gray-600 mb-4">
+                Start building your own project and manage tasks.
+            </p>
+        </div>
+
     </div>
+</section>
 
 </body>
 </html>
