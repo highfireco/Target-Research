@@ -1,4 +1,5 @@
 from django.shortcuts import render
+<<<<<<< HEAD
 from core.firebase_config import db
 from datetime import datetime, timedelta, timezone
 
@@ -42,12 +43,25 @@ def survey_notification(request):
     return render(request, "notifications/survey_notification.html", {
         "surveys": project_list
     })
+=======
+>>>>>>> 12bdc58dca73a90cc65b09fab8d55c25632dd2bc
 
 def notification_home(request):
     return render(request, "notifications/notification_home.html")
 
+<<<<<<< HEAD
+=======
+
+def survey_notification(request):
+    return render(request, "notifications/survey_notification.html")
+
+>>>>>>> 12bdc58dca73a90cc65b09fab8d55c25632dd2bc
 def project_progress_notification(request):
     return render(request, "notifications/project_progress_notification.html")
 
 def payment_notification(request):
     return render(request, "notifications/payment_notification.html")
+<<<<<<< HEAD
+=======
+
+>>>>>>> 12bdc58dca73a90cc65b09fab8d55c25632dd2bc

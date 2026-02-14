@@ -24,7 +24,11 @@ urlpatterns = [
     path('dashboard/', include('dashboard_page.urls')),
     path('survey/', include('survey_builder.urls')),
     path('home/', include('Home_Layout.urls')),
+<<<<<<< HEAD
     path('notifications/', include('notifications.urls')),
     path('account/', include('account.urls')),
 ]
 
+=======
+]
+>>>>>>> 12bdc58dca73a90cc65b09fab8d55c25632dd2bc

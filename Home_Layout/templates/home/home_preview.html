@@ -1,169 +1,174 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <title>Home</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        body {
-            margin: 0;
-            background: #f6f6f6;
-            display: flex;
-        }
-
-        .sidebar {
-            width: 260px;
-            background: #f7dce3;
-            padding: 20px;
-            height: 100vh;
-        }
-
-        .profile {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .avatar {
-            width: 120px;
-            height: 120px;
-            background: #8e6bbd;
-            border-radius: 50%;
-            margin: 0 auto 10px;
-            color: white;
-            font-size: 22px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .profile p {
-            margin: 4px 0;
-        }
-
-        .menu {
-            margin-top: 40px;
-        }
-
-        .menu a {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 0;
-            text-decoration: none;
-            color: black;
-            font-weight: 500;
-        }
-
-        .main {
-            flex: 1;
-            padding: 40px;
-        }
-
-        h1 {
-            margin-bottom: 20px;
-        }
-
-        .table-wrapper {
-            background: white;
-            border-radius: 20px;
-            border: 2px solid #4a90e2;
-            overflow: hidden;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        thead {
-            background: #e0e0e0;
-        }
-
-        th, td {
-            padding: 14px;
-            border-bottom: 1px solid #ccc;
-            text-align: left;
-        }
-
-        th {
-            font-weight: bold;
-        }
-
-        .status-active {
-            color: green;
-            font-weight: bold;
-        }
-
-        .status-pending {
-            color: goldenrod;
-            font-weight: bold;
-        }
-    </style>
+    <title>Target Research</title>
+    <link rel="icon" type="image/png" href="{% static 'Picture/icon.png' %}">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
 
-    <div class="sidebar">
-        <div class="profile">
-            <div class="avatar">Profile</div>
-            <p><strong>IDEKHERE</strong></p>
-            <p style="font-size: 14px;">ILOVE.ROBLOX@gmail.com</p>
+<body class="bg-[#FFF5F9] font-sans">
+
+<nav class="bg-white shadow-sm">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center">
+
+        <!-- Logo -->
+        <div class="flex items-center space-x-3">
+            <img src="{% static 'Picture/icon.png' %}" class="w-10 h-10">
+            <span class="text-2xl font-bold text-[#EEB1C6]">
+                Target Research
+            </span>
         </div>
 
-        <div class="menu">
-            <a href="#">📊 Dashboard</a>
-            <a href="#">💬 Chat</a>
-            <a href="#">💳 Finance</a>
-            <a href="#">👥 Hire / Create Project</a>
+        <!-- Menu -->
+        <div class="ml-10 space-x-6 hidden md:flex">
+            <a href="#" 
+               class="text-gray-600 hover:text-[#EEB1C6]">
+                Dashboard
+            </a>
+            <a href="{% url 'create_project' %}" 
+               class="text-gray-600 hover:text-[#EEB1C6]">
+                Hire / Create Project
+            </a>
+            <a href="#tasks" 
+               class="text-gray-600 hover:text-[#EEB1C6]">
+                Tasks
+            </a>
         </div>
+
+        <!-- Right Side -->
+        <div class="ml-auto flex items-center space-x-6">
+
+            <!-- Notification Bell -->
+            <div class="relative cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" 
+                     class="h-9 w-9 text-gray-600 hover:text-[#EEB1C6]" 
+                     fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" 
+                          stroke-linejoin="round" 
+                          stroke-width="2" 
+                          d="M15 17h5l-1.405-1.405A2.032 
+                             2.032 0 0118 14.158V11a6 
+                             6 0 10-12 0v3.159c0 
+                             .538-.214 1.055-.595 
+                             1.436L4 17h5m6 0a3 
+                             3 0 11-6 0m6 0H9" />
+                </svg>
+            </div>
+
+            <!-- Profile Dropdown -->
+            <div class="relative">
+                <button id="profileBtn">
+                    <img src="https://i.pravatar.cc/40"
+                         class="w-13 h-13 rounded-full object-cover cursor-pointer 
+                                border-2 border-gray-300 hover:border-[white]">
+                </button>
+
+                <div id="profileMenu"
+                     class="hidden absolute right-0 mt-3 w-44 bg-white 
+                            rounded-xl shadow-lg border py-2 z-50">
+
+                    <a href="#"
+                       class="block px-4 py-2 text-sm text-gray-700 
+                              hover:bg-gray-100">
+                        Edit Profile
+                    </a>
+
+                    <a href="#"
+                       class="block px-4 py-2 text-sm text-gray-700 
+                              hover:bg-gray-100">
+                        Settings
+                    </a>
+
+                    <hr class="my-2">
+
+                    <a href="#"
+                       class="block px-4 py-2 text-sm text-red-500 
+                              hover:bg-red-50">
+                        Logout
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</nav>
+
+
+<!-- Hero Section -->
+<section class="bg-[#EEB1C6] text-white py-28 text-center">
+    <h1 class="text-5xl font-bold mb-6">
+        Start Your Research with Target Research
+    </h1>
+    <p class="text-lg mb-9 opacity-90">
+        Connect with top developers, manage projects and 
+        drive your research forward.
+    </p>
+</section>
+
+<!-- Tasks Section -->
+<section id="tasks" class="py-20">
+    <div class="text-center mb-14">
+        <h2 class="text-4xl font-bold text-[#EEB1C6]">
+            Tasks
+        </h2>
     </div>
 
-    <div class="main">
-        <h1>My Projects</h1>
+    <!-- Feature Cards -->
+    <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-8 px-6">
 
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Project</th>
-                        <th>Status</th>
-                        <th>Samples</th>
-                        <th>Last Update</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            ความพึงพอใจในมหา<br>
-                            วิทยาลัยของนิสิต
-                        </td>
-                        <td class="status-active">Active</td>
-                        <td>150 คน</td>
-                        <td>01 ม.ค. 2569</td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            จำนวนชั่วโมงที่ชอบ<br>
-                            เล่นเกมตอนพัก
-                        </td>
-                        <td class="status-pending">รอชำระเงิน</td>
-                        <td>250 คน</td>
-                        <td>01 ม.ค. 2569</td>
-                    </tr>
-
-                
-                    <tr><td colspan="4">&nbsp;</td></tr>
-                    <tr><td colspan="4">&nbsp;</td></tr>
-                    <tr><td colspan="4">&nbsp;</td></tr>
-                </tbody>
-            </table>
+        <div class="bg-white p-8 rounded-2xl shadow-md hover:shadow-lg transition">
+            <h3 class="text-xl font-bold text-[#EEB1C6] mb-4">
+                Dashboard
+            </h3>
+            <p class="text-gray-600">
+                Track your projects, analytics and performance.
+            </p>
         </div>
+
+        <div class="bg-white p-8 rounded-2xl shadow-md hover:shadow-lg transition">
+            <h3 class="text-xl font-bold text-[#EEB1C6] mb-4">
+                Hire / Create Project
+            </h3>
+            <p class="text-gray-600">
+                Find top talent or start your own project today.
+            </p>
+        </div>
+
+        <div class="bg-white p-8 rounded-2xl shadow-md hover:shadow-lg transition">
+            <h3 class="text-xl font-bold text-[#EEB1C6] mb-4">
+                Research Management
+            </h3>
+            <p class="text-gray-600">
+                Organize and manage your research projects efficiently.
+            </p>
+        </div>
+
     </div>
+
+</section>
+
+
+
+<!-- Dropdown Script -->
+<script>
+    const profileBtn = document.getElementById('profileBtn');
+    const profileMenu = document.getElementById('profileMenu');
+
+    profileBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        profileMenu.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', function (e) {
+        if (!profileMenu.contains(e.target)) {
+            profileMenu.classList.add('hidden');
+        }
+    });
+</script>
 
 </body>
 </html>

@@ -43,12 +43,17 @@ INSTALLED_APPS = [
     'dashboard_page',
 <<<<<<< HEAD
     'Home_Layout',
+<<<<<<< HEAD
     'notifications',
 =======
 >>>>>>> origin/project-refactor
 =======
     "account",
 >>>>>>> origin/account
+=======
+    'dashboard_page',
+
+>>>>>>> 12bdc58dca73a90cc65b09fab8d55c25632dd2bc
 ]
 
 MIDDLEWARE = [

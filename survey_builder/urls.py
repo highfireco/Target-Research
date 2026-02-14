@@ -1,6 +1,5 @@
 from django.urls import path
 from . import views
-
 urlpatterns = [
     # หน้าสร้างแบบสอบถาม
     path('create-survey/', views.create_survey_page, name='create_survey'),
