@@ -39,9 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'hire_project',
     'survey_builder',
+<<<<<<< HEAD
     'dashboard_page',
     'Home_Layout',
     'notifications',
+=======
+>>>>>>> origin/project-refactor
 ]
 
 MIDDLEWARE = [
@@ -59,10 +62,18 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+<<<<<<< HEAD
         'DIRS': [BASE_DIR / 'html'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+=======
+        'DIRS': [BASE_DIR / 'templates'],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+>>>>>>> origin/project-refactor
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -119,4 +130,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
+<<<<<<< HEAD
 STATIC_URL = '/static/'
+=======
+STATIC_URL = 'static/'
+>>>>>>> origin/project-refactor
