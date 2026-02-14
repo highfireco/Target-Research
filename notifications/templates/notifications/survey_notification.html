@@ -1,0 +1,148 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แบบสำรวจ</title>
+
+<link rel="stylesheet" href="{% static 'notifications/css/survey.css' %}">
+<script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-section">
+        <button class="back-button" onclick="goBack()">
+            <i data-lucide="arrow-left"></i> กลับ
+        </button>
+        <div class="icon-wrapper">
+            <i data-lucide="clipboard-list"></i>
+        </div>
+        <h1>แบบสำรวจ</h1>
+        <div class="subtitle">แบบสำรวจที่รอการตอบกลับจากคุณ</div>
+    </div>
+
+    <!-- Filter -->
+    <div class="categories">
+        <button class="category-btn active" data-filter="all">ทั้งหมด ({{ surveys|length }})</button>
+        <button class="category-btn" data-filter="new">ใหม่</button>
+        <button class="category-btn" data-filter="ending">ใกล้ปิด</button>
+    </div>
+
+    <!-- Survey Cards -->
+    {% for survey in surveys %}
+    <div class="card" data-category="{% if survey.is_new %}new{% elif survey.is_ending %}ending{% else %}all{% endif %}">
+        <div class="card-header">
+            <div class="badge-row">
+                {% if survey.is_new %}
+                <span class="badge badge-new">ใหม่</span>
+                {% elif survey.is_ending %}
+                <span class="badge badge-ending">เหลือ {{ survey.days_left }} วัน</span>
+                {% endif %}
+                <span class="survey-category">{{ survey.title }}</span>
+            </div>
+            <button class="arrow-toggle">
+                <i data-lucide="chevron-right"></i>
+            </button>
+        </div>
+
+        <h2>{{ survey.title }}</h2>
+        <p>{{ survey.description }}</p>
+
+        <div class="info">
+            <div class="info-left">
+                <i data-lucide="clock"></i>
+                <span>ประมาณ เวลาประมาณต้องตรงไหนวะ นาที</span>
+            </div>
+            <div class="info-right">
+                <i data-lucide="gift"></i>
+                <span>Point ไม่รู้กี่คะเเนนต้องคิดตรงไหนวะ points</span>
+            </div>
+        </div>
+
+        <div class="extra-info hidden">
+            <div class="detail-badge">{{ survey.objective }}</div>
+        </div>
+
+        <div class="button-group">
+            <button class="btn btn-primary">เริ่มทำแบบสำรวจ</button>
+            <button class="btn btn-secondary">เตือนฉันภายหลัง</button>
+        </div>
+
+        <div class="survey-footer">
+            แบบสำรวจปิดใน {{ survey.days_left }} วัน
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+
+<script>
+lucide.createIcons();
+
+function goBack() {
+    window.location.href = "{% url 'notification_home' %}";
+}
+
+// Arrow toggle
+const arrowButtons = document.querySelectorAll('.arrow-toggle');
+
+arrowButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const currentCard = btn.closest('.card');
+        const currentExtra = currentCard.querySelector('.extra-info');
+
+        arrowButtons.forEach(otherBtn => {
+            const otherCard = otherBtn.closest('.card');
+            const otherExtra = otherCard.querySelector('.extra-info');
+
+            if (otherBtn !== btn) {
+                otherBtn.classList.remove('active');
+                otherExtra.classList.add('hidden');
+            }
+        });
+
+        btn.classList.toggle('active');
+        currentExtra.classList.toggle('hidden');
+    });
+});
+
+// FILTER
+const filterButtons = document.querySelectorAll(".category-btn");
+const cards = document.querySelectorAll(".card");
+
+function showCards(filter) {
+    cards.forEach(card => {
+        const category = card.dataset.category;
+        if (filter === "all") {
+            if (category === "new" || category === "ending" || category === "all") {
+                card.style.display = "block";
+            } else {
+                card.style.display = "none";
+            }
+        } else if (filter === category) {
+            card.style.display = "block";
+        } else {
+            card.style.display = "none";
+        }
+    });
+}
+
+filterButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        filterButtons.forEach(btn => btn.classList.remove("active"));
+        button.classList.add("active");
+
+        const filter = button.dataset.filter;
+        showCards(filter);
+    });
+});
+
+window.addEventListener("DOMContentLoaded", () => {
+    showCards("all");
+});
+</script>
+
+</body>
+</html>
