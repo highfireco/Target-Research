@@ -21,10 +21,9 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('hire/', include('hire_project.urls')),
-    path('dashboard/', include('dashboard.urls')),
+    path('dashboard/', include('dashboard_page.urls')),
     path('survey/', include('survey_builder.urls')),
     path('home/', include('Home_Layout.urls')),
-    path('accounts/', include('accounts.urls')),
-    path('notifications/', include('notifications.urls')),
+
 ]
 
