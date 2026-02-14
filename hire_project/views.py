@@ -123,11 +123,14 @@ def create_project_view(request):
     return render(request, "hire/create_project.html")
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 def survey_page(request):
     return render(request, "hire/create_survey.html")
 
 
+=======
+>>>>>>> origin/survey_builder
 @csrf_exempt
 def create_project_api(request):
     if request.method == "POST":
