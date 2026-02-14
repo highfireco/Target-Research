@@ -9,11 +9,6 @@ from django.http import HttpResponse
 def create_project_view(request):
     return render(request, "hire/create_project.html")
 
-
-def survey_page(request):
-    return render(request, "hire/create_survey.html")
-
-
 @csrf_exempt
 def create_project_api(request):
     if request.method == "POST":

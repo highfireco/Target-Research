@@ -11,6 +11,8 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "firebase": "^12.9.0",
+    "firebase-admin": "^13.6.1",
     "tailwindcss": "^4.1.18"
   }
 }
