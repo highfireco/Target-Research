@@ -1,24 +1,139 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
 <head>
-    <title>Verify Email</title>
+    <meta charset="UTF-8">
+    <title>Email Verification</title>
+
+
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+    body {
+        margin: 0;
+        font-family: "Prompt", sans-serif;
+        background: linear-gradient(135deg, #F8C8DC, #FADADD);
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .card {
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        width: 380px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        text-align: center;
+    }
+
+    h2 {
+        margin-bottom: 10px;
+        font-weight: 600;
+        color: #444;
+    }
+
+    .subtitle {
+        font-size: 13px;
+        color: #777;
+        margin-bottom: 25px;
+    }
+
+    .error {
+        background: #FFE6E6;
+        color: #D32F2F;
+        padding: 10px;
+        border-radius: 10px;
+        font-size: 13px;
+        margin-bottom: 15px;
+    }
+
+    .input-group {
+        text-align: left;
+        margin-bottom: 18px;
+    }
+
+    label {
+        font-size: 14px;
+        color: #666;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px;
+        border-radius: 12px;
+        border: none;
+        background: #FDF1F5;
+        margin-top: 6px;
+        font-size: 16px;
+        letter-spacing: 4px;
+        text-align: center;
+    }
+
+    input:focus {
+        outline: none;
+        background: #FCE4EC;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #F48FB1, #EC407A);
+        color: white;
+        font-weight: 500;
+        cursor: pointer;
+        transition: 0.25s;
+    }
+
+    .btn:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+    }
+
+    .info {
+        margin-top: 18px;
+        font-size: 12px;
+        color: #888;
+    }
+</style>
+
+
 </head>
 <body>
 
-<h2>Email Verification</h2>
+<div class="card">
+    <h2>Verify Your Email</h2>
+    <div class="subtitle">
+        Enter the 6-digit code sent to your email
+    </div>
+
 
 {% if error %}
-
-<p style="color:red">{{ error }}</p>
+    <div class="error">{{ error }}</div>
 {% endif %}
 
 <form method="POST">
     {% csrf_token %}
-    <label>Enter 6-digit PIN</label><br>
-    <input type="text" name="pin" maxlength="6" required><br><br>
-    <button type="submit">Verify</button>
+
+    <div class="input-group">
+        <label>Verification Code</label>
+        <input type="text" name="pin" maxlength="6" placeholder="••••••" required>
+    </div>
+
+    <button class="btn" type="submit">
+        Verify Code
+    </button>
 </form>
+
+<div class="info">
+    Didn’t receive the code? Try again in a moment.
+</div>
+
+
+</div>
 
 </body>
 </html>

@@ -1,42 +1,139 @@
 <!DOCTYPE html>
-
 <html>
 <head>
     <title>Login</title>
+
+    <style>
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background: #e9b7c1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            background: #ffffff;
+            padding: 40px;
+            width: 380px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        p.subtitle {
+            color: #777;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .input-group {
+            text-align: left;
+            margin-bottom: 18px;
+        }
+
+        label {
+            font-size: 13px;
+            color: #555;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            margin-top: 6px;
+            font-size: 14px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #d48a9a;
+            box-shadow: 0 0 0 2px rgba(212,138,154,0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            background: #d48a9a;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #c57486;
+        }
+
+        .link {
+            margin-top: 18px;
+            font-size: 13px;
+        }
+
+        .link a {
+            color: #d48a9a;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .link a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
+
 <body>
 
-<h2>Login</h2>
+<div class="card">
+    <h2>Welcome Back</h2>
+    <p class="subtitle">Login to your account</p>
 
-<form id="loginForm">
-    {% csrf_token %}
+    <form id="loginForm">
+        {% csrf_token %}
 
-```
-<label>Email</label><br>
-<input type="email" id="email" required><br><br>
+        <div class="input-group">
+            <label>Email</label>
+            <input type="email" id="email" required>
+        </div>
 
-<label>Password</label><br>
-<input type="password" id="password" required><br><br>
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" id="password" required>
+        </div>
 
-<button type="submit">Login</button>
-```
+        <button type="submit">Login</button>
+    </form>
 
-</form>
-
-<p><a href="{% url 'signup' %}">Create new account</a></p>
+    <div class="link">
+        Don’t have an account? <a href="{% url 'signup' %}">Create one</a>
+    </div>
+</div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
 <script>
+/* 🔧 Your Firebase config */
 const firebaseConfig = {
     apiKey: "AIzaSyCg7IuGA_dR-O3lSsbQb4lR4OwpgjkNvTA",
     authDomain: "target-research-6b556.firebaseapp.com",
+    projectId: "target-research-6b556",
 };
 
+/* Initialize Firebase */
 firebase.initializeApp(firebaseConfig);
 
+/* Login flow */
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -44,9 +141,14 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     const password = document.getElementById("password").value;
 
     try {
-        const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+        // Login with Firebase
+        const userCredential = await firebase.auth()
+            .signInWithEmailAndPassword(email, password);
+
+        // Get ID token
         const idToken = await userCredential.user.getIdToken();
 
+        // Send token to Django
         const response = await fetch("{% url 'verify_token' %}", {
             method: "POST",
             headers: {
@@ -58,14 +160,16 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
 
         const data = await response.json();
 
+        // Redirect if success
         if (data.status === "success") {
-            window.location.href = "/account/dashboard_view/";
+            window.location.href = "{% url 'dashboard_view' %}";
         } else {
             alert("Login failed");
         }
 
     } catch (error) {
         alert(error.message);
+        console.error(error);
     }
 });
 </script>

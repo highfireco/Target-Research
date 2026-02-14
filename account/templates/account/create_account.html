@@ -1,24 +1,236 @@
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 <head>
-    <title>Create Account</title>
+    <meta charset="UTF-8">
+    <title>Create Profile</title>
+
+    <!-- Font (same as set_password) -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Tom Select CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: "Prompt", sans-serif;
+            background: linear-gradient(135deg, #F8C8DC, #FADADD);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            width: 380px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            background: #FDF1F5;
+            margin-top: 6px;
+            font-size: 14px;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            background: #FCE4EC;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #EC407A, #F06292);
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+    </style>
 </head>
 <body>
-<h2>Create Account</h2>
 
-<form method="POST">
-    {% csrf_token %}
+<div class="card">
+    <h2>Create Your Profile</h2>
 
-<label>Full Name</label><br>
-<input type="text" name="name" required><br><br>
+    <form method="POST">
+        {% csrf_token %}
 
-<label>Telephone</label><br>
-<input type="text" name="tel" required><br><br>
+        <div class="input-group">
+            <label>Name</label>
+            <input type="text" name="name" required>
+        </div>
 
-<button type="submit">Create Account</button>
-```
+        <div class="input-group">
+            <label>Telephone</label>
+            <input type="text" name="tel" required>
+        </div>
 
-</form>
+        <div class="input-group">
+            <label>Age Range</label>
+            <select name="age_range" required>
+                <option value="">Select age range</option>
+                <option>18-24</option>
+                <option>25-34</option>
+                <option>35-44</option>
+                <option>45-54</option>
+                <option>55+</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Gender</label>
+            <select name="gender" required>
+                <option value="">Select gender</option>
+                <option>Male</option>
+                <option>Female</option>
+            </select>
+        </div>
+
+
+        <div class="input-group">
+            <label>Occupation</label>
+            <select name="occupation" required>
+                <option value="">Select occupation</option>
+                <option value="Government">Government</option>
+                <option value="Private Employee">Private Employee</option>
+                <option value="Business Owner">Business Owner</option>
+                <option value="Freelance">Freelance</option>
+                <option value="Agriculture">Agriculture</option>
+                <option value="Labor">Labor</option>
+                <option value="Professional">Professional</option>
+                <option value="Unemployed">Unemployed</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
+
+        <div class="input-group">
+            <label>Location (Province)</label>
+            <select id="province-select" name="province" required>
+                <option value="">Select province</option>
+                <option>Bangkok</option>
+                <option>Krabi</option>
+                <option>Kanchanaburi</option>
+                <option>Kalasin</option>
+                <option>Kamphaeng Phet</option>
+                <option>Khon Kaen</option>
+                <option>Chanthaburi</option>
+                <option>Chachoengsao</option>
+                <option>Chonburi</option>
+                <option>Chainat</option>
+                <option>Chaiyaphum</option>
+                <option>Chumphon</option>
+                <option>Chiang Rai</option>
+                <option>Chiang Mai</option>
+                <option>Trang</option>
+                <option>Trat</option>
+                <option>Tak</option>
+                <option>Nakhon Nayok</option>
+                <option>Nakhon Pathom</option>
+                <option>Nakhon Phanom</option>
+                <option>Nakhon Ratchasima</option>
+                <option>Nakhon Si Thammarat</option>
+                <option>Nakhon Sawan</option>
+                <option>Nonthaburi</option>
+                <option>Narathiwat</option>
+                <option>Nan</option>
+                <option>Bueng Kan</option>
+                <option>Buriram</option>
+                <option>Pathum Thani</option>
+                <option>Prachuap Khiri Khan</option>
+                <option>Prachinburi</option>
+                <option>Pattani</option>
+                <option>Phra Nakhon Si Ayutthaya</option>
+                <option>Phang Nga</option>
+                <option>Phatthalung</option>
+                <option>Phichit</option>
+                <option>Phitsanulok</option>
+                <option>Phetchaburi</option>
+                <option>Phetchabun</option>
+                <option>Phrae</option>
+                <option>Phayao</option>
+                <option>Phuket</option>
+                <option>Maha Sarakham</option>
+                <option>Mukdahan</option>
+                <option>Mae Hong Son</option>
+                <option>Yasothon</option>
+                <option>Yala</option>
+                <option>Roi Et</option>
+                <option>Ranong</option>
+                <option>Rayong</option>
+                <option>Ratchaburi</option>
+                <option>Lopburi</option>
+                <option>Lampang</option>
+                <option>Lamphun</option>
+                <option>Loei</option>
+                <option>Sisaket</option>
+                <option>Sakon Nakhon</option>
+                <option>Songkhla</option>
+                <option>Satun</option>
+                <option>Samut Prakan</option>
+                <option>Samut Songkhram</option>
+                <option>Samut Sakhon</option>
+                <option>Sa Kaeo</option>
+                <option>Saraburi</option>
+                <option>Sing Buri</option>
+                <option>Sukhothai</option>
+                <option>Suphan Buri</option>
+                <option>Surat Thani</option>
+                <option>Surin</option>
+                <option>Nong Khai</option>
+                <option>Nong Bua Lamphu</option>
+                <option>Ang Thong</option>
+                <option>Udon Thani</option>
+                <option>Uthai Thani</option>
+                <option>Uttaradit</option>
+                <option>Ubon Ratchathani</option>
+                <option>Amnat Charoen</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn">Create Account</button>
+    </form>
+</div>
+
+<!-- Tom Select JS -->
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+
+<script>
+    new TomSelect("#province-select", {
+        create: false,
+        sortField: { field: "text", direction: "asc" }
+    });
+</script>
+
 </body>
 </html>

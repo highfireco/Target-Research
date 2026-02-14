@@ -88,11 +88,18 @@ def create_account(request):
     if request.method == "POST":
         name = request.POST.get("name")
         tel = request.POST.get("tel")
+        age_range = request.POST.get("age_range")
+        gender = request.POST.get("gender")
+        occupation = request.POST.get("occupation")
+        province = request.POST.get("province")
 
         db.collection("users").document(uid).set({
-            "email": email,
             "name": name,
             "tel": tel,
+            "age_range": age_range,
+            "gender": gender,
+            "occupation": occupation,
+            "province": province
         })
 
         return redirect("login")
