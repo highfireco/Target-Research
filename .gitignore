@@ -4,4 +4,4 @@ __pycache__/
 .env
 db.sqlite3
 node_modules/
-*.json
+firebase_key.json

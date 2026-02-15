@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Success!!</title>
+
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: #F7EDED;
+            min-height: 100vh;
+        }
+
+        /* Overlay */
+        .payment-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+
+        /* Popup */
+        .payment-popup {
+            width: 100%;
+            max-width: 440px;
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 24px 48px rgba(0,0,0,0.25);
+            text-align: center;
+        }
+
+        /* Icon */
+        .popup-icon {
+            width: 88px;
+            height: 88px;
+            background-color: #8162A9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 18px;
+        }
+
+        .popup-icon svg {
+            width: 40px;
+            height: 40px;
+            stroke: #ffffff;
+        }
+
+        /* Title */
+        h2 {
+            font-size: 26px;
+            color: #8162A9;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: rgba(0,0,0,0.7);
+            margin-bottom: 24px;
+        }
+
+        /* Detail card */
+        .payment-detail {
+            background: #F7EDED;
+            border-radius: 18px;
+            padding: 18px;
+            border: 1px solid #BAADAE;
+            text-align: left;
+            font-size: 14px;
+            margin-bottom: 26px;
+        }
+
+        .payment-detail .row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .payment-detail .row:last-child {
+            margin-bottom: 0;
+        }
+
+        .payment-detail span {
+            color: rgba(0,0,0,0.6);
+        }
+
+        .status-success {
+            color: #8162A9;
+            font-weight: 600;
+        }
+
+        .tx-id {
+            font-family: monospace;
+            font-size: 13px;
+            color: rgba(0,0,0,0.75);
+        }
+
+        /* Button */
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            border-radius: 14px;
+            border: none;
+            background-color: #8162A9;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="payment-overlay">
+    <div class="payment-popup">
+
+        <!-- Icon -->
+        <div class="popup-icon">
+            <i data-lucide="check-circle"></i>
+        </div>
+
+        <!-- Title -->
+        <h2>ชำระเงินสำเร็จ</h2>
+        <div class="subtitle">ระบบได้รับการชำระเงินเรียบร้อยแล้ว</div>
+
+        <!-- Detail -->
+        <div class="payment-detail">
+            <div class="row">
+                <span>รายการ</span>
+                <strong>แบบสำรวจร้านค้าในมหาวิทยาลัย</strong>
+            </div>
+            <div class="row">
+                <span>จำนวนเงิน</span>
+                <strong>150 บาท</strong>
+            </div>
+            <div class="row">
+                <span>วันที่ / เวลา</span>
+                <strong>10 ก.ย. 2569 · 14:32 น.</strong>
+            </div>
+            <div class="row">
+                <span>เลขอ้างอิง</span>
+                <strong class="tx-id">TXN-9F3A-72C8-1092</strong>
+            </div>
+            <div class="row">
+                <span>สถานะ</span>
+                <strong class="status-success">ชำระเงินแล้ว</strong>
+            </div>
+        </div>
+
+        <!-- Action -->
+        <button class="btn-primary">ปิดหน้าต่าง</button>
+
+    </div>
+</div>
+
+<script>
+    lucide.createIcons();
+</script>
+
+</body>
+</html>
