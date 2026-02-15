@@ -1,8 +1,8 @@
 Django==5.0.2
-firebase-admin==6.5.0
+firebase-admin==6.2.0
 python-dotenv==1.0.1
 whitenoise==6.6.0
 gunicorn==21.2.0
 requests==2.31.0
-cffi==1.16.0
-cryptography==42.0.5
+cffi==1.15.1
+cryptography==41.0.7

@@ -4,51 +4,49 @@ import json
 from firebase_admin import credentials, firestore 
 from dotenv import load_dotenv
 
-# โหลดค่าจากไฟล์ .env (สำหรับรันในเครื่อง)
 load_dotenv()
 
-def initialize_firebase():
+# สร้างตัวแปร Global ไว้เก็บค่า
+_db = None
+
+def get_db():
+    global _db
+    
+    # ถ้าเคยเชื่อมต่อแล้ว ให้ส่งตัวเดิมกลับไปเลย (ไม่ต้องต่อใหม่)
+    if _db is not None:
+        return _db
+
     try:
-        # ---------------------------------------------------------
-        # 1. สำหรับ Vercel (Production): อ่านจากตัวแปร Environment โดยตรง
-        # ---------------------------------------------------------
-        # เราจะตั้งชื่อตัวแปรใหม่ใน Vercel ว่า 'FIREBASE_CREDENTIALS_JSON'
+        # --- (โค้ดเชื่อมต่อเดิมของคุณ) ---
         firebase_json = os.getenv('FIREBASE_CREDENTIALS_JSON')
-        
         cred = None
         
         if firebase_json:
-            print("--- DEBUG: Found FIREBASE_CREDENTIALS_JSON in Env (Vercel Mode) ---")
-            # แปลง String (JSON) ให้เป็น Dictionary เพื่อใช้งานทันที
+            print("--- Vercel Mode: Loading from Env ---")
             cred_dict = json.loads(firebase_json)
             cred = credentials.Certificate(cred_dict)
-            
-        # ---------------------------------------------------------
-        # 2. สำหรับ Local (Development): อ่านจากไฟล์ Path เหมือนเดิม
-        # ---------------------------------------------------------
         else:
             cred_path = os.getenv('FIREBASE_ACCOUNT_KEY_PATH')
-            print(f"--- DEBUG: Current Firebase Path: {cred_path} (Local Mode) ---")
-
             if not cred_path or not os.path.exists(cred_path):
-                # ถ้าหาไม่เจอทั้งคู่ ให้แจ้ง Error
-                raise FileNotFoundError(f"ไม่พบไฟล์ JSON หรือตัวแปร Environment สำหรับ Firebase")
-
+                 # กรณีรัน collectstatic บน Server อาจจะไม่มีไฟล์ ก็ให้ข้ามไปก่อน
+                print("Warning: Firebase config not found.")
+                return None
             cred = credentials.Certificate(cred_path)
 
-        # ---------------------------------------------------------
-        # เริ่มต้น Firebase Admin SDK
-        # ---------------------------------------------------------
         if not firebase_admin._apps:
-            # เริ่มต้น Firebase
-            app = firebase_admin.initialize_app(cred)
-            print(f"--- DEBUG: Connected to Project ID: {app.project_id} ---")
-
-        return firestore.client()
+            firebase_admin.initialize_app(cred)
+            
+        _db = firestore.client()
+        return _db
         
     except Exception as e:
-        print(f"เกิดข้อผิดพลาดในการเชื่อมต่อ Firebase: {e}")
+        print(f"Error connecting to Firebase: {e}")
         return None
 
-# สร้างตัวแปร db ไว้ใช้งาน
-db = initialize_firebase()
+# 🌟 เปลี่ยนจาก db = initialize_firebase() เป็นตัวนี้แทน:
+# ใช้ Lazy Object เพื่อให้ Django ไม่พังตอน Load settings
+class LazyDB:
+    def __getattr__(self, name):
+        return getattr(get_db(), name)
+
+db = LazyDB()
