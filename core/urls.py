@@ -23,6 +23,6 @@ urlpatterns = [
     path('hire/', include('hire_project.urls')),
     path('dashboard/', include('dashboard_page.urls')),
     path('survey/', include('survey_builder.urls')),
-    path('', include('payment.urls')),
+    path('payment/', include('payment.urls')),
 ]
 
