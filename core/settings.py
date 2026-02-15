@@ -132,17 +132,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-<<<<<<< HEAD
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
-
-# ส่วนนี้สำหรับให้ WhiteNoise บีบอัดไฟล์ให้เว็บโหลดเร็วขึ้น
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-=======
-import os # อย่าลืม import os ไว้ด้านบนสุดของไฟล์ด้วยนะครับ
+# อย่าลืม import os ไว้ด้านบนสุดของไฟล์ด้วยนะครับ
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static', # โฟลเดอร์ที่เก็บไฟล์ Picture, CSS, JS
 ]
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
->>>>>>> 416e3c37a52b50cd36b21f3c93479de520980dee
+
+import os # ถ้าด้านบนยังไม่ได้ import os ให้ใส่ด้วย
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
+
+# ส่วนนี้สำหรับให้ WhiteNoise บีบอัดไฟล์ให้เว็บโหลดเร็วขึ้น
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
