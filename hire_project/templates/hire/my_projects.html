@@ -240,6 +240,24 @@ body { font-family: 'Prompt', sans-serif; margin: 0; }
 }
 .btn-secondary:hover { background: #F8F8F8; border-color: #CCC; color: #555; transform: translateY(-2px); }
 
+.btn-delete {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 18px;
+  border-radius: 12px;
+  background: #fff;
+  color: #E07070;
+  font-family: 'Prompt', sans-serif;
+  font-size: 0.83rem;
+  font-weight: 500;
+  text-decoration: none;
+  border: 1.5px solid #F5CECE;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.btn-delete:hover { background: #FFF0F0; border-color: #E07070; transform: translateY(-2px); }
+
 /* empty state */
 .empty-state {
   text-align: center;
@@ -470,6 +488,19 @@ body { font-family: 'Prompt', sans-serif; margin: 0; }
           <polyline points="14 2 14 8 20 8"/>
         </svg>
         ดูแบบร่าง
+      </a>
+
+      <a href="{% url 'delete_project' project.id %}"
+         class="btn-delete"
+         onclick="return confirm('ลบโครงการนี้? ข้อมูลจะถูกลบออกจากระบบทั้งหมด')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="3 6 5 6 21 6"/>
+          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+          <path d="M10 11v6"/><path d="M14 11v6"/>
+          <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+        </svg>
+        ลบ
       </a>
     </div>
   </div>

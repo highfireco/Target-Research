@@ -275,13 +275,10 @@ def create_project_api(request):
 # ═══════════════════════════════════════════════
 
 def convert_to_project(request, draft_id):
-    owner_id = _get_owner_id(request)
-    if not owner_id:
-        return redirect("login")
     try:
-        draft = ResearchDraft.objects.get(id=draft_id, owner_id=owner_id)
+        draft = ResearchDraft.objects.get(id=draft_id)
     except ResearchDraft.DoesNotExist:
-        return redirect("draft_history")
+        return JsonResponse({"status": "error", "message": "ไม่พบ draft"}, status=404)
 
     project = ResearchProject.objects.create(
         title=draft.title, objective=draft.objective,
@@ -316,6 +313,23 @@ def convert_to_project(request, draft_id):
 
 
 # ═══════════════════════════════════════════════
+#  Helper: ลบ Firestore doc ด้วย django_id
+# ═══════════════════════════════════════════════
+
+def _delete_firestore_doc(collection: str, django_id: int):
+    """ค้นหา doc ที่มี django_id ตรงกัน แล้วลบออกจาก Firestore"""
+    try:
+        db = get_firebase_db()
+        docs = db.collection(collection)\
+                 .where("django_id", "==", str(django_id))\
+                 .stream()
+        for doc in docs:
+            doc.reference.delete()
+    except Exception as e:
+        print(f"[Firestore delete ERROR] {collection}/{django_id}: {e}")
+
+
+# ═══════════════════════════════════════════════
 #  ลบ Draft
 # ═══════════════════════════════════════════════
 
@@ -324,7 +338,26 @@ def delete_draft(request, draft_id):
     if not owner_id:
         return redirect("login")
     try:
-        ResearchDraft.objects.get(id=draft_id, owner_id=owner_id).delete()
+        draft = ResearchDraft.objects.get(id=draft_id, owner_id=owner_id)
+        _delete_firestore_doc("drafts", draft.id)   # ลบ Firestore ก่อน
+        draft.delete()                               # แล้วค่อยลบ Django DB
     except ResearchDraft.DoesNotExist:
         pass
     return redirect("draft_history")
+
+
+# ═══════════════════════════════════════════════
+#  ลบ Project
+# ═══════════════════════════════════════════════
+
+def delete_project(request, project_id):
+    owner_id = _get_owner_id(request)
+    if not owner_id:
+        return redirect("login")
+    try:
+        project = ResearchProject.objects.get(id=project_id, owner_id=owner_id)
+        _delete_firestore_doc("projects", project.id)  # ลบ Firestore ก่อน
+        project.delete()                               # แล้วค่อยลบ Django DB
+    except ResearchProject.DoesNotExist:
+        pass
+    return redirect("my_projects")
