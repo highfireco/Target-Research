@@ -127,7 +127,7 @@ def verify_token(request):
 def dashboard_view(request):
     if not request.session.get("uid"):
         return redirect("login")
-    return render(request, "account/dashboard_view.html")
+    return render(request, "home/home_preview.html")
 
 
 def logout_view(request):
