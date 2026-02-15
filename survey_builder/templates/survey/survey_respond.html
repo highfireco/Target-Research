@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ survey.title|default:"แบบสอบถาม" }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Kanit', sans-serif; background-color: #EEB1C6; }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6">
+    <div class="w-full max-w-[800px] bg-white rounded-3xl p-8 shadow-xl">
+        <div class="mb-8 border-b pb-4">
+            <h1 class="text-2xl font-semibold text-gray-800">{{ survey.title }}</h1>
+            <p class="text-gray-500 mt-2">{{ survey.description }}</p>
+        </div>
+
+        <form id="responseForm" class="space-y-6">
+            {% for question in questions %}
+            <div class="p-6 rounded-2xl bg-[#F8EDEC] question-item" data-id="{{ question.id }}">
+                <h3 class="font-medium text-gray-800 mb-4">{{ forloop.counter }}. {{ question.question_text }}</h3>
+                
+                <div class="space-y-2">
+                {% if question.question_type == "choice" %}
+                    {% for option in question.options %}
+                    <label class="flex items-center p-3 bg-white rounded-xl cursor-pointer hover:bg-gray-50 transition-all border border-transparent hover:border-[#EEB1C6]">
+                        <input type="radio" name="ans_{{ question.id }}" value="{{ option }}" class="w-4 h-4 accent-[#EEB1C6] mr-3" required>
+                        <span class="text-gray-700">{{ option }}</span>
+                    </label>
+                    {% endfor %}
+                {% else %}
+                    <textarea name="ans_{{ question.id }}" class="w-full p-4 rounded-xl border-none ring-1 ring-gray-200 focus:ring-2 focus:ring-[#EEB1C6] outline-none" rows="3" placeholder="พิมพ์คำตอบของคุณ..." required></textarea>
+                {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+
+            <div class="flex justify-center pt-4">
+                <button type="submit" class="px-12 py-3 rounded-2xl bg-[#EEB1C6] text-white font-bold text-lg shadow-lg hover:brightness-95 transition-all">
+                    ส่งคำตอบ
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('responseForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const answers = [];
+            const questions = document.querySelectorAll('.question-item');
+            
+            questions.forEach(q => {
+                const qId = q.getAttribute('data-id');
+                let answerValue = "";
+                
+                const radio = q.querySelector('input[type="radio"]:checked');
+                const textarea = q.querySelector('textarea');
+                
+                if (radio) answerValue = radio.value;
+                else if (textarea) answerValue = textarea.value;
+
+                answers.push({
+                    question_id: qId,
+                    answer: answerValue
+                });
+            });
+
+            try {
+                const response = await fetch('/survey/submit-response-api/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        survey_id: "{{ survey_id }}",
+                        answers: answers
+                    })
+                });
+
+                const result = await response.json();
+                if (result.status === "success") {
+                    alert("ขอบคุณที่ตอบแบบสอบถาม!");
+                    window.location.reload(); // หรือไปหน้า Thank you
+                }
+            } catch (err) {
+                alert("เกิดข้อผิดพลาดในการส่งข้อมูล");
+            }
+        });
+    </script>
+</body>
+</html>
