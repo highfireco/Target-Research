@@ -119,8 +119,10 @@ def verify_token(request):
     try:
         decoded = auth.verify_id_token(id_token)
         request.session["uid"] = decoded["uid"]
+        print(id_token)
         return JsonResponse({"status": "success"})
     except Exception:
+        print(Exception)
         return JsonResponse({"status": "error"})
     
 

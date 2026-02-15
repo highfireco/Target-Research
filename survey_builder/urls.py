@@ -7,4 +7,7 @@ urlpatterns = [
     path('save-survey-api/', views.save_survey_api, name='save_survey_api'),
     # หน้าพรีวิวที่เราทำไว้ก่อนหน้านี้
     path('survey-preview/<str:survey_id>/', views.survey_page, name='survey_preview'),
+    path('respond/<str:survey_id>/', views.survey_respond_page, name='survey_respond'),
+    path('submit-response-api/', views.submit_response_api, name='submit_response_api'),
+
 ]
