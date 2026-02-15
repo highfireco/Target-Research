@@ -36,7 +36,12 @@
             </div>
             {% endfor %}
 
-            <div class="flex justify-center pt-4">
+            <div class="flex justify-center gap-4 pt-4">
+                <a href="{% url 'home_page' %}" 
+                   class="px-8 py-3 rounded-2xl border-2 border-[#EEB1C6] text-[#EEB1C6] font-bold text-lg hover:bg-[#FDF5F7] transition-all flex items-center">
+                    กลับหน้าหลัก
+                </a>
+
                 <button type="submit" class="px-12 py-3 rounded-2xl bg-[#EEB1C6] text-white font-bold text-lg shadow-lg hover:brightness-95 transition-all">
                     ส่งคำตอบ
                 </button>
@@ -80,7 +85,8 @@
                 const result = await response.json();
                 if (result.status === "success") {
                     alert("ขอบคุณที่ตอบแบบสอบถาม!");
-                    window.location.reload(); // หรือไปหน้า Thank you
+                    // 🌟 จุดที่แก้ที่ 2: เปลี่ยนจากการ Refresh หน้า เป็นการเด้งกลับไปที่ Home
+                    window.location.href = "{% url 'home_page' %}"; 
                 }
             } catch (err) {
                 alert("เกิดข้อผิดพลาดในการส่งข้อมูล");

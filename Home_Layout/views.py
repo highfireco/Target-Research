@@ -2,24 +2,32 @@ from django.shortcuts import render, redirect
 from core.firebase_config import db # อย่าลืม import db
 
 def home_page(request):
-    # 1. เช็คว่ามีคน Login หรือยัง (ดึง uid จาก Session)
     uid = request.session.get("uid")
     if not uid:
-        return redirect("login") # ถ้ายังไม่ Login ให้เด้งไปหน้า login
+        return redirect("login")
 
-    # 2. ดึงข้อมูล "งานวิจัยของฉัน" จาก Firestore 
-    # (ใช้ .where เพื่อกรองเอาเฉพาะงานที่ owner_id ตรงกับคนที่ Login)
-    surveys_ref = db.collection('surveys').where('owner_id', '==', uid).stream()
-    
-    researches = []
-    for doc in surveys_ref:
+    # 1. หมวด "งานวิจัยของฉัน" (My Research)
+    my_surveys_ref = db.collection('surveys').where('owner_id', '==', uid).stream()
+    my_researches = []
+    for doc in my_surveys_ref:
         data = doc.to_dict()
-        data['id'] = doc.id # นี่คือ project_id (Document ID ที่ Firebase สร้างให้)
-        researches.append(data)
+        data['id'] = doc.id
+        my_researches.append(data)
 
+    # 2. หมวด "แบบสอบถามที่เปิดรับคำตอบ" (Available Surveys)
+    all_surveys_ref = db.collection('surveys').stream()
+    available_surveys = []
+    for doc in all_surveys_ref:
+        data = doc.to_dict()
+        data['id'] = doc.id
+        if data.get('owner_id') != uid and data.get('status') == 'active':
+            available_surveys.append(data)
+
+    # 3. ส่งตัวแปรไปให้หน้า HTML
     context = {
-        'researches': researches,
-        'first_survey': researches[0] if researches else None
+        'researches': my_researches, 
+        'first_survey': my_researches[0] if my_researches else None,
+        'available_surveys': available_surveys  # 👈 เช็คให้ชัวร์ว่ามีบรรทัดนี้ ไม่งั้น HTML จะไม่มีข้อมูล
     }
     return render(request, 'home/home_preview.html', context)
 

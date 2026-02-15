@@ -92,6 +92,11 @@ def create_survey_page(request):
 def save_survey_api(request):
     if request.method == "POST":
         try:
+            # 1. 🚨 ดึง UID ของคนที่กำลัง Login จาก Session
+            uid = request.session.get("uid")
+            if not uid:
+                return JsonResponse({"status": "error", "message": "กรุณาเข้าสู่ระบบก่อนสร้างแบบสอบถาม"}, status=401)
+
             data = json.loads(request.body)
             project_id = data.get("project_id")
             survey_title = data.get("survey_title")
@@ -110,12 +115,15 @@ def save_survey_api(request):
             else:
                 survey_ref = db.collection('surveys').document()
 
+            # 2. 🚨 แก้ไขก้อนข้อมูล survey_data ให้เพิ่ม owner_id เข้าไป
             survey_data = {
                 'project_id': project_path,
                 'title': survey_title,
                 'status': "active",
+                'owner_id': uid,  # <--- ✨ เพิ่มบรรทัดนี้ลงไป เพื่อระบุตัวตนคนสร้าง!
                 'updated_at': firestore.SERVER_TIMESTAMP
             }
+            
             # เพิ่ม created_at เฉพาะตอนสร้างใหม่
             if len(existing_surveys) == 0:
                 survey_data['created_at'] = firestore.SERVER_TIMESTAMP
