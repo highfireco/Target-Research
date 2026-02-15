@@ -5,43 +5,67 @@
     <title>Settings</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-[#FFF5F9]">
+<body id="mainBody" class="bg-[#FFF5F9] transition-colors duration-300">
 
-<div class="max-w-3xl mx-auto mt-20 bg-white p-10 rounded-2xl shadow-lg">
-    <h1 class="text-3xl font-bold text-[#EEB1C6] mb-6">
-        Account Settings
-    </h1>
+<div class="max-w-3xl mx-auto mt-20 bg-white p-10 rounded-2xl shadow-lg dark:bg-white-800 transition-colors">
+    <h1 class="text-3xl font-bold text-[#EEB1C6] mb-6">Account Settings</h1>
 
     <div class="space-y-6">
-
         <div>
-            <label class="block text-gray-600 mb-2">
-                Email Notifications
-            </label>
+            <label class="block text-gray-600 dark:text-gray-300 mb-2">Email Notifications</label>
             <input type="checkbox" class="w-5 h-5">
         </div>
 
         <div>
-            <label class="block text-gray-600 mb-2">
-                Dark Mode
-            </label>
-            <input type="checkbox" class="w-5 h-5">
+            <label class="block text-gray-600 dark:text-gray-300 mb-2">Dark Mode</label>
+            <input type="checkbox" id="darkModeToggle" class="w-5 h-5 cursor-pointer">
         </div>
 
-        <button class="bg-[#EEB1C6] text-white px-6 py-2 rounded-lg 
-                       hover:opacity-90 transition">
+        <button id="saveBtn" class="bg-[#EEB1C6] text-white px-6 py-2 rounded-lg hover:opacity-90 transition">
             Save Changes
         </button>
-
     </div>
 
     <div class="mt-6">
-        <a href="{% url 'home_page' %}" 
-           class="text-gray-500 hover:text-[#EEB1C6]">
-            ← Back to Main Page
+        <a href="{% url 'home_page' %}" class="text-gray-500 hover:text-[#EEB1C6] dark:text-gray-400">
+            ← Back to Dashboard
         </a>
     </div>
 </div>
+
+<script>
+    const body = document.getElementById('mainBody');
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const saveBtn = document.getElementById('saveBtn');
+
+    // ฟังก์ชันสำหรับเปลี่ยนสี
+    function applyDarkMode(isDark) {
+        if (isDark) {
+            body.classList.remove('bg-[#FFF5F9]');
+            body.classList.add('bg-gray-900', 'text-white');
+        } else {
+            body.classList.remove('bg-gray-900', 'text-white');
+            body.classList.add('bg-[#FFF5F9]');
+        }
+    }
+
+    // เมื่อโหลดหน้าเว็บ: เช็คค่าที่เคยบันทึกไว้ใน Browser
+    const savedDarkMode = localStorage.getItem('darkMode') === 'enabled';
+    darkModeToggle.checked = savedDarkMode;
+    applyDarkMode(savedDarkMode);
+
+    // เมื่อกดปุ่ม Save Changes
+    saveBtn.addEventListener('click', () => {
+        if (darkModeToggle.checked) {
+            localStorage.setItem('darkMode', 'enabled');
+            applyDarkMode(true);
+        } else {
+            localStorage.setItem('darkMode', 'disabled');
+            applyDarkMode(false);
+        }
+        alert('บันทึกการตั้งค่าเรียบร้อยแล้ว!');
+    });
+</script>
 
 </body>
 </html>

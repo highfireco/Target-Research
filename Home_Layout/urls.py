@@ -1,14 +1,14 @@
 from django.urls import path
-from Home_Layout.views import ( home_page, setting_page, profile_page)
+from Home_Layout.views import ( home_page, settings_view, edit_profile)
 from hire_project.views import create_project_view
 from dashboard_page.views import survey_dashboard_view
 from notifications.views import notification_home
 
 urlpatterns = [ 
-    path('home-page/', home_page, name='home_page'),
     path('create-project/', create_project_view, name='create_project'),
     path('dashboard-view/<str:survey_id>/', survey_dashboard_view, name='survey_dashboard'),
     path('notification-home/', notification_home, name='notification_home'),
-    path('settings/', setting_page, name='setting_page'),
-    path('profile/', profile_page, name='profile_page'),
+    path('home-page/', home_page, name='home_page'),
+    path('edit-profile/', edit_profile, name='edit_profile'),
+    path('settings/', settings_view, name='settings'),
 ]

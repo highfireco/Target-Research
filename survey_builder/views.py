@@ -73,3 +73,50 @@ def save_survey_api(request):
             return JsonResponse({"status": "error", "message": str(e)}, status=500)
             
     return JsonResponse({"error": "POST only"}, status=405)
+
+def survey_respond_page(request, survey_id):
+    # ใช้ Logic เดียวกับ survey_page เพื่อดึงคำถามมาแสดง
+    survey_data = {}
+    questions_list = []
+    survey_id = survey_id.strip()
+    
+    try:
+        survey_ref = db.collection('surveys').document(survey_id)
+        survey_doc = survey_ref.get()
+        if survey_doc.exists:
+            survey_data = survey_doc.to_dict()
+            question_docs = survey_ref.collection('questions').order_by('order').stream()
+            for doc in question_docs:
+                q_data = doc.to_dict()
+                q_data['id'] = doc.id
+                questions_list.append(q_data)
+    except Exception as e:
+        print(f"Error: {e}")
+
+    return render(request, 'survey/survey_respond.html', {
+        'survey': survey_data, 
+        'questions': questions_list,
+        'survey_id': survey_id
+    })
+
+@csrf_exempt
+def submit_response_api(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            survey_id = data.get("survey_id")
+            answers = data.get("answers") # ลิสต์ของ {question_id, answer}
+
+            # สร้าง Document ใหม่ในคอลเลกชัน responses
+            # ตามโครงสร้างในรูป: answers (array), submitted_at, survey_id, user_id
+            db.collection('responses').add({
+                'survey_id': f"/surveys/{survey_id}",
+                'answers': answers,
+                'submitted_at': firestore.SERVER_TIMESTAMP,
+                'user_id': "" # เว้นว่างไว้ตามรูปตัวอย่างของคุณ
+            })
+
+            return JsonResponse({"status": "success", "message": "ส่งแบบสอบถามเรียบร้อยแล้ว"})
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
+    return JsonResponse({"error": "POST only"}, status=405)

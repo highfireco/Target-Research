@@ -6,7 +6,7 @@ from notifications.views import(
         survey_notification,
         project_progress_notification
     )
-from Home_Layout.views import (home_page, setting_page, profile_page)
+from Home_Layout.views import (home_page, settings_view, edit_profile)
 
 urlpatterns = [
     path('dashboard-view/<str:survey_id>/', survey_dashboard_view, name='survey_dashboard'),
@@ -15,6 +15,6 @@ urlpatterns = [
     path("survey/", survey_notification, name="survey_notification"),
     path("project-progress/", project_progress_notification, name="project_progress_notification"),
     path('home-page/', home_page, name='home_page'),
-    path('settings/', setting_page, name='setting_page'),
-    path('profile/', profile_page, name='profile_page'),
+    path('settings/', settings_view, name='settings_view'),
+    path('profile/', edit_profile, name='edit_profile'),
 ]

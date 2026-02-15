@@ -3,11 +3,12 @@ import firebase_admin
 from firebase_admin import credentials, firestore 
 from dotenv import load_dotenv
 
-# บังคับโหลด .env ใหม่เพื่อป้องกันค่าเก่าค้างใน Cache
-load_dotenv(override=True) 
+# โหลดค่าจากไฟล์ .env
+load_dotenv()
 
 def initialize_firebase():
     try:
+        # ดึง Path ของไฟล์ JSON จาก .env
         cred_path = os.getenv('FIREBASE_ACCOUNT_KEY_PATH')
         
         # DEBUG: พิมพ์พาธที่ระบบกำลังเรียกใช้ออกมาดูใน Terminal
@@ -16,6 +17,7 @@ def initialize_firebase():
         if not cred_path or not os.path.exists(cred_path):
             raise FileNotFoundError(f"ไม่พบไฟล์ JSON ตาม Path ที่ระบุ: {cred_path}")
 
+        # เริ่มต้น Firebase Admin SDK
         if not firebase_admin._apps:
             cred = credentials.Certificate(cred_path)
             # เริ่มต้น Firebase และตรวจสอบ Project ID ทันที
