@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ศูนย์รวมการแจ้งเตือน</title>
+
+    <link rel="stylesheet" href="{% static 'notifications/css/home.css' %}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="icon-wrapper">
+        <i data-lucide="bell-ring"></i>
+    </div>
+
+    <h1>การแจ้งเตือนทั้งหมด</h1>
+    <div class="subtitle">
+        เลือกประเภทการแจ้งเตือนที่คุณต้องการดู
+    </div>
+
+    <div class="grid">
+
+        <a href="{% url 'survey_notification' %}" class="card">
+            <div class="card-icon">
+                <i data-lucide="clipboard-list"></i>
+            </div>
+            <div class="card-title">แบบสำรวจ</div>
+            <div class="card-desc">
+                แบบสำรวจที่รอการตอบกลับจากคุณ
+            </div>
+            <div class="card-link">
+                ดูรายละเอียด
+                <i data-lucide="arrow-right"></i>
+            </div>
+        </a>
+
+        <a href="{% url 'project_progress_notification' %}" class="card">
+            <div class="card-icon">
+                <i data-lucide="trending-up"></i>
+            </div>
+            <div class="card-title">ความคืบหน้าโครงการ</div>
+            <div class="card-desc">
+                ติดตามสถานะและความคืบหน้าโครงการทั้งหมด
+            </div>
+            <div class="card-link">
+                ดูรายละเอียด
+                <i data-lucide="arrow-right"></i>
+            </div>
+        </a>
+
+    </div>
+
+</div>
+
+<script>
+    lucide.createIcons();
+</script>
+
+</body>
+</html>
