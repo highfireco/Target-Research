@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>สร้างแบบสอบถาม</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Kanit', sans-serif; background-color: #EEB1C6; }
+        .pink-btn { background-color: #EEB1C6; transition: 0.3s; }
+        .pink-btn:hover { background-color: #e5a0b8; }
+        .custom-card { background-color: #F8EDEC; }
+        
+        .modal-bg {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 50;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            transform: scale(0.9);
+            opacity: 0;
+            transition: all 0.3s ease-out;
+        }
+        .modal-active .modal-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div id="successModal" class="modal-bg">
+        <div class="modal-content bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full text-center">
+            <div class="w-16 h-16 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">สำเร็จ!</h3>
+            <p class="text-gray-600 mb-6">ทำการสร้างแบบสอบถามเสร็จสิ้นลงในระบบเรียบร้อยแล้ว</p>
+            <button onclick="closeModalAndRedirect()" class="w-full py-3 pink-btn text-white rounded-xl font-bold shadow-lg">
+                ตกลง
+            </button>
+        </div>
+    </div>
+
+    <div class="w-full max-w-[1000px] bg-white rounded-3xl p-8 shadow-2xl">
+        <h1 class="text-2xl font-semibold mb-6 text-gray-800">สร้างแบบสอบถาม</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="p-6 rounded-2xl custom-card flex flex-col gap-4">
+                <h2 class="font-semibold text-gray-700">รายละเอียดคำถาม</h2>
+                <input id="q_text" class="w-full p-3 rounded-xl border-none ring-1 ring-gray-200 outline-none focus:ring-2 focus:ring-[#EEB1C6]" placeholder="ระบุคำถามที่นี่..." />
+                
+                <select id="q_type" onchange="toggleOptions()" class="w-full p-3 rounded-xl border-none ring-1 ring-gray-200 outline-none">
+                    <option value="choice">ปรนัย (ตัวเลือก)</option>
+                    <option value="text">อัตนัย (พิมพ์ตอบ)</option>
+                </select>
+
+                <div id="options_group">
+                    <label class="text-[10px] text-gray-400 mb-1 ml-1">ระบุตัวเลือก (คั่นด้วยเครื่องหมายจุลภาค , )</label>
+                    <input id="q_options" class="w-full p-3 rounded-xl border-none ring-1 ring-gray-200 outline-none" placeholder="เช่น ส้ม, มะม่วง, องุ่น" />
+                </div>
+
+                <button onclick="addQuestion()" class="w-full py-3 bg-black text-white rounded-xl font-medium hover:bg-gray-800 transition-all">
+                    เพิ่มคำถาม
+                </button>
+            </div>
+
+            <div class="p-6 rounded-2xl custom-card flex flex-col">
+                <h2 class="font-semibold text-gray-700 mb-4">รายการคำถาม</h2>
+                <div id="q_list_container" class="space-y-3 overflow-y-auto max-h-[350px]">
+                    <div class="text-sm text-gray-400 text-center py-20 italic">ยังไม่มีคำถามในรายการ</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row justify-end mt-8 gap-4">
+            <a href="/survey/survey-preview/GXWpYH51w91KUfxjzqGS/" class="px-6 py-3 rounded-xl border-2 border-[#EEB1C6] text-[#E5A9BC] font-semibold hover:bg-[#FDF5F7] transition-all text-center">
+                ดูตัวอย่าง (Preview)
+            </a>
+            
+            <button onclick="window.history.back()" class="px-8 py-3 rounded-xl border border-gray-200 text-gray-500 hover:bg-gray-50 transition-all">ย้อนกลับ</button>
+            <button onclick="saveSurvey()" class="px-8 py-3 rounded-xl pink-btn text-white font-bold shadow-lg">บันทึกแบบสอบถาม</button>
+        </div>
+    </div>
+
+    <script>
+        let questions = [];
+        let surveyId = "GXWpYH51w91KUfxjzqGS"; // กำหนด ID ไว้ล่วงหน้า
+
+        function toggleOptions() {
+            const type = document.getElementById('q_type').value;
+            document.getElementById('options_group').style.display = (type === 'choice') ? 'block' : 'none';
+        }
+
+        function addQuestion() {
+            const text = document.getElementById('q_text').value;
+            const type = document.getElementById('q_type').value;
+            const opts = document.getElementById('q_options').value;
+
+            if (!text) return alert("กรุณากรอกข้อความคำถาม");
+
+            questions.push({
+                question_text: text,
+                question_type: type,
+                options: type === 'choice' ? opts.split(',').map(s => s.trim()).filter(s => s !== "") : [],
+                order: questions.length + 1
+            });
+
+            renderUI();
+            document.getElementById('q_text').value = "";
+            document.getElementById('q_options').value = "";
+        }
+
+        function renderUI() {
+            const list = document.getElementById('q_list_container');
+            if (questions.length === 0) {
+                list.innerHTML = '<div class="text-sm text-gray-400 text-center py-20 italic">ยังไม่มีคำถามในรายการ</div>';
+                return;
+            }
+            list.innerHTML = questions.map((q, i) => `
+                <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-[#EEB1C6]">
+                    <div class="flex justify-between items-start">
+                        <span class="text-sm font-medium text-gray-800">${i+1}. ${q.question_text}</span>
+                        <span class="text-[9px] bg-[#F8EDEC] px-2 py-1 rounded text-[#E5A9BC] uppercase font-bold">${q.question_type}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showSuccessModal(id) {
+            const modal = document.getElementById('successModal');
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                modal.classList.add('modal-active');
+            }, 10);
+        }
+
+        function closeModalAndRedirect() {
+            window.location.href = `/survey/survey-preview/${surveyId}/`;
+        }
+
+        async function saveSurvey() {
+            if (questions.length === 0) return alert("กรุณาเพิ่มคำถามก่อนบันทึก");
+
+            try {
+                const response = await fetch('/survey/save-survey-api/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        survey_id: surveyId,
+                        questions: questions
+                    })
+                });
+
+                const result = await response.json();
+                if (result.status === "success") {
+                    showSuccessModal(result.survey_id);
+                }
+            } catch (error) {
+                alert("ไม่สามารถบันทึกข้อมูลได้ในขณะนี้");
+            }
+        }
+    </script>
+</body>
+</html>
