@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Preview: แบบสำรวจกลุ่มเป้าหมาย</title>
+    <title>Preview: {{ survey.title|default:"แบบสำรวจ" }}</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #F3C5D3; /* สีชมพูพื้นหลังตามรูป */
+            --bg-color: #F3C5D3;
             --card-bg: #ffffff;
             --input-bg: #FDF5F7;
             --primary-btn: #000000;
             --secondary-btn: #E5A9BC;
+            --preview-tag: #666;
+            --project-tag: #C47898;
         }
 
         body {
@@ -32,119 +34,152 @@
             border-radius: 20px;
             padding: 40px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            position: relative;
         }
 
-        h2 {
-            font-weight: 600;
-            margin-bottom: 30px;
-            color: #333;
+        /* Preview Badge */
+        .preview-badge {
+            display: inline-block;
+            background-color: var(--preview-tag);
+            color: white;
+            padding: 4px 15px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
         }
+
+        .header-section {
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--input-bg);
+            padding-bottom: 20px;
+        }
+
+        /* สไตล์สำหรับชื่อโปรเจกต์ */
+        .project-context {
+            color: var(--project-tag);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: block;
+            text-transform: uppercase;
+        }
+
+        h2 { font-weight: 600; margin: 0 0 10px 0; color: #333; }
+        .description { color: #666; font-size: 0.95rem; line-height: 1.5; }
 
         .question-card {
             background-color: var(--input-bg);
-            padding: 20px;
+            padding: 25px;
             border-radius: 12px;
             margin-bottom: 20px;
+            border: 1px solid transparent;
         }
 
         .question-title {
             font-weight: 500;
             margin-bottom: 15px;
             display: block;
+            font-size: 1.1rem;
         }
 
-        .options-list {
-            list-style: none;
-            padding: 0;
-        }
+        .options-list { display: flex; flex-direction: column; gap: 10px; }
 
         .option-item {
             background: white;
             border: 1px solid #ddd;
-            padding: 10px 15px;
+            padding: 12px 15px;
             border-radius: 8px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #555;
+            cursor: default; 
         }
 
-        .option-item:hover {
-            border-color: var(--secondary-btn);
-            background-color: #fff9fa;
-        }
+        input[type="radio"] { accent-color: var(--secondary-btn); transform: scale(1.2); }
 
         .footer-buttons {
             display: flex;
-            justify-content: flex-end;
-            gap: 15px;
-            margin-top: 30px;
+            justify-content: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px dashed #ddd;
         }
 
-        .btn {
-            padding: 10px 25px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            font-family: 'Kanit', sans-serif;
-            font-size: 16px;
-            transition: 0.3s;
-        }
-
-        .btn-outline {
-            background: white;
-            border: 1px solid #ddd;
-            color: #666;
-        }
-
-        .btn-primary {
-            background-color: var(--secondary-btn);
+        .btn-back {
+            background-color: #444;
             color: white;
+            padding: 12px 40px;
+            border-radius: 10px;
+            text-decoration: none;
             font-weight: 500;
+            transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        .btn-primary:hover {
-            background-color: #d88da3;
+        .btn-back:hover {
+            background-color: #000;
+            transform: translateY(-2px);
+        }
+
+        .preview-textarea {
+            width: 100%;
+            border: 1px solid #ddd;
+            height: 100px;
+            border-radius: 8px;
+            padding: 12px;
+            background-color: #fff;
+            font-family: 'Kanit', sans-serif;
+            resize: none;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>แสดงตัวอย่างแบบสอบถาม (Target Research)</h2>
-
-    <div class="question-card">
-        <span class="question-title">1. ปัจจัยใดสำคัญที่สุดในการตัดสินใจเลือกซื้อสินค้าของเรา?</span>
-        <div class="options-list">
-            <div class="option-item">○ ราคาคุ้มค่า</div>
-            <div class="option-item">○ คุณภาพและความทนทาน</div>
-            <div class="option-item">○ การออกแบบ/ดีไซน์</div>
-            <div class="option-item">○ การบริการหลังการขาย</div>
-        </div>
+    <div style="text-align: center;">
+        <span class="preview-badge">โหมดตัวอย่าง (Preview Only)</span>
     </div>
 
-    <div class="question-card">
-        <span class="question-title">2. คุณมักจะรับข่าวสารเกี่ยวกับโปรโมชั่นผ่านช่องทางใด?</span>
-        <div class="options-list">
-            <div class="option-item">○ Facebook / Instagram</div>
-            <div class="option-item">○ TikTok</div>
-            <div class="option-item">○ Line Official Account</div>
-            <div class="option-item">○ อีเมลประชาสัมพันธ์</div>
-        </div>
+    <div class="header-section">
+        <span class="project-context">โครงการวิจัย: {{ project_title|default:"ไม่ได้เชื่อมโยงโครงการ" }}</span>
+        
+        <h2>{{ survey.title|default:"ไม่มีชื่อแบบสำรวจ" }}</h2>
+        <p class="description">{{ survey.description|default:"ไม่มีคำอธิบาย" }}</p>
     </div>
 
-    <div class="question-card">
-        <span class="question-title">3. ความถี่ในการใช้บริการสินค้าประเภทนี้ของคุณคือ?</span>
-        <div class="options-list">
-            <div class="option-item">○ ทุกวัน</div>
-            <div class="option-item">○ สัปดาห์ละ 1-2 ครั้ง</div>
-            <div class="option-item">○ เดือนละครั้ง</div>
-            <div class="option-item">○ นานๆ ครั้ง / ตามโอกาสพิเศษ</div>
+    <div class="preview-content">
+        
+        {% for question in questions %}
+        <div class="question-card">
+            <span class="question-title">{{ forloop.counter }}. {{ question.question_text }}</span>
+            
+            <div class="options-list">
+                {% if question.question_type == "choice" %}
+                    {% for option in question.options %}
+                    <div class="option-item">
+                        <input type="radio" name="preview_{{ question.id }}" disabled>
+                        <span>{{ option }}</span>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <textarea class="preview-textarea" placeholder="ช่องกรอกคำตอบ (โหมดตัวอย่าง)" disabled></textarea>
+                {% endif %}
+            </div>
         </div>
-    </div>
+        {% empty %}
+        <div class="question-card" style="text-align: center;">
+            <p>ยังไม่มีคำถามในแบบสำรวจนี้</p>
+        </div>
+        {% endfor %}
 
-    <div class="footer-buttons">
-        <button class="btn btn-outline">ย้อนกลับ</button>
-        <button class="btn btn-primary">ส่งแบบสอบถาม</button>
+        <div class="footer-buttons">
+            <a href="javascript:window.history.back();" class="btn-back">
+                ← กลับไปหน้าแก้ไข
+            </a>
+        </div>
     </div>
 </div>
 

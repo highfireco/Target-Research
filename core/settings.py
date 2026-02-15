@@ -40,6 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'hire_project',
     'survey_builder',
+    'dashboard_page',
+    'Home_Layout',
+    "account",
+    "notifications",
+    'payment'
 ]
 
 MIDDLEWARE = [
@@ -51,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'core.middleware.UserTrackingMiddleware', #ไว้ดู user ว่า online อยู่หรือเปล่า
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -58,10 +64,11 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'html'],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -82,6 +89,14 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+FIREBASE_CREDENTIALS = BASE_DIR / "Firebase.json"
+
+# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# EMAIL_HOST = "smtp.gmail.com"
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = "highfire.co@gmail.com"
+# EMAIL_HOST_PASSWORD = "pphocdklrzxswyxz"
 
 
 # Password validation
@@ -114,12 +129,20 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
+<<<<<<< HEAD
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
 
 # ส่วนนี้สำหรับให้ WhiteNoise บีบอัดไฟล์ให้เว็บโหลดเร็วขึ้น
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+=======
+import os # อย่าลืม import os ไว้ด้านบนสุดของไฟล์ด้วยนะครับ
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static', # โฟลเดอร์ที่เก็บไฟล์ Picture, CSS, JS
+]
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+>>>>>>> 416e3c37a52b50cd36b21f3c93479de520980dee

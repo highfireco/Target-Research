@@ -1,0 +1,313 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+</head>
+
+<body>
+    <header
+        class="bg-[#fcfcfc] border-b border-gray-200 px-4 py-4 sm:px-6 lg:px-8 font-semibold text-[#a280c4] items-center justify-between flex relative shadow-md">
+        <a href="{% url 'home_page' %}" class="flex items-center gap-2 group">
+            <div class="flex items-center gap-5 text-2xl">
+                <img src="{% static 'img/icon.png' %}" alt="logo"
+                    class="w-10 h-10 rounded-full object-cover border-2 border-gray-300">
+                <span class="font-bold text-2xl">Target-Research</span>
+            </div>
+        </a>
+        <div class="flex gap-4 items-center">
+            <a href="{% url 'notification_home' %}" class="p-2 hover:bg-gray-100 rounded-full transition">
+                <!-- รอเพิ่ม link ไปหน้า noti-->
+                <i data-lucide="bell"></i> </a>
+            <div class="relative">
+                <button onclick="toggleDropDown(event)" class="p-1 hover:bg-gray-100 rounded-full transition">
+                    <img src="https://via.placeholder.com/40" alt="user-profile"
+                        class="w-10 h-10 rounded-full object-cover border-2 border-gray-300">
+                </button>
+                <div id="dropdownMenu"
+                    class="hidden absolute right-1 mt-1 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+                    <a href="{% url 'edit_profile' %}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                        <!--รอเพิ่ม link profile-->
+                        <i data-lucide="user" class="w-4 h-4 inline mr-2"></i>Profile
+                    </a>
+                    <a href="{% url 'settings' %}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                        <!--รอเพิ่ม link settings-->
+                        <i data-lucide="settings" class="w-4 h-4 inline mr-2"></i>Settings
+                    </a>
+                    <a href="{% url 'logout' %}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                        <!--รอเพิ่ม link logout-->
+                        <i data-lucide="log-out" class="w-4 h-4 inline mr-2"></i>Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main class="p-4 sm:p-6 lg:p-8 bg-[#E8DEF3] min-h-screen" id="dashboard-content">
+        <div class="flex justify-between items-center mb-5">
+            <div class="mb-2">
+                <h1 class="text-2xl font-bold mb-1">Dashboard</h1>
+                <div class="flex relative space-between items-center gap-4">
+                    <p class="text-sm text-gray-600">ภาพรวมแบบสอบถามและผลลัพธ์ของ</p>
+                    <div class="flex gap-3 mt-3 items-center">
+                        <select onchange="changeSurvey(this.value)"
+                            class="border border-purple-300 text-sm rounded-xl px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-purple-400">
+                            {% for survey in all_surveys %}
+                            <option value="{{ survey.id }}" {% if survey.id == current_survey.id %}selected{% endif %}>
+                                {{ survey.title }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-3 mt-3">
+                <button onclick="exportAllPDF()"
+                    class="bg-[#8a6bb8] text-sm text-white px-4 py-2 rounded-xl hover:bg-[#7a5aa8] transition flex items-center gap-2"
+                    id="allPDF">
+                    <i data-lucide="download" class="w-4 h-4"></i> Download PDF
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h3 class="text-sm mb-2 text-gray-400">คำตอบล่าสุด</h3>
+                <p class="text-black text-2xl font-bold">{{latest_answer}}</p>
+                <p class="text-green-500 text-sm">จากแบบสอบถาม</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h3 class="text-sm mb-2 text-gray-400">จำนวนคำตอบทั้งหมด</h3>
+                <p class="text-gray-800 text-2xl font-bold">{{total_count}}</p>
+                <p class="text-green-500 text-sm">จากแบบสอบถาม</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h3 class="text-sm mb-2 text-gray-400">อัตราการตอบกลับ</h3>
+                <p class="text-gray-800 text-2xl font-bold">{{response_rate}}%</p>
+                <p class="text-green-500 text-sm">จากแบบสอบถาม</p>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-purple-100">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h3 class="text-lg font-bold">คำตอบที่คุณได้รับ</h3>
+                        <p class="text-gray-400 text-sm">แนวโน้มการตอบรายเดือน</p>
+                    </div>
+                </div>
+                <div class="relative h-[350px] w-full">
+                    <canvas id="researchChart"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-purple-100">
+                <h3 class="text-lg font-bold mb-4">สัดส่วนหมวดหมู่</h3>
+                <div class="relative h-[320px] flex items-center justify-center">
+                    <canvas id="doughnutChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-5">
+            <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-sm border border-purple-100">
+                <h3 class="text-lg font-bold mb-6">สรุปหมวดหมู่</h3>
+                <div class="space-y-6">
+                    {% for label, value in pie_dict.items|slice:":6" %}
+                    <div class="flex items-center gap-4">
+                        <div class="p-3 bg-purple-50 rounded-xl text-purple-500 text-xl">📦</div>
+                        <div class="flex-1">
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm font-semibold text-gray-700">{{ label }}</span>
+                                <span class="text-sm text-gray-500">{{ value.count }} หน่วย</span>
+                            </div>
+                            <div class="w-full bg-gray-100 rounded-full h-2">
+                                <div class="bg-purple-400 h-2 rounded-full" style="width: {{value.percent|default:0}}%">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-gray-400 text-sm text-center">ไม่พบข้อมูลหมวดหมู่</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-purple-100 overflow-hidden">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-bold text-gray-800">คำตอบล่าสุด</h3>
+                    <button onclick="exportTableCSV()"
+                        class="bg-[#8a6bb8] text-sm text-white px-3 py-1 rounded-lg hover:bg-[#7a5aa8] transition flex items-center gap-1">
+                        <i data-lucide="download" class="w-4 h-4"></i> CSV
+                    </button>
+                </div>
+                <div class="overflow-x-auto" id="table-content">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="text-gray-400 text-xs uppercase tracking-wider border-b border-gray-50">
+                                <th class="pb-3 font-medium">รหัสการตอบ</th>
+                                <th class="pb-3 font-medium">วันที่</th>
+                                <th class="pb-3 font-medium">คำตอบ</th>
+                                <th class="pb-3 font-medium text-center">สถานะ</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm text-gray-700">
+                            {% for res in latest_responses %}
+                            <tr class="border-b border-gray-50 hover:bg-gray-50 transition">
+                                <td class="py-4 font-medium text-gray-900">#{{ res.id|slice:":6" }}</td>
+                                <td class="py-4 text-gray-400 text-xs">{{ res.submitted_at|date:"d/m/Y" }}</td>
+                                <td class="py-4 font-semibold text-purple-600">{{ res.answers.0.answer }}</td>
+                                <td class="py-4 text-center">
+                                    <span
+                                        class="px-3 py-1 rounded-full text-[10px] bg-green-100 text-green-600 font-bold uppercase">สำเร็จ</span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="py-10 text-center text-gray-400">ไม่พบข้อมูลคำตอบ</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function toggleDropDown(event) {
+            event.stopPropagation();
+            const dropDown = document.getElementById('dropdownMenu');
+            dropDown.classList.toggle('hidden');
+        }
+        window.onclick = function (event) {
+            if (!event.target.matches('button')) {
+                const dropdowns = document.getElementById('dropdownMenu');
+                if (dropdowns && !dropdowns.classList.contains('hidden')) {
+                    dropdowns.classList.add('hidden');
+                }
+            }
+        }
+        function exportAllPDF() {
+            const exportpdfButton = document.getElementById('dashboard-content');
+            const options = {
+                margin: [10, 10, 10, 10],
+                filename: 'Target_Research_Full_Report.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: {
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                    letterRendering: true,
+                    scrollY: -window.scrollY
+                },
+                jsPDF: {
+                    unit: 'mm',
+                    format: 'a4',
+                    orientation: 'portrait'
+                }
+            };
+            html2pdf().set(options).from(exportpdfButton).save('Dashboard.pdf');
+        }
+        function exportTableCSV() {
+            const rows = [];
+
+            // Header
+            rows.push(['รหัสการตอบ', 'วันที่', 'คำตอบ', 'สถานะ']);
+
+            // tbody rows
+            const tbody = document.querySelectorAll('#table-content tbody tr');
+            tbody.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length > 1) {
+                    rows.push([
+                        cells[0].innerText.trim(),
+                        cells[1].innerText.trim(),
+                        cells[2].innerText.trim(),
+                        cells[3].innerText.trim()
+                    ]);
+                }
+            });
+
+            // ✅ ใช้ Papa Parse แปลงเป็น CSV
+            const csv = Papa.unparse(rows);
+
+            // Download
+            const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Target_Research_Responses.csv';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        function changeSurvey(surveyId) {
+            window.location.href = `/dashboard/dashboard-view/${surveyId}/`;
+        }
+    </script>
+    {{ pie_labels|json_script:"pie-labels-data" }}
+    {{ pie_data|json_script:"pie-data-data" }}
+    {{ bar_labels|json_script:"bar-labels-data" }}
+    {{ bar_data|json_script:"bar-data-data" }}
+
+    <script>
+        const pieLabels = JSON.parse(document.getElementById('pie-labels-data').textContent);
+        const pieValues = JSON.parse(document.getElementById('pie-data-data').textContent);
+        const barLabels = JSON.parse(document.getElementById('bar-labels-data').textContent);
+        const barValues = JSON.parse(document.getElementById('bar-data-data').textContent);
+        // Bar Chart
+        const ctxBar = document.getElementById('researchChart').getContext('2d');
+        new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: barLabels,
+                datasets: [{
+                    label: 'จำนวนคำตอบ',
+                    data: barValues,
+                    backgroundColor: '#8a6bb8',
+                    borderRadius: 8
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+        // Doughnut Chart
+        const ctxPie = document.getElementById('doughnutChart').getContext('2d');
+        new Chart(ctxPie, {
+            type: 'doughnut',
+            data: {
+                labels: pieLabels,
+                datasets: [{
+                    data: pieValues,
+                    backgroundColor: ['#A855F7', '#FB923C', '#FACC15', '#4ADE80'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,       // ✅ เปิด legend
+                        position: 'bottom',  // ✅ วางข้างล่าง
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true,  // ใช้จุดกลมแทนสี่เหลี่ยม
+                            font: { size: 12 }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+    <script>lucide.createIcons();</script>
+</body>
+
+</html>

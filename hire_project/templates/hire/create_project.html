@@ -2,298 +2,849 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<title>Create Research Project</title>
+<title>สร้างโครงการวิจัย</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
-    
-body {
-    font-family: 'Prompt', sans-serif;
-}
 
-/* Gradient animations */
+body { font-family: 'Prompt', sans-serif; }
+
 @keyframes gradient {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 .gradient-bg {
-    background: linear-gradient(-45deg, #EEB1C6, #F5C6D6, #FFD4E5, #EEB1C6);
-    background-size: 400% 400%;
-    animation: gradient 15s ease infinite;
+  background: linear-gradient(-45deg, #EEB1C6, #F5C6D6, #FFD4E5, #EEB1C6);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
 }
 
-/* Input focus effects */
 input:focus, textarea:focus, select:focus {
-    outline: none;
-    border-color: #EEB1C6;
-    box-shadow: 0 0 0 3px rgba(238, 177, 198, 0.1);
-    transform: translateY(-1px);
-    transition: all 0.3s ease;
+  outline: none;
+  border-color: #EEB1C6;
+  box-shadow: 0 0 0 3px rgba(238,177,198,0.12);
+  transform: translateY(-1px);
+  transition: all 0.3s ease;
 }
 
-/* Button hover effects */
-.btn-hover {
-    transition: all 0.3s ease;
+/* ── Field error state ── */
+input.field-error, textarea.field-error, select.field-error {
+  border-color: #F87171 !important;
+  box-shadow: 0 0 0 3px rgba(248,113,113,0.12) !important;
 }
-
-.btn-hover:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+.error-hint {
+  font-size: 0.7rem;
+  color: #EF4444;
+  margin-top: 4px;
+  display: none;
 }
+.error-hint.show { display: block; }
 
-.btn-hover:active {
-    transform: translateY(0);
-}
+.btn-hover { transition: all 0.3s ease; }
+.btn-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+.btn-hover:active { transform: translateY(0); }
 
-/* Card shadow */
-.card-shadow {
-    box-shadow: 0 20px 60px rgba(238, 177, 198, 0.3);
-}
+.card-shadow { box-shadow: 0 20px 60px rgba(238,177,198,0.3); }
 
-/* Toast animation */
 @keyframes slideIn {
-    from {
-        transform: translateX(400px);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
+  from { transform: translateX(400px); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
 }
+.toast-show { animation: slideIn 0.4s ease-out; }
 
-.toast-show {
-    animation: slideIn 0.4s ease-out;
-}
-
-/* Label styling */
 label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: #4A4A4A;
-    font-weight: 500;
+  display: block;
+  margin-bottom: 0.4rem;
+  color: #4A4A4A;
+  font-weight: 500;
+  font-size: 0.875rem;
 }
 
-/* Input styling */
 input, textarea, select {
-    transition: all 0.3s ease;
-    border: 2px solid #E5E5E5;
+  transition: all 0.3s ease;
+  border: 2px solid #E5E5E5;
+  background: #fff;
+  font-family: 'Prompt', sans-serif;
 }
 
-input::placeholder, textarea::placeholder {
-    color: #BDBDBD;
-}
+input::placeholder, textarea::placeholder { color: #BDBDBD; }
 
-/* Section divider */
 .section-divider {
-    background: linear-gradient(90deg, transparent, #EEB1C6, transparent);
-    height: 2px;
-    margin: 1.5rem 0;
-    opacity: 0.3;
+  background: linear-gradient(90deg, transparent, #EEB1C6, transparent);
+  height: 2px;
+  margin: 1rem 0;
+  opacity: 0.3;
 }
 
-/* Icon bounce */
 @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-5px); }
+}
+.icon-bounce:hover { animation: bounce 0.6s ease infinite; }
+
+.section-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(238,177,198,0.18);
+  color: #C47898;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 999px;
+  margin-bottom: 1rem;
+  letter-spacing: 0.02em;
 }
 
-.icon-bounce:hover {
-    animation: bounce 0.6s ease infinite;
+.hint {
+  font-size: 0.7rem;
+  color: #BDBDBD;
+  margin-top: 4px;
 }
+
+/* ── Occupation multi-select ── */
+.occ-dropdown { position: relative; }
+
+.occ-trigger {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  border: 2px solid #E5E5E5;
+  background: #fff;
+  font-family: 'Prompt', sans-serif;
+  font-size: 0.875rem;
+  color: #4A4A4A;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  transition: all 0.3s ease;
+  text-align: left;
+  user-select: none;
+}
+.occ-trigger:hover,
+.occ-trigger.open {
+  border-color: #EEB1C6;
+  box-shadow: 0 0 0 3px rgba(238,177,198,0.12);
+}
+
+.occ-trigger-label {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #BDBDBD;
+}
+.occ-trigger-label.has-value { color: #4A4A4A; }
+
+.occ-chevron {
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+  color: #C47898;
+}
+.occ-trigger.open .occ-chevron { transform: rotate(180deg); }
+
+.occ-panel {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 2px solid #EEB1C6;
+  border-radius: 0.75rem;
+  box-shadow: 0 12px 32px rgba(238,177,198,0.25);
+  z-index: 50;
+  overflow: hidden;
+  animation: panelOpen 0.2s ease;
+}
+@keyframes panelOpen {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.occ-panel.open { display: block; }
+
+.occ-select-all {
+  padding: 8px 14px;
+  background: rgba(238,177,198,0.08);
+  border-bottom: 1px solid #F5E8EE;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #C47898;
+  transition: background 0.15s;
+}
+.occ-select-all:hover { background: rgba(238,177,198,0.18); }
+
+.occ-list { max-height: 220px; overflow-y: auto; }
+.occ-list::-webkit-scrollbar { width: 4px; }
+.occ-list::-webkit-scrollbar-thumb { background: #EEB1C6; border-radius: 4px; }
+
+.occ-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  cursor: pointer;
+  font-size: 0.83rem;
+  color: #4A4A4A;
+  transition: background 0.15s;
+  border-bottom: 1px solid #FDF0F4;
+}
+.occ-item:last-child { border-bottom: none; }
+.occ-item:hover { background: rgba(238,177,198,0.08); }
+.occ-item.checked { background: rgba(238,177,198,0.12); color: #C47898; font-weight: 500; }
+
+.occ-check {
+  width: 16px; height: 16px;
+  border: 2px solid #DDD;
+  border-radius: 4px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  background: #fff;
+}
+.occ-item.checked .occ-check { background: #EEB1C6; border-color: #EEB1C6; }
+.occ-item.checked .occ-check::after {
+  content: '';
+  width: 4px; height: 7px;
+  border: 2px solid #fff;
+  border-top: none; border-left: none;
+  transform: rotate(45deg) translateY(-1px);
+}
+
+.occ-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; min-height: 0; }
+.occ-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(238,177,198,0.2);
+  color: #C47898;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 9px 3px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(238,177,198,0.4);
+  animation: tagPop 0.2s ease;
+}
+@keyframes tagPop {
+  from { opacity:0; transform: scale(0.8); }
+  to   { opacity:1; transform: scale(1); }
+}
+.occ-tag-remove {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  opacity: 0.6;
+  transition: opacity 0.15s;
+  font-size: 0.9rem;
+  line-height: 1;
+}
+.occ-tag-remove:hover { opacity: 1; }
+
+/* ── My Projects button ── */
+.btn-my-projects {
+  background: linear-gradient(135deg, #5BA4A4 0%, #3D8080 100%);
+}
+
+/* ══════════════════════════════════════════════
+   SUCCESS MODAL
+══════════════════════════════════════════════ */
+#successModal {
+  position: fixed; inset: 0; z-index: 999;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(6px);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+#successModal.show {
+  opacity: 1; pointer-events: all;
+}
+
+.modal-box {
+  background: #fff;
+  border-radius: 24px;
+  padding: 44px 40px 36px;
+  max-width: 420px; width: 90%;
+  text-align: center;
+  box-shadow: 0 32px 80px rgba(238,177,198,0.35), 0 8px 32px rgba(0,0,0,0.1);
+  transform: scale(0.88) translateY(20px);
+  transition: transform 0.35s cubic-bezier(.22,.68,0,1.2);
+  position: relative; overflow: hidden;
+}
+#successModal.show .modal-box {
+  transform: scale(1) translateY(0);
+}
+
+/* Pink top strip */
+.modal-box::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 5px;
+  background: linear-gradient(90deg, #EEB1C6, #e68fb0, #EEB1C6);
+}
+
+.modal-icon {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: linear-gradient(135deg, rgba(238,177,198,0.2), rgba(238,177,198,0.1));
+  border: 2px solid rgba(238,177,198,0.4);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px;
+  animation: popIn 0.5s 0.2s cubic-bezier(.22,.68,0,1.4) both;
+}
+@keyframes popIn {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+.modal-icon svg { width: 34px; height: 34px; stroke: #EEB1C6; stroke-width: 2; fill: none; }
+
+.modal-title {
+  font-size: 1.35rem; font-weight: 700;
+  color: #1a1a1a; margin-bottom: 10px;
+}
+.modal-sub {
+  font-size: 0.875rem; color: #888;
+  line-height: 1.65; margin-bottom: 28px;
+}
+.modal-sub strong { color: #C47898; }
+
+.modal-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #EEB1C6 0%, #E89BB0 100%);
+  color: #fff; border: none;
+  font-family: 'Prompt', sans-serif;
+  font-size: 0.95rem; font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(238,177,198,0.45);
+  transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.modal-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(238,177,198,0.55);
+}
+
+/* Decorative petal dots */
+.modal-dots {
+  display: flex; justify-content: center; gap: 5px; margin-top: 16px;
+}
+.modal-dots span { width: 5px; height: 5px; border-radius: 50%; background: rgba(238,177,198,0.3); }
+.modal-dots span:nth-child(2) { background: #EEB1C6; width: 14px; border-radius: 3px; }
 </style>
 </head>
 
 <body class="min-h-screen flex items-center justify-center gradient-bg py-8">
 
-<div class="w-[1200px] min-h-[750px] rounded-3xl p-10 card-shadow" style="background:#FFFFFF;">
+<div id="successModal">
+  <div class="modal-box">
+    <div class="modal-icon">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+        <polyline points="22 4 12 14.01 9 11.01"/>
+      </svg>
+    </div>
+    <div class="modal-title">🎉 บันทึกข้อมูลสำเร็จ!</div>
+    <div class="modal-sub">
+      ข้อมูลโครงการวิจัยของคุณถูกจัดการแล้ว<br>
+      ขั้นตอนถัดไปคือ <strong>สร้างแบบสอบถาม</strong><br>
+      เพื่อเริ่มเก็บข้อมูลจากกลุ่มเป้าหมาย
+    </div>
+    <button class="modal-btn" onclick="goToSurvey()">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      ตกลง — ไปสร้างแบบสอบถาม
+    </button>
+    <div class="modal-dots"><span></span><span></span><span></span></div>
+  </div>
+</div>
 
-<!-- TOP BAR WITH ICONS -->
-<div class="flex justify-between items-start mb-8">
-<div>
-<h1 class="text-4xl font-bold mb-2" style="color:#EEB1C6;">Create Research Project</h1>
-<p class="text-gray-500">สร้างโครงการวิจัยของคุณอย่างมืออาชีพ</p>
-</div>
-<div class="flex gap-3">
-<button onclick="goHome()" class="w-12 h-12 rounded-xl bg-white border-2 border-gray-200 flex items-center justify-center text-2xl hover:bg-gray-50 btn-hover icon-bounce" title="Home">
-🏠
-</button>
-<button onclick="goSettings()" class="w-12 h-12 rounded-xl bg-white border-2 border-gray-200 flex items-center justify-center text-2xl hover:bg-gray-50 btn-hover icon-bounce" title="Settings">
-⚙️
-</button>
-</div>
+<div class="w-[1200px] rounded-3xl p-10 card-shadow" style="background:#FFFFFF;">
+
+<div class="flex justify-between items-start mb-6">
+  <div>
+    <h1 class="text-3xl font-bold mb-1" style="color:#EEB1C6;">สร้างโครงการวิจัย</h1>
+    <p class="text-gray-400 text-sm">สร้างโครงการวิจัยของคุณอย่างมืออาชีพ</p>
+  </div>
+  <div class="flex gap-3">
+    <button onclick="goHome()" class="flex items-center gap-2 px-4 h-11 rounded-xl bg-white border-2 border-gray-200 text-gray-600 text-sm font-medium hover:bg-gray-50 btn-hover">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      กลับ
+    </button>
+    <button onclick="goSettings()" class="flex items-center gap-2 px-4 h-11 rounded-xl bg-white border-2 border-gray-200 text-gray-600 text-sm font-medium hover:bg-gray-50 btn-hover">
+      <i data-lucide="settings" class="w-4 h-4"></i>ตั้งค่า
+    </button>
+  </div>
 </div>
 
 <div class="section-divider"></div>
 
-<form id="projectForm" class="grid grid-cols-3 gap-6">
+<form id="projectForm" class="grid grid-cols-3 gap-6 mt-2" novalidate>
 
-<!-- LEFT SECTION -->
-<div class="col-span-2 p-8 rounded-2xl" style="background: linear-gradient(135deg, #F8EDEC 0%, #FFF5F3 100%);">
-<div class="mb-6">
-<label class="flex items-center gap-2">
-<span>ชื่อโครงการ</span>
-</label>
-<input id="title" class="w-full p-4 rounded-xl border-2" placeholder="ระบุชื่อโครงการวิจัยของคุณ...">
+<div class="col-span-2 flex flex-col gap-5">
+
+  <div class="p-6 rounded-2xl" style="background:linear-gradient(135deg,#F8EDEC 0%,#FFF5F3 100%);">
+    <div class="section-pill">
+      <i data-lucide="file-text" style="width:13px;height:13px;"></i>
+      ข้อมูลโครงการ
+    </div>
+    <div class="mb-4">
+      <label>ชื่อโครงการ <span style="color:#EEB1C6;">*</span></label>
+      <input id="title" class="w-full p-3 rounded-xl border-2" placeholder="ระบุชื่อโครงการวิจัยของคุณ...">
+      <p class="error-hint" id="err-title">⚠ กรุณาระบุชื่อโครงการ</p>
+    </div>
+    <div class="mb-4">
+      <label>วัตถุประสงค์ <span style="color:#EEB1C6;">*</span></label>
+      <textarea id="objective" class="w-full p-3 rounded-xl border-2" rows="2" placeholder="ระบุวัตถุประสงค์ของการวิจัย..."></textarea>
+      <p class="error-hint" id="err-objective">⚠ กรุณาระบุวัตถุประสงค์</p>
+    </div>
+    <div>
+      <label>รายละเอียดโครงการ</label>
+      <textarea id="description" class="w-full p-3 rounded-xl border-2" rows="4" placeholder="อธิบายรายละเอียดโครงการวิจัยของคุณ..."></textarea>
+    </div>
+  </div>
+
+  <div class="p-6 rounded-2xl" style="background:linear-gradient(135deg,#F8EDEC 0%,#FFF5F3 100%);">
+    <div class="section-pill">
+      <i data-lucide="building-2" style="width:13px;height:13px;"></i>
+      ข้อมูลองค์กร / ผู้จ้าง
+    </div>
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <div>
+        <label>ชื่อองค์กร / หน่วยงาน <span style="color:#EEB1C6;">*</span></label>
+        <input id="org_name" class="w-full p-3 rounded-xl border-2" placeholder="เช่น มหาวิทยาลัยเชียงใหม่">
+        <p class="error-hint" id="err-org_name">⚠ กรุณาระบุชื่อองค์กร</p>
+      </div>
+      <div>
+        <label>ประเภทสังกัด</label>
+        <select id="org_type" class="w-full p-3 rounded-xl border-2">
+          <option value="">-- เลือกประเภท --</option>
+          <option value="university">สถาบันการศึกษา</option>
+          <option value="hospital">โรงพยาบาล / สถานพยาบาล</option>
+          <option value="government">หน่วยงานราชการ</option>
+          <option value="private">บริษัทเอกชน</option>
+          <option value="ngo">NGO / องค์กรไม่แสวงหากำไร</option>
+          <option value="other">อื่นๆ</option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <label>คณะ / ฝ่าย / แผนก</label>
+      <input id="org_dept" class="w-full p-3 rounded-xl border-2" placeholder="เช่น คณะวิทยาศาสตร์สุขภาพ">
+      <p class="hint">ระบุเพื่อความน่าเชื่อถือในหน้ารายละเอียดโครงการ</p>
+    </div>
+  </div>
+
+  <div class="p-6 rounded-2xl" style="background:linear-gradient(135deg,#F8EDEC 0%,#FFF5F3 100%);">
+    <div class="section-pill">
+      <i data-lucide="calendar" style="width:13px;height:13px;"></i>
+      ระยะเวลาโครงการ
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label>วันเริ่มรับข้อมูล <span style="color:#EEB1C6;">*</span></label>
+        <input id="start_date" type="date" class="w-full p-3 rounded-xl border-2">
+        <p class="error-hint" id="err-start_date">⚠ กรุณาเลือกวันเริ่มต้น</p>
+        <p class="hint">ใช้คำนวณ progress bar ของโครงการ</p>
+      </div>
+      <div>
+        <label>วันหมดเขต <span style="color:#EEB1C6;">*</span></label>
+        <input id="deadline" type="date" class="w-full p-3 rounded-xl border-2">
+        <p class="error-hint" id="err-deadline">⚠ กรุณาเลือกวันหมดเขต</p>
+        <p class="hint">แสดงเป็น countdown ในหน้ารายละเอียด</p>
+      </div>
+    </div>
+  </div>
+
 </div>
 
-<div class="mb-6">
-<label class="flex items-center gap-2">
-<span>วัตถุประสงค์</span>
-</label>
-<textarea id="objective" class="w-full p-4 rounded-xl border-2" rows="3" placeholder="ระบุวัตถุประสงค์ของการวิจัย..."></textarea>
-</div>
+<div class="flex flex-col gap-5">
 
-<div>
-<label class="flex items-center gap-2">
-<span>รายละเอียดโครงการ</span>
-</label>
-<textarea id="description" class="w-full p-4 rounded-xl border-2 h-[180px]" placeholder="อธิบายรายละเอียดโครงการวิจัยของคุณ..."></textarea>
-</div>
-</div>
+  <div class="p-6 rounded-2xl flex flex-col gap-4" style="background:linear-gradient(135deg,#F8EDEC 0%,#FFF5F3 100%);">
+    <div class="section-pill">
+      <i data-lucide="users" style="width:13px;height:13px;"></i>
+      ข้อมูลกลุ่มตัวอย่าง
+    </div>
 
-<!-- RIGHT SECTION -->
-<div class="p-8 rounded-2xl flex flex-col gap-4" style="background: linear-gradient(135deg, #F8EDEC 0%, #FFF5F3 100%);">
+    <div>
+      <label>ช่วงอายุ</label>
+      <input id="age_range" class="w-full p-3 rounded-xl border-2" placeholder="เช่น 18-35">
+    </div>
 
-<div class="mb-2">
-<h3 class="text-lg font-semibold mb-4" style="color:#EEB1C6;">📊 ข้อมูลกลุ่มตัวอย่าง</h3>
-</div>
+    <div>
+      <label>เพศ</label>
+      <select id="gender" class="w-full p-3 rounded-xl border-2">
+        <option value="all">ทุกเพศ</option>
+        <option value="male">ชาย</option>
+        <option value="female">หญิง</option>
+      </select>
+    </div>
 
-<div>
-<label class="flex items-center gap-2">
-<span>ช่วงอายุ</span>
-</label>
-<input id="age_range" class="w-full p-3 rounded-xl border-2" placeholder="เช่น 18-35">
-</div>
+    <div>
+      <label>
+        อาชีพ
+        <span class="hint" style="display:inline;margin-left:6px;">เลือกได้หลายอาชีพ</span>
+      </label>
+      <div class="occ-dropdown" id="occDropdown">
+        <button type="button" class="occ-trigger" id="occTrigger" onclick="toggleOccPanel()">
+          <span class="occ-trigger-label" id="occTriggerLabel">เลือกอาชีพ (ค่าเริ่มต้น: ทุกอาชีพ)</span>
+          <svg class="occ-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div class="occ-panel" id="occPanel">
+          <div class="occ-select-all" id="selectAllRow" onclick="toggleSelectAll()">
+            <div class="occ-check" id="selectAllCheck"></div>
+            <span>ทุกอาชีพ</span>
+          </div>
+          <div class="occ-list" id="occList"></div>
+        </div>
+      </div>
+      <div class="occ-tags" id="occTags"></div>
+      <p class="hint">ระบุเพื่อ filter ผู้ตอบแบบสอบถามที่ตรงกลุ่มเป้าหมาย</p>
+    </div>
 
-<div>
-<label class="flex items-center gap-2">
-<span>เพศ</span>
-</label>
-<select id="gender" class="w-full p-3 rounded-xl border-2">
-<option value="all">ทุกเพศ</option>
-<option value="male">ชาย</option>
-<option value="female">หญิง</option>
-</select>
-</div>
+    <div>
+      <label>พื้นที่</label>
+      <input id="location" class="w-full p-3 rounded-xl border-2" placeholder="เช่น กรุงเทพฯ, เชียงใหม่">
+    </div>
 
-<div>
-<label class="flex items-center gap-2">
-<span>พื้นที่</span>
-</label>
-<input id="location" class="w-full p-3 rounded-xl border-2" placeholder="เช่น Bangkok, Chiang Mai">
-</div>
+    <div>
+      <label>จำนวนกลุ่มตัวอย่าง</label>
+      <input id="sample_size" type="number" class="w-full p-3 rounded-xl border-2" placeholder="100">
+    </div>
+  </div>
 
-<div>
-<label class="flex items-center gap-2">
-<span>จำนวนกลุ่มตัวอย่าง</span>
-</label>
-<input id="sample_size" type="number" class="w-full p-3 rounded-xl border-2" placeholder="100">
-</div>
+  <div class="p-6 rounded-2xl flex flex-col gap-4" style="background:linear-gradient(135deg,#F8EDEC 0%,#FFF5F3 100%);">
+    <div class="section-pill">
+      <i data-lucide="list-checks" style="width:13px;height:13px;"></i>
+      ข้อมูลแบบสอบถาม
+    </div>
+    <div>
+      <label>จำนวนคำถามโดยประมาณ</label>
+      <input id="question_count" type="number" class="w-full p-3 rounded-xl border-2" placeholder="เช่น 12">
+    </div>
+    <div>
+      <label>เวลาที่ใช้ทำโดยประมาณ (นาที)</label>
+      <input id="est_minutes" type="number" class="w-full p-3 rounded-xl border-2" placeholder="เช่น 10">
+      <p class="hint">แสดงใน stat pill ของหน้ารายละเอียดโครงการ</p>
+    </div>
+  </div>
 
-<div class="section-divider my-2"></div>
+  <div class="section-divider"></div>
 
-<!-- BUTTONS -->
-<button type="button" onclick="saveDraft()" class="p-4 rounded-xl bg-white border-2 border-gray-300 font-semibold hover:bg-gray-50 btn-hover icon-bounce">
-<span class="text-lg">💾</span> Save Draft
-</button>
+  <button type="button" onclick="saveDraft()" class="p-4 rounded-xl bg-white border-2 border-gray-300 font-semibold text-gray-600 hover:bg-gray-50 btn-hover icon-bounce flex items-center justify-center gap-2">
+    <i data-lucide="save" style="width:17px;height:17px;"></i> บันทึกแบบร่าง
+  </button>
 
-<button type="submit" class="p-4 rounded-xl font-semibold text-white btn-hover" style="background: linear-gradient(135deg, #EEB1C6 0%, #E89BB0 100%);">
-<span class="text-lg">✅</span> Create Project
-</button>
+  <button type="submit" class="p-4 rounded-xl font-semibold text-white btn-hover flex items-center justify-center gap-2" style="background:linear-gradient(135deg,#EEB1C6 0%,#E89BB0 100%);">
+    <i data-lucide="check-circle" style="width:17px;height:17px;"></i> บันทึกโครงการ
+  </button>
 
-<button type="button" onclick="goSurvey()" class="p-4 rounded-xl bg-gradient-to-r from-gray-800 to-black text-white font-semibold btn-hover">
-<span class="text-lg">➡</span> ไปหน้าสร้างแบบสอบถาม
-</button>
+  <button type="button" onclick="goMyProjects()" class="p-4 rounded-xl text-white font-semibold btn-hover flex items-center justify-center gap-2 btn-my-projects">
+    <i data-lucide="folder-kanban" style="width:17px;height:17px;"></i> โครงการของฉัน
+  </button>
 
-<button type="button" onclick="goDraftHistory()" class="p-4 rounded-xl bg-gradient-to-r from-gray-600 to-gray-700 text-white font-semibold btn-hover">
-<span class="text-lg">📂</span> ดูประวัติการเซฟ
-</button>
+  <button type="button" onclick="goDraftHistory()" class="p-4 rounded-xl bg-gradient-to-r from-gray-600 to-gray-700 text-white font-semibold btn-hover flex items-center justify-center gap-2">
+    <i data-lucide="folder-open" style="width:17px;height:17px;"></i> ดูประวัติการเซฟ
+  </button>
 
 </div>
 </form>
 
 </div>
 
-<!-- TOAST NOTIFICATION -->
-<div id="toast" class="fixed top-8 right-8 hidden text-white px-8 py-4 rounded-2xl shadow-2xl font-semibold" style="background: linear-gradient(135deg, #2C2C2C 0%, #1A1A1A 100%);"></div>
+<div id="toast" class="fixed top-8 right-8 hidden text-white px-8 py-4 rounded-2xl shadow-2xl font-semibold z-50" style="background:linear-gradient(135deg,#2C2C2C 0%,#1A1A1A 100%);"></div>
 
 <script>
-function showToast(msg){
-const t = document.getElementById("toast");
-t.innerText = msg;
-t.classList.remove("hidden");
-t.classList.add("toast-show");
-setTimeout(()=>{
-t.classList.add("hidden");
-t.classList.remove("toast-show");
-}, 2500);
-}
+lucide.createIcons();
 
-async function send(status){
-const data = {
-title: title.value,
-objective: objective.value,
-description: description.value,
-age_range: age_range.value,
-gender: gender.value,
-location: location.value,
-sample_size: sample_size.value,
-status: status
-};
+// --- ตัวแปรสำหรับข้อมูลอาชีพ ---
+const OCC_OPTIONS = [
+  { value: "Government",       label: "ข้าราชการ / รัฐวิสาหกิจ" },
+  { value: "Private Employee", label: "พนักงานเอกชน" },
+  { value: "Business Owner",   label: "เจ้าของกิจการ" },
+  { value: "Freelance",         label: "ฟรีแลนซ์" },
+  { value: "Agriculture",      label: "เกษตรกร" },
+  { value: "Labor",             label: "แรงงาน" },
+  { value: "Professional",     label: "วิชาชีพ (แพทย์ ทนาย ฯลฯ)" },
+  { value: "Student",          label: "นักเรียน / นักศึกษา" },
+  { value: "Unemployed",       label: "ไม่ได้ทำงาน" },
+  { value: "Other",            label: "อื่นๆ" },
+];
 
-const res = await fetch("/hire/create-project-api/",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify(data)
+let selectedOcc = new Set();
+let currentFirebaseProjectId = "";
+
+// รับข้อมูลที่ผ่านการจัดการวันที่มาจาก Server แล้ว
+const existingProject = JSON.parse('{{ existing_data|safe|default:"{}" }}');
+
+// --- เริ่มต้นระบบอาชีพ (Multi-select) ---
+const occList = document.getElementById("occList");
+OCC_OPTIONS.forEach(opt => {
+  const item = document.createElement("div");
+  item.className = "occ-item";
+  item.dataset.value = opt.value;
+  item.innerHTML = `<div class="occ-check"></div><span>${opt.label}</span>`;
+  item.addEventListener("click", () => toggleOcc(opt.value, opt.label, item));
+  occList.appendChild(item);
 });
 
-return await res.json();
-}
-
-/* CREATE */
-document.getElementById("projectForm").addEventListener("submit",async e=>{
-e.preventDefault();
-const r = await send("active");
-
-if(r.status==="success"){
-showToast("✅ บันทึกโครงการแล้ว");
-projectForm.reset();
-}else{
-showToast("❌ เกิดข้อผิดพลาด");
-}
+document.addEventListener("DOMContentLoaded", () => {
+    // ระบบ Auto-fill ข้อมูลเดิมกลับเข้าไปในฟอร์ม
+    if (existingProject && existingProject.title) {
+        document.getElementById('title').value = existingProject.title;
+        document.getElementById('objective').value = existingProject.objective;
+        document.getElementById('description').value = existingProject.description || "";
+        document.getElementById('org_name').value = existingProject.org_name;
+        document.getElementById('org_type').value = existingProject.org_type || "";
+        document.getElementById('org_dept').value = existingProject.org_dept || "";
+        document.getElementById('start_date').value = existingProject.start_date;
+        document.getElementById('deadline').value = existingProject.deadline;
+        
+        // กำหนด ID ปัจจุบันสำหรับการอัปเดต
+        currentFirebaseProjectId = existingProject.id || "";
+        
+        // ข้อมูลกลุ่มเป้าหมายใน Nested Object
+        if (existingProject.target_group) {
+            document.getElementById('age_range').value = existingProject.target_group.age_range || "";
+            document.getElementById('gender').value = existingProject.target_group.gender || "all";
+            document.getElementById('location').value = existingProject.target_group.location || "";
+            
+            // เติมข้อมูลอาชีพ (Selected Occupations)
+            if (existingProject.target_group.occupations) {
+                existingProject.target_group.occupations.forEach(occ => {
+                    if (occ !== "all") {
+                        selectedOcc.add(occ);
+                        const el = document.querySelector(`.occ-item[data-value="${occ}"]`);
+                        if (el) el.classList.add("checked");
+                    }
+                });
+                renderTags(); updateTriggerLabel(); updateSelectAll();
+            }
+        }
+        
+        document.getElementById('sample_size').value = existingProject.sample_size || "";
+        document.getElementById('question_count').value = existingProject.question_count || "";
+        document.getElementById('est_minutes').value = existingProject.est_minutes || "";
+    }
 });
 
-/* SAVE DRAFT */
-async function saveDraft(){
-const r = await send("draft");
-
-if(r.status==="success"){
-showToast("💾 บันทึกแบบร่างแล้ว");
-projectForm.reset();
-}else{
-showToast("❌ เซฟไม่สำเร็จ");
-}
+function toggleOcc(value, label, el) {
+  if (selectedOcc.has(value)) { selectedOcc.delete(value); el.classList.remove("checked"); }
+  else { selectedOcc.add(value); el.classList.add("checked"); }
+  updateSelectAll(); renderTags(); updateTriggerLabel();
 }
 
-/* NAV */
-function goSurvey(){
-window.location.href="/hire/create-survey/";
+function toggleSelectAll() {
+  const all = selectedOcc.size === OCC_OPTIONS.length;
+  if (all) {
+    selectedOcc.clear();
+    document.querySelectorAll(".occ-item").forEach(el => el.classList.remove("checked"));
+  } else {
+    OCC_OPTIONS.forEach(o => selectedOcc.add(o.value));
+    document.querySelectorAll(".occ-item").forEach(el => el.classList.add("checked"));
+  }
+  updateSelectAll(); renderTags(); updateTriggerLabel();
 }
 
-function goDraftHistory(){
-window.location.href="/hire/draft-history/";
+function updateSelectAll() {
+  const check = document.getElementById("selectAllCheck");
+  const all   = selectedOcc.size === OCC_OPTIONS.length;
+  const none  = selectedOcc.size === 0;
+  check.style.background  = all ? "#EEB1C6" : none ? "#fff" : "rgba(238,177,198,0.4)";
+  check.style.borderColor = (all || !none) ? "#EEB1C6" : "#DDD";
+  check.innerHTML = all
+    ? `<span style="display:block;width:4px;height:7px;border:2px solid #fff;border-top:none;border-left:none;transform:rotate(45deg) translateY(-1px);"></span>`
+    : none ? "" : `<span style="display:block;width:8px;height:2px;background:#fff;border-radius:2px;"></span>`;
 }
 
-function goHome(){
-window.location.href="/";
+function renderTags() {
+  const container = document.getElementById("occTags");
+  container.innerHTML = "";
+  selectedOcc.forEach(val => {
+    const opt = OCC_OPTIONS.find(o => o.value === val);
+    if (!opt) return;
+    const tag = document.createElement("span");
+    tag.className = "occ-tag";
+    tag.innerHTML = `${opt.label}<span class="occ-tag-remove" title="ลบ" onclick="removeOcc('${val}')">×</span>`;
+    container.appendChild(tag);
+  });
 }
 
-function goSettings(){
-window.location.href="/settings/";
+function removeOcc(value) {
+  selectedOcc.delete(value);
+  const el = occList.querySelector(`[data-value="${value}"]`);
+  if (el) el.classList.remove("checked");
+  updateSelectAll(); renderTags(); updateTriggerLabel();
 }
+
+function updateTriggerLabel() {
+  const lbl = document.getElementById("occTriggerLabel");
+  if (selectedOcc.size === 0) {
+    lbl.textContent = "เลือกอาชีพ (ค่าเริ่มต้น: ทุกอาชีพ)";
+    lbl.classList.remove("has-value");
+  } else if (selectedOcc.size === OCC_OPTIONS.length) {
+    lbl.textContent = "ทุกอาชีพ";
+    lbl.classList.add("has-value");
+  } else {
+    lbl.textContent = `เลือกแล้ว ${selectedOcc.size} อาชีพ`;
+    lbl.classList.add("has-value");
+  }
+}
+
+function toggleOccPanel() {
+  const panel   = document.getElementById("occPanel");
+  const trigger = document.getElementById("occTrigger");
+  const isOpen  = panel.classList.toggle("open");
+  trigger.classList.toggle("open", isOpen);
+}
+
+document.addEventListener("click", e => {
+  if (!document.getElementById("occDropdown").contains(e.target)) {
+    document.getElementById("occPanel").classList.remove("open");
+    document.getElementById("occTrigger").classList.remove("open");
+  }
+});
+
+// --- ระบบ Validation ---
+const REQUIRED_FIELDS = [
+  { id: "title",      errId: "err-title" },
+  { id: "objective",  errId: "err-objective" },
+  { id: "org_name",   errId: "err-org_name" },
+  { id: "start_date", errId: "err-start_date" },
+  { id: "deadline",   errId: "err-deadline" },
+];
+
+function validateForm() {
+  let valid = true;
+  REQUIRED_FIELDS.forEach(({ id, errId }) => {
+    const el  = document.getElementById(id);
+    const err = document.getElementById(errId);
+    if (!el.value.trim()) {
+      el.classList.add("field-error");
+      err.classList.add("show");
+      valid = false;
+    } else {
+      el.classList.remove("field-error");
+      err.classList.remove("show");
+    }
+  });
+
+  const sd = document.getElementById("start_date").value;
+  const dl = document.getElementById("deadline").value;
+  if (sd && dl && dl < sd) {
+    const errDl = document.getElementById("err-deadline");
+    document.getElementById("deadline").classList.add("field-error");
+    errDl.textContent = "⚠ วันหมดเขตต้องอยู่หลังวันเริ่มต้น";
+    errDl.classList.add("show");
+    valid = false;
+  }
+  if (!valid) {
+    const firstErr = document.querySelector(".field-error");
+    if (firstErr) firstErr.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+  return valid;
+}
+
+// --- ฟังก์ชันนำทางและ Modal ---
+function showSuccessModal(projectId) {
+    currentFirebaseProjectId = projectId; 
+    document.getElementById("successModal").classList.add("show");
+}
+
+function goToSurvey() {
+    if (currentFirebaseProjectId) {
+        window.location.href = `/survey/create-survey/?project_id=${currentFirebaseProjectId}`;
+    } else {
+        alert("ขออภัย ไม่พบรหัสโครงการ กรุณาตรวจสอบใน 'โครงการของฉัน'");
+    }
+}
+
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.innerText = msg;
+  t.classList.remove("hidden");
+  t.classList.add("toast-show");
+  setTimeout(() => { t.classList.add("hidden"); t.classList.remove("toast-show"); }, 2500);
+}
+
+// --- การรวบรวมข้อมูล (ปรับปรุงเพื่อให้ส่ง project_id ไปด้วย) ---
+function getFormData(status) {
+    const data = {
+        // ส่ง ID ไปให้ Backend เช็คเพื่อ Update ถ้ามีอยู่แล้ว
+        project_id: currentFirebaseProjectId || "", 
+        title:          document.getElementById("title").value,
+        objective:      document.getElementById("objective").value,
+        description:    document.getElementById("description").value,
+        org_name:       document.getElementById("org_name").value,
+        org_type:       document.getElementById("org_type").value,
+        org_dept:       document.getElementById("org_dept").value,
+        start_date:     document.getElementById("start_date").value,
+        deadline:       document.getElementById("deadline").value,
+        age_range:      document.getElementById("age_range").value,
+        gender:         document.getElementById("gender").value,
+        occupations:    selectedOcc.size === 0 ? ["all"] : [...selectedOcc],
+        location:       document.getElementById("location").value,
+        sample_size:    document.getElementById("sample_size").value,
+        question_count: document.getElementById("question_count").value,
+        est_minutes:    document.getElementById("est_minutes").value,
+        status:         status,
+    };
+    return data;
+}
+
+async function sendData(status) {
+  const res = await fetch("/hire/create-project-api/", {
+    method:  "POST",
+    headers: { "Content-Type": "application/json" },
+    body:    JSON.stringify(getFormData(status)),
+  });
+  return await res.json();
+}
+
+async function saveDraft() {
+  try {
+    const r = await sendData("draft");
+    if (r.status === "success") {
+      showToast("💾 บันทึกแบบร่างเรียบร้อย");
+    }
+  } catch (err) {
+    showToast("❌ เชื่อมต่อเซิร์ฟเวอร์ล้มเหลว");
+  }
+}
+
+document.getElementById("projectForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    try {
+        const r = await sendData("active"); 
+        if (r.status === "success") {
+            showSuccessModal(r.project_id); 
+        } else {
+            showToast("❌ " + r.message);
+        }
+    } catch (err) {
+        showToast("❌ ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้");
+    }
+});
+
+// --- Navigation ---
+function goMyProjects()   { window.location.href = "/hire/my-projects/"; }
+function goDraftHistory() { window.location.href = "/hire/drafts/"; }
+function goHome()         { window.location.href = "/home/home-page/"; }
+function goSettings()     { window.location.href = "/settings/"; }
 </script>
 
 </body>

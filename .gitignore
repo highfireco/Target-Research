@@ -4,3 +4,7 @@ __pycache__/
 .env
 db.sqlite3
 node_modules/
+firebase_key.json
+# Ignore Firebase/Google service account
+target-research-6b556-firebase-adminsdk-fbsvc-cb6ec548bb.json
+

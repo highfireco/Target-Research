@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Signup</title>
+
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+    body {
+        margin: 0;
+        font-family: "Prompt", sans-serif;
+        background: linear-gradient(135deg, #F8C8DC, #FADADD);
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .card {
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        width: 360px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        text-align: center;
+    }
+
+    h2 {
+        margin-bottom: 25px;
+        font-weight: 600;
+        color: #444;
+    }
+
+    .input-group {
+        text-align: left;
+        margin-bottom: 18px;
+    }
+
+    label {
+        font-size: 14px;
+        color: #666;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px;
+        border-radius: 12px;
+        border: none;
+        background: #FDF1F5;
+        margin-top: 6px;
+        font-size: 14px;
+    }
+
+    input:focus {
+        outline: none;
+        background: #FCE4EC;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #F48FB1, #EC407A);
+        color: white;
+        font-weight: 500;
+        cursor: pointer;
+        transition: 0.25s;
+    }
+
+    .btn:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+    }
+
+    .footer {
+        margin-top: 18px;
+        font-size: 13px;
+    }
+
+    .footer a {
+        color: #EC407A;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .footer a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+
+</head>
+<body>
+
+<div class="card">
+    <h2>Create Account</h2>
+
+
+<form method="POST">
+    {% csrf_token %}
+
+    <div class="input-group">
+        <label>Email address</label>
+        <input type="email" name="email" placeholder="Enter your email" required>
+    </div>
+
+    <button class="btn" type="submit" name="send_pin">
+        Send Verification Code
+    </button>
+</form>
+
+<div class="footer">
+    Already have an account?
+    <a href="{% url 'login' %}">Login</a>
+</div>
+
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,274 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>การแจ้งเตือน</title>
+
+    <link rel="stylesheet" href="{% static 'notifications/css/home.css' %}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: #F7EDED;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            padding: 24px;
+            margin: 0 auto;
+        }
+
+        .header-section {
+            padding: 40px;
+            margin-bottom: 32px;
+            position: relative;
+        }
+
+        /* Back button */
+        .back-button {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            background: #ffffff;
+            border: 2px solid #8162A9;
+            color: #8162A9;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-button:hover {
+            background-color: #8162A9;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(129, 98, 169, 0.3);
+        }
+
+        .back-button svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+        }
+
+        .icon-wrapper {
+            width: 96px;
+            height: 96px;
+            background-color: #8162A9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 8px 32px rgba(129, 98, 169, 0.3);
+        }
+
+        .icon-wrapper svg {
+            width: 48px;
+            height: 48px;
+            stroke: #fff;
+            stroke-width: 2;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 42px;
+            font-weight: 700;
+            margin: 0 0 8px;
+            color: #8162A9;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 18px;
+            margin: 0 0 50px;
+            color: #4a5568;
+            font-weight: 400;
+        }
+
+        .grid {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+            position: relative;
+            max-width: 420px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.05);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .card-icon {
+            width: 80px;
+            height: 80px;
+            background-color: #FEEBCB;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .card-icon svg {
+            width: 36px;
+            height: 36px;
+            stroke: #A780DA;
+        }
+
+        .card-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #2d3748;
+        }
+
+        .card-desc {
+            font-size: 16px;
+            color: #718096;
+            line-height: 1.6;
+        }
+
+        .card-link {
+            margin-top: 24px;
+            font-weight: 600;
+            color: #8162A9;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .card-link svg {
+            width: 18px;
+            height: 18px;
+            stroke: #8162A9;
+        }
+
+        /* Badge รอเพื่อนเชื่อม */
+        .badge-waiting {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background-color: #FBBF24;
+            color: #fff;
+            padding: 6px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+
+            .subtitle {
+                font-size: 16px;
+            }
+
+            .card {
+                padding: 24px;
+                width: 100%;
+            }
+
+            .back-button {
+                top: 20px;
+                left: 20px;
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container header-section">
+
+    <!-- ปุ่มกลับ -->
+    <button class="back-button" onclick="goHome()">
+        <i data-lucide="arrow-left"></i> กลับ
+    </button>
+
+    <div class="icon-wrapper">
+        <i data-lucide="bell-ring"></i>
+    </div>
+
+    <h1>การแจ้งเตือนทั้งหมด</h1>
+    <div class="subtitle">เลือกประเภทการแจ้งเตือนที่คุณต้องการดู</div>
+
+    <div class="grid">
+
+        <a href="{% url 'survey_notification' %}" class="card">
+            <div class="card-icon">
+                <i data-lucide="clipboard-list"></i>
+            </div>
+            <div class="card-title">แบบสำรวจ</div>
+            <div class="card-desc">
+                แบบสำรวจที่รอการตอบกลับจากคุณ
+            </div>
+            <div class="card-link">
+                ดูรายละเอียด
+                <i data-lucide="arrow-right"></i>
+            </div>
+        </a>
+
+        <a href="{% url 'project_progress_notification' %}" class="card">
+            <div class="card-icon">
+                <i data-lucide="trending-up"></i>
+            </div>
+            <div class="card-title">ความคืบหน้าโครงการ</div>
+            <div class="card-desc">
+                ติดตามสถานะและความคืบหน้าโครงการทั้งหมด
+            </div>
+            <div class="card-link">
+                ดูรายละเอียด
+                <i data-lucide="arrow-right"></i>
+            </div>
+        </a>
+
+    </div>
+
+</div>
+
+<script>
+    lucide.createIcons();
+    
+    /* เชื่อมหน้าตรงนี้งับ */
+    function goHome() {
+        window.location.href = "{% url 'home_page' %}";
+    }
+</script>
+
+</body>
+</html>
