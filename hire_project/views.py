@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.shortcuts import redirect, render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -110,6 +111,30 @@ def _firestore_doc(payload: dict, django_id=None) -> dict:
 # ═══════════════════════════════════════════════
 
 def create_project_view(request):
+    # 1. ล็อกหน้าเว็บ ต้อง Login ก่อนถึงจะสร้างโปรเจกต์ได้
+    uid = request.session.get("uid")
+    if not uid:
+        return redirect("login")
+
+    if request.method == "POST":
+        # 2. รับค่าที่ผู้ใช้พิมพ์มาจากหน้าเว็บ (ตั้งชื่อตัวแปรตาม name ใน HTML)
+        title = request.POST.get("project_name") # สมมติว่าใน HTML ใช้ name="project_name"
+        description = request.POST.get("objective") # สมมติว่าใน HTML ใช้ name="objective"
+        
+        # 3. สร้าง Document ใหม่แบบให้ Firebase สุ่ม ID ให้ (นี่คือ Project ID ของคุณ)
+        new_project_ref = db.collection("surveys").document() 
+        
+        # 4. บันทึกข้อมูลลงฐานข้อมูล
+        new_project_ref.set({
+            "title": title,
+            "description": description,
+            "owner_id": uid,  # 🔑 สำคัญมาก! ผูกงานนี้เข้ากับ UID ของคนที่สร้าง
+            "created_at": datetime.datetime.now().strftime("%d %b %Y")
+        })
+
+        # 5. สร้างเสร็จแล้ว ให้เด้งกลับไปหน้า Home เพื่อดูการ์ดผลงานที่เพิ่งสร้าง
+        return redirect("home_page")
+
     return render(request, "hire/create_project.html")
 
 def draft_history_view(request):
