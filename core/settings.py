@@ -54,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'core.middleware.UserTrackingMiddleware', #ไว้ดู user ว่า online อยู่หรือเปล่า
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -86,6 +87,15 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+FIREBASE_CREDENTIALS = BASE_DIR / "Firebase.json"
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "highfire.co@gmail.com"
+EMAIL_HOST_PASSWORD = "pphocdklrzxswyxz"
+
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators

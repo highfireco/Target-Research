@@ -79,14 +79,14 @@ def _build_payload(data: dict, owner_id: str, status: str) -> dict:
 
 def _firestore_doc(payload: dict, django_id=None) -> dict:
     doc = {
-        "title":       payload["title"],
-        "objective":   payload["objective"],
-        "description": payload["description"],
-        "org_name":    payload["org_name"],
-        "org_type":    payload["org_type"],
-        "org_dept":    payload["org_dept"],
-        "start_date":  payload["start_date"],
-        "deadline":    payload["deadline"],
+        "title":        payload["title"],
+        "objective":    payload["objective"],
+        "description":  payload["description"],
+        "org_name":     payload["org_name"],
+        "org_type":     payload["org_type"],
+        "org_dept":     payload["org_dept"],
+        "start_date":   payload["start_date"],
+        "deadline":     payload["deadline"],
         "target_group": {
             "age_range":   payload["age_range"],
             "gender":      payload["gender"],
@@ -98,11 +98,23 @@ def _firestore_doc(payload: dict, django_id=None) -> dict:
         "est_minutes":    payload["est_minutes"],
         "owner_id":   payload["owner_id"],
         "status":     payload["status"],
-        "created_at": SERVER_TIMESTAMP,
+        "updated_at": SERVER_TIMESTAMP,
     }
     if django_id:
         doc["django_id"] = str(django_id)
     return doc
+
+def _delete_firestore_doc(collection: str, django_id: int):
+    """ค้นหา doc ที่มี django_id ตรงกัน แล้วลบออกจาก Firestore"""
+    try:
+        db = get_firebase_db()
+        docs = db.collection(collection)\
+                 .where("django_id", "==", str(django_id))\
+                 .stream()
+        for doc in docs:
+            doc.reference.delete()
+    except Exception as e:
+        print(f"[Firestore delete ERROR] {collection}/{django_id}: {e}")
 
 
 # ═══════════════════════════════════════════════
@@ -120,7 +132,6 @@ def create_project_view(request):
     if draft_id:
         owner_id = _get_owner_id(request)
         try:
-            # ดึง draft เฉพาะของ owner คนนี้เท่านั้น (ป้องกัน IDOR)
             draft = ResearchDraft.objects.get(id=draft_id, owner_id=owner_id)
         except ResearchDraft.DoesNotExist:
             pass  # draft ไม่พบ หรือไม่ใช่ของ user → เปิด form ว่างปกติ
@@ -155,7 +166,7 @@ def project_list_view(request):
 
 
 # ═══════════════════════════════════════════════
-#  API: สร้าง / บันทึกโครงการ
+#  API: สร้าง / อัปเดตโครงการ
 # ═══════════════════════════════════════════════
 
 @csrf_exempt
@@ -237,7 +248,7 @@ def create_project_api(request):
             return JsonResponse({"status": "success", "draft_id": draft.id, "message": "บันทึกแบบร่างแล้ว"})
 
         else:
-            # บันทึก Django
+            # ── สร้าง ResearchProject ใหม่ (active) ──
             project = ResearchProject.objects.create(
                 title          = payload["title"],
                 objective      = payload["objective"],
@@ -258,75 +269,73 @@ def create_project_api(request):
                 owner_id       = owner_id,
             )
             # Sync Firestore → collection "projects"
-            db.collection("projects").add(_firestore_doc(payload, django_id=project.id))
+            doc_data = _firestore_doc(payload, django_id=project.id)
+            doc_data["created_at"] = SERVER_TIMESTAMP
+            doc_ref = db.collection("projects").add(doc_data)
+            firebase_project_id = doc_ref[1].id
 
-            # ลบ draft เดิมถ้ามี (กด "สร้างโครงการ" จากหน้าแก้ไข draft)
+            # ลบ draft เดิมถ้ามี
             if existing_draft_id:
                 ResearchDraft.objects.filter(id=existing_draft_id, owner_id=owner_id).delete()
 
-            return JsonResponse({"status": "success", "project_id": project.id, "message": "สร้างโครงการแล้ว"})
+            return JsonResponse({
+                "status":     "success",
+                "project_id": firebase_project_id,
+                "message":    "สร้างโครงการแล้ว",
+            })
 
     except Exception as e:
         return JsonResponse({"status": "error", "message": str(e)}, status=500)
 
 
 # ═══════════════════════════════════════════════
-#  Convert draft → active
+#  Convert draft → active project
 # ═══════════════════════════════════════════════
 
 def convert_to_project(request, draft_id):
+    owner_id = _get_owner_id(request)
+    if not owner_id:
+        return redirect("login")
     try:
-        draft = ResearchDraft.objects.get(id=draft_id)
+        draft = ResearchDraft.objects.get(id=draft_id, owner_id=owner_id)
     except ResearchDraft.DoesNotExist:
-        return JsonResponse({"status": "error", "message": "ไม่พบ draft"}, status=404)
+        return redirect("draft_history")
 
     project = ResearchProject.objects.create(
-        title=draft.title, objective=draft.objective,
-        description=draft.description, org_name=draft.org_name,
-        org_type=draft.org_type, org_dept=draft.org_dept,
-        start_date=draft.start_date, deadline=draft.deadline,
-        age_range=draft.age_range, gender=draft.gender or "all",
-        occupations=draft.occupations or ["all"],
-        location=draft.location, sample_size=draft.sample_size or 0,
-        question_count=draft.question_count, est_minutes=draft.est_minutes,
-        owner_id=draft.owner_id, status="active",
+        title          = draft.title,
+        objective      = draft.objective,
+        description    = draft.description,
+        org_name       = draft.org_name,
+        org_type       = draft.org_type,
+        org_dept       = draft.org_dept,
+        start_date     = draft.start_date,
+        deadline       = draft.deadline,
+        age_range      = draft.age_range,
+        gender         = draft.gender or "all",
+        occupations    = draft.occupations or ["all"],
+        location       = draft.location,
+        sample_size    = draft.sample_size or 0,
+        question_count = draft.question_count,
+        est_minutes    = draft.est_minutes,
+        owner_id       = draft.owner_id,
+        status         = "active",
     )
 
+    firebase_project_id = None
     try:
-        payload = {
-            "title": project.title, "objective": project.objective,
-            "description": project.description, "org_name": project.org_name,
-            "org_type": project.org_type, "org_dept": project.org_dept,
-            "start_date": project.start_date, "deadline": project.deadline,
-            "age_range": project.age_range, "gender": project.gender or "all",
-            "occupations": project.occupations or ["all"],
-            "location": project.location, "sample_size": project.sample_size,
-            "question_count": project.question_count, "est_minutes": project.est_minutes,
-            "owner_id": project.owner_id, "status": "active",
-        }
-        get_firebase_db().collection("projects").add(_firestore_doc(payload, django_id=project.id))
+        payload = _build_payload(draft.__dict__, draft.owner_id, "active")
+        doc_data = _firestore_doc(payload, django_id=project.id)
+        doc_data["created_at"] = SERVER_TIMESTAMP
+        doc_ref = get_firebase_db().collection("projects").add(doc_data)
+        firebase_project_id = doc_ref[1].id
     except Exception as e:
         print(f"[Firebase ERROR] {e}")
 
     draft.delete()
+
+    if firebase_project_id:
+        return redirect(f"/survey/create-survey/?project_id={firebase_project_id}")
     return redirect("my_projects")
-
-
-# ═══════════════════════════════════════════════
-#  Helper: ลบ Firestore doc ด้วย django_id
-# ═══════════════════════════════════════════════
-
-def _delete_firestore_doc(collection: str, django_id: int):
-    """ค้นหา doc ที่มี django_id ตรงกัน แล้วลบออกจาก Firestore"""
-    try:
-        db = get_firebase_db()
-        docs = db.collection(collection)\
-                 .where("django_id", "==", str(django_id))\
-                 .stream()
-        for doc in docs:
-            doc.reference.delete()
-    except Exception as e:
-        print(f"[Firestore delete ERROR] {collection}/{django_id}: {e}")
 
 
 # ═══════════════════════════════════════════════
@@ -339,8 +348,8 @@ def delete_draft(request, draft_id):
         return redirect("login")
     try:
         draft = ResearchDraft.objects.get(id=draft_id, owner_id=owner_id)
-        _delete_firestore_doc("drafts", draft.id)   # ลบ Firestore ก่อน
-        draft.delete()                               # แล้วค่อยลบ Django DB
+        _delete_firestore_doc("drafts", draft.id)
+        draft.delete()
     except ResearchDraft.DoesNotExist:
         pass
     return redirect("draft_history")
@@ -356,8 +365,8 @@ def delete_project(request, project_id):
         return redirect("login")
     try:
         project = ResearchProject.objects.get(id=project_id, owner_id=owner_id)
-        _delete_firestore_doc("projects", project.id)  # ลบ Firestore ก่อน
-        project.delete()                               # แล้วค่อยลบ Django DB
+        _delete_firestore_doc("projects", project.id)
+        project.delete()
     except ResearchProject.DoesNotExist:
         pass
     return redirect("my_projects")

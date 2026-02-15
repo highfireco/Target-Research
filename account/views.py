@@ -149,6 +149,7 @@ def verify_token(request):
     try:
         decoded = auth.verify_id_token(id_token)
         request.session["uid"] = decoded["uid"]
+        print(id_token)
         return JsonResponse({"status": "success"})
     except Exception as e:
         # พิมพ์ Error ออกมาดูว่า Firebase บ่นอะไร
@@ -159,7 +160,7 @@ def verify_token(request):
 def dashboard_view(request):
     if not request.session.get("uid"):
         return redirect("login")
-    return render(request, "account/dashboard_view.html")
+    return render(request, "home/home_preview.html")
 
 
 def logout_view(request):
