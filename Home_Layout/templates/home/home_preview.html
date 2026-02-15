@@ -37,6 +37,9 @@
                 <a href="#MyResearch" class="text-gray-600 hover:text-[#EEB1C6]">
                     My Research
                 </a>
+                <a href="#AvailableSurveys" class="text-gray-600 hover:text-[#EEB1C6]">
+                    AvailableSurveys
+                </a>
             </div>
 
             <!-- Right Side -->
@@ -112,10 +115,21 @@
         <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-8 px-6">
 
             {% for research in researches %}
-            <div class="bg-white p-8 rounded-2xl shadow-md hover:shadow-lg transition">
+            <div class="bg-white p-8 rounded-2xl shadow-md hover:shadow-lg transition relative group">
+                <form action="{% url 'delete_project' survey_id=research.id %}" method="POST"
+                    onsubmit="return confirm('คุณแน่ใจหรือไม่ว่าต้องการลบโปรเจกต์นี้? ข้อมูลทั้งหมดจะหายไปถาวร');"
+                    class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                    {% csrf_token %}
+                    <button type="submit" class="text-gray-400 hover:text-red-500 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </form>
 
-                <h3 class="text-xl font-bold text-[#EEB1C6] mb-4">
-                    {{ research.title }}
+                <h3 class="text-xl font-bold text-[#EEB1C6] mb-4 pr-6"> {{ research.title }}
                 </h3>
 
                 <p class="text-gray-600 mb-4">
@@ -126,12 +140,11 @@
                     Created: {{ research.created_at}}
                 </p>
 
-                <a href="#" class="text-sm text-[#EEB1C6] hover:underline">
+                <a href="{% url 'survey_dashboard' survey_id=research.id %}"
+                    class="text-sm text-[#EEB1C6] hover:underline">
                     View Details →
                 </a>
-
             </div>
-
             {% empty %}
             <div class="col-span-3 text-center text-gray-500">
                 You haven't created any research yet.

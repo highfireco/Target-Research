@@ -1,9 +1,12 @@
-from django.shortcuts import render
-from firebase_admin import firestore
+from django.shortcuts import render,redirect
+from core.firebase_config import db
 from collections import Counter
 
 def survey_dashboard_view(request, survey_id):
-    db = firestore.client()
+    uid=request.session.get("uid")
+    if not uid:
+        return redirect("login")
+    
     all_responses = []
     category_list = []
     monthly_counts = [0] * 12
@@ -20,17 +23,20 @@ def survey_dashboard_view(request, survey_id):
     current_survey = survey_doc.to_dict()
     current_survey['id'] = survey_id
 
+    if current_survey.get('owner_id') != uid:  # username = Firebase UID
+        return redirect("home_page")
+    
     # ── ดึง surveys ทั้งหมดสำหรับ dropdown ──
     all_surveys = []
-    for doc in db.collection('surveys').stream():
+    surveys_stream = db.collection('surveys').where('owner_id', '==', uid).stream()
+    for doc in surveys_stream:
         data = doc.to_dict()
         data['id'] = doc.id
         all_surveys.append(data)
 
     # ── ดึง responses ของ survey นี้ ──
-    docs = db.collection('responses') \
-             .where('survey_id', '==', survey_ref) \
-             .stream()
+    survey_path_string = f"/surveys/{survey_id}"
+    docs = db.collection('responses').where('survey_id', '==', survey_path_string).stream()
 
     for doc in docs:
         data = doc.to_dict()
@@ -75,29 +81,19 @@ def survey_dashboard_view(request, survey_id):
         project_doc = project_ref.get()
         if project_doc.exists:
             sample_size = project_doc.to_dict().get('sample_size', 0)
-            project_data = project_doc.to_dict()
 
-            # owner_id = project_data.get('owner_id')
-            # if owner_id != request.user.username:
-            #     return render(request, '403.html', status=403)
     total_count = len(all_responses)
     response_rate = round((total_count / sample_size * 100), 1) if sample_size > 0 else 0
-
-    # if current_survey.get('owner_id') != request.user.username:  # username = Firebase UID
-    #     return render(request, '403.html', status=403)
 
     context = {
         'latest_responses': all_responses[:5],
         'total_count': len(all_responses),
         'latest_answer': latest_answer,
-
         'all_surveys': all_surveys,          # ✅ surveys จริงสำหรับ dropdown
         'current_survey': current_survey,    # ✅ survey ที่เลือกอยู่
-
         'pie_labels': list(pie_counts.keys()),
         'pie_data': list(pie_counts.values()),
         'pie_dict': pie_dict_with_percent,
-
         'bar_labels': ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.",
                        "ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."],
         'bar_data': monthly_counts,

@@ -1,5 +1,5 @@
 from django.urls import path
-from Home_Layout.views import ( home_page, settings_view, edit_profile)
+from Home_Layout.views import ( home_page, settings_view, edit_profile, delete_project)
 from hire_project.views import create_project_view
 from dashboard_page.views import survey_dashboard_view
 from notifications.views import notification_home
@@ -13,4 +13,5 @@ urlpatterns = [
     path('edit-profile/', edit_profile, name='edit_profile'),
     path('settings/', settings_view, name='settings'),
     path('respond/<str:survey_id>/', survey_respond_page, name='survey_respond'),
+    path('delete-project/<str:survey_id>/', delete_project, name='delete_project'),
 ]
