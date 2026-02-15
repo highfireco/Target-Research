@@ -3,10 +3,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Signup</title>
+    <title>Email Verification</title>
 
 
-<!-- Google Font -->
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
@@ -24,15 +23,30 @@
         background: white;
         padding: 40px;
         border-radius: 20px;
-        width: 360px;
+        width: 380px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.08);
         text-align: center;
     }
 
     h2 {
-        margin-bottom: 25px;
+        margin-bottom: 10px;
         font-weight: 600;
         color: #444;
+    }
+
+    .subtitle {
+        font-size: 13px;
+        color: #777;
+        margin-bottom: 25px;
+    }
+
+    .error {
+        background: #FFE6E6;
+        color: #D32F2F;
+        padding: 10px;
+        border-radius: 10px;
+        font-size: 13px;
+        margin-bottom: 15px;
     }
 
     .input-group {
@@ -52,7 +66,9 @@
         border: none;
         background: #FDF1F5;
         margin-top: 6px;
-        font-size: 14px;
+        font-size: 16px;
+        letter-spacing: 4px;
+        text-align: center;
     }
 
     input:focus {
@@ -77,19 +93,10 @@
         transform: translateY(-1px);
     }
 
-    .footer {
+    .info {
         margin-top: 18px;
-        font-size: 13px;
-    }
-
-    .footer a {
-        color: #EC407A;
-        text-decoration: none;
-        font-weight: 500;
-    }
-
-    .footer a:hover {
-        text-decoration: underline;
+        font-size: 12px;
+        color: #888;
     }
 </style>
 
@@ -98,25 +105,31 @@
 <body>
 
 <div class="card">
-    <h2>Create Account</h2>
+    <h2>Verify Your Email</h2>
+    <div class="subtitle">
+        Enter the 6-digit code sent to your email
+    </div>
 
+
+{% if error %}
+    <div class="error">{{ error }}</div>
+{% endif %}
 
 <form method="POST">
     {% csrf_token %}
 
     <div class="input-group">
-        <label>Email address</label>
-        <input type="email" name="email" placeholder="Enter your email" required>
+        <label>Verification Code</label>
+        <input type="text" name="pin" maxlength="6" placeholder="••••••" required>
     </div>
 
-    <button class="btn" type="submit" name="send_pin">
-        Send Verification Code
+    <button class="btn" type="submit">
+        Verify Code
     </button>
 </form>
 
-<div class="footer">
-    Already have an account?
-    <a href="{% url 'login' %}">Login</a>
+<div class="info">
+    Didn’t receive the code? Try again in a moment.
 </div>
 
 
