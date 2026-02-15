@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-
+from payment.views import payment_page
 urlpatterns = [
     # หน้าสำหรับสร้างแบบสอบถาม (รองรับการรับ ?project_id=... ผ่าน URL)
     path('create-survey/', views.create_survey_page, name='create_survey'),
@@ -12,5 +12,5 @@ urlpatterns = [
     path('survey-preview/<str:survey_id>/', views.survey_page, name='survey_preview'),
     path('respond/<str:survey_id>/', views.survey_respond_page, name='survey_respond'),
     path('submit-response-api/', views.submit_response_api, name='submit_response_api'),
-
+    path('project-summary/<str:project_id>/', payment_page, name='payment'),
 ]

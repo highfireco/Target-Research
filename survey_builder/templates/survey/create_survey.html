@@ -222,9 +222,26 @@
                         questions: questions
                     })
                 });
+                
                 const result = await response.json();
-                if (result.status === "success") showSuccessModal(result.survey_id);
-            } catch (error) { alert("การเชื่อมต่อเซิร์ฟเวอร์ล้มเหลว"); }
+                
+                if (result.status === "success") {
+                    // (เลือกได้) ถ้าอยากให้เด้งไปหน้าชำระเงินทันที ให้ลบ/คอมเมนต์ showSuccessModal บรรทัดนี้ทิ้งครับ
+                    // showSuccessModal(result.survey_id); 
+                    
+                    // 🌟 1. ให้ Django สร้าง URL โดยใช้ชื่อ 'payment' และใส่คำว่า 'DUMMY_PROJECT' ไว้ก่อน
+                    let targetUrl = "{% url 'project_summary' project_id='DUMMY_PROJECT' %}";
+                    
+                    // 🌟 2. ใช้ JavaScript เอา projectIdFromUrl มาแทนที่คำว่า 'DUMMY_PROJECT'
+                    targetUrl = targetUrl.replace('DUMMY_PROJECT', projectIdFromUrl);
+
+                    // 🌟 3. สั่งเปลี่ยนหน้าเว็บ
+                    window.location.href = targetUrl;
+                }
+            } catch (error) { 
+                alert("การเชื่อมต่อเซิร์ฟเวอร์ล้มเหลว"); 
+            }
+            
         }
 
         function goBackToProject() {

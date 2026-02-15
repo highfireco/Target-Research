@@ -3,5 +3,5 @@ from . import views  # ต้องมั่นใจว่า import views ม�
 
 urlpatterns = [
     # แก้ไขให้รองรับ project_id ต่อท้าย URL
-    path('project-summary/<str:project_id>/', views.payment_page, name='payment'),
+    path('project-summary/<str:project_id>/', views.payment_page, name='project_summary'),
 ]
