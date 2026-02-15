@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from core.firebase_config import db
 from datetime import datetime, timedelta, timezone
-from django.http import HttpResponse, JsonResponse
 
 # ------------------- SURVEY NOTIFICATION -------------------
 def survey_notification(request):
@@ -56,62 +55,74 @@ def survey_notification(request):
     })
 
 
-# ------------------- PROJECT PROGRESS -------------------
 def project_progress_notification(request):
     now = datetime.now(tz=timezone.utc)
     project_data_list = []
 
-    # ดึง projects ทั้งหมด
     projects_ref = db.collection("projects")
     project_docs = projects_ref.stream()
 
     for project_doc in project_docs:
         project = project_doc.to_dict()
         project_id = project_doc.id
+
+        # --- เช็ค status active ---
+        if project.get("status") != "active":
+            print(f"Skipping project {project_id}: status is {project.get('status')}")
+            continue
+
         sample_size = project.get("sample_size", 0)
+        start_date = project.get("start_date")
+        end_date = project.get("deadline")
+
+        # --- เช็ค datetime ---
+        if not isinstance(start_date, datetime):
+            print(f"Skipping project {project_id}: start_date is not datetime ({start_date})")
+            continue
+        if not isinstance(end_date, datetime):
+            print(f"Skipping project {project_id}: deadline is not datetime ({end_date})")
+            continue
 
         # --- ดึง survey ของ project ---
         survey_ref = db.collection("surveys").where(
-            field_path="project_id",
-            op_string="==",
-            value=db.document(f"projects/{project_id}")
+            "project_id", "==", db.document(f"projects/{project_id}")
         )
         survey_docs = list(survey_ref.stream())
 
         if not survey_docs:
-            continue  # ข้าม project ที่ยังไม่มี survey
+            print(f"No survey found for project {project_id}")
+            continue
 
         survey_doc = survey_docs[0]
         survey = survey_doc.to_dict()
 
-        start_date = survey.get("start_date")
-        end_date = survey.get("end_date")
+        # --- นับจำนวนคำถามจาก subcollection questions ---
+        questions_ref = db.collection("surveys") \
+            .document(survey_doc.id) \
+            .collection("questions")
+        question_count = len(list(questions_ref.stream()))
+        print(f"Survey {survey_doc.id} has {question_count} questions")
 
-        print(f"Survey ID: {survey_doc.id}")
-        print("Subcollections:", [col.id for col in db.collection("surveys").document(survey_doc.id).collections()])
-
-
-        # --- นับจำนวน responses ---
+        # --- นับ responses ---
         responses_ref = db.collection("responses").where(
             "survey_id", "==", db.document(f"surveys/{survey_doc.id}")
-    )
+        )
         response_docs = list(responses_ref.stream())
         num_responds = len(response_docs)
-        print(f"Survey ID: {survey_doc.id}, Responses found: {num_responds}")
+        print(f"Survey {survey_doc.id} has {num_responds} responses")
 
-
-        # --- คำนวณความคืบหน้าเป็น %
+        # --- คำนวณ progress ---
         progress_percentage = 0
         if sample_size > 0:
             progress_percentage = min(int((num_responds / sample_size) * 100), 100)
 
-        # --- กำหนดสถานะโครงการ ---
-        if num_responds >= sample_size or (end_date and end_date < now):
+        # --- กำหนดสถานะ ---
+        if num_responds >= sample_size or end_date < now:
             status = "completed"
         else:
             status = "in-progress"
 
-
+        # --- เพิ่มเข้า list ---
         project_data_list.append({
             "survey_title": survey.get("title"),
             "survey_description": survey.get("description"),
@@ -122,8 +133,8 @@ def project_progress_notification(request):
             "progress_percentage": progress_percentage,
             "status": status,
         })
-    print(project_data_list)
 
+    print("Final project_data_list:", project_data_list)
     return render(request, "notifications/project_progress_notification.html", {
         "projects": project_data_list
     })

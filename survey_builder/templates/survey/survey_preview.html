@@ -13,6 +13,7 @@
             --primary-btn: #000000;
             --secondary-btn: #E5A9BC;
             --preview-tag: #666;
+            --project-tag: #C47898;
         }
 
         body {
@@ -55,6 +56,16 @@
             padding-bottom: 20px;
         }
 
+        /* สไตล์สำหรับชื่อโปรเจกต์ */
+        .project-context {
+            color: var(--project-tag);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: block;
+            text-transform: uppercase;
+        }
+
         h2 { font-weight: 600; margin: 0 0 10px 0; color: #333; }
         .description { color: #666; font-size: 0.95rem; line-height: 1.5; }
 
@@ -84,7 +95,6 @@
             align-items: center;
             gap: 10px;
             color: #555;
-            /* ปรับ cursor ให้เป็น default เพราะเป็นหน้า Preview ไม่ใช่หน้าทำจริง */
             cursor: default; 
         }
 
@@ -114,7 +124,6 @@
             transform: translateY(-2px);
         }
 
-        /* สไตล์สำหรับ Textarea */
         .preview-textarea {
             width: 100%;
             border: 1px solid #ddd;
@@ -135,6 +144,8 @@
     </div>
 
     <div class="header-section">
+        <span class="project-context">โครงการวิจัย: {{ project_title|default:"ไม่ได้เชื่อมโยงโครงการ" }}</span>
+        
         <h2>{{ survey.title|default:"ไม่มีชื่อแบบสำรวจ" }}</h2>
         <p class="description">{{ survey.description|default:"ไม่มีคำอธิบาย" }}</p>
     </div>
@@ -165,7 +176,7 @@
         {% endfor %}
 
         <div class="footer-buttons">
-            <a href="http://127.0.0.1:8000/survey/create-survey/" class="btn-back">
+            <a href="javascript:window.history.back();" class="btn-back">
                 ← กลับไปหน้าแก้ไข
             </a>
         </div>

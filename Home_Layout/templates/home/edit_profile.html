@@ -49,10 +49,21 @@
     <div class="mt-6">
         <a href="{% url 'home_page' %}" 
            class="text-gray-500 hover:text-[#EEB1C6]">
-            ← Back to Main Page
+            ← Back to Dashboard
         </a>
     </div>
 </div>
 
+<script>
+    // เช็คค่าจาก localStorage แล้วเปลี่ยนสี body ทันทีที่โหลดหน้า
+    const body = document.body;
+    const savedDarkMode = localStorage.getItem('darkMode') === 'enabled';
+    
+    if (savedDarkMode) {
+        body.classList.remove('bg-[#FFF5F9]');
+        body.classList.add('bg-gray-900', 'text-white');
+        // ถ้า Title มีส่วนอื่นที่อยากให้เปลี่ยนสี (เช่น Navbar) ให้สั่งเพิ่มตรงนี้ได้ครับ
+    }
+</script>
 </body>
 </html>

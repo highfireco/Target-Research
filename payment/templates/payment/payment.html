@@ -1,185 +1,462 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<title>Payment</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สรุปโครงการและการชำระเงิน | Target Research</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
-<style>
-body {
-  margin: 0;
-  font-family: "Segoe UI", sans-serif;
-  background: #f6dce2;
-}
+    <style>
+        :root {
+            --primary-color: #2F80ED; /* Blue from screenshot */
+            --bg-color: #FAFBFC;
+            --border-radius: 12px;
+        }
 
-.wrapper {
-  max-width: 1200px;
-  margin: 40px auto;
-  background: white;
-  padding: 30px;
-  border-radius: 20px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-}
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: var(--bg-color);
+            color: #333;
+            min-height: 100vh;
+        }
 
-.header {
-  background: #f3f3f3;
-  padding: 15px 25px;
-  border-radius: 50px;
-  margin-bottom: 25px;
-}
+        /* --- Stepper --- */
+        .stepper {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        .step-item {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            width: 120px;
+        }
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #E0E0E0;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: bold;
+        }
+        .step-item.active .step-circle {
+            background-color: var(--primary-color);
+        }
+        .step-item.completed .step-circle {
+            background-color: #27AE60; /* Green check */
+        }
+        .step-line {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 2px;
+            background-color: #E0E0E0;
+            z-index: 1;
+        }
+        
+        /* --- Cards & Layout --- */
+        .custom-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            border: 1px solid #EAECF0;
+            margin-bottom: 20px;
+        }
 
-.content {
-  display: flex;
-  gap: 20px;
-}
+        .edit-badge {
+            background: #E0E7FF;
+            color: #4338CA;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .edit-badge:hover { background: #ced5f2; }
 
-.left { flex: 2; }
-.right { flex: 1; }
+        /* --- Payment Selection Styles --- */
+        .payment-method-card {
+            border: 1px solid #EAECF0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        .payment-method-card:hover { border-color: var(--primary-color); }
+        .payment-method-card.active {
+            border: 2px solid var(--primary-color);
+            background-color: #F5F9FF;
+        }
+        
+        .radio-custom {
+            width: 20px; height: 20px; border-radius: 50%;
+            border: 2px solid #D0D5DD; margin-right: 15px;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .payment-method-card.active .radio-custom { border-color: var(--primary-color); }
+        .payment-method-card.active .radio-custom::after {
+            content: ''; position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%); width: 10px; height: 10px;
+            background-color: var(--primary-color); border-radius: 50%;
+        }
 
-.card {
-  background: #f7eaea;
-  padding: 20px;
-  border-radius: 15px;
-  margin-bottom: 15px;
-}
+        /* --- Right Sidebar (Blue Box) --- */
+        .summary-sidebar {
+            background-color: #1A73E8; /* Bright Blue */
+            color: white;
+            border-radius: 16px;
+            padding: 30px;
+            position: sticky;
+            top: 20px;
+        }
+        .summary-row {
+            display: flex; justify-content: space-between;
+            margin-bottom: 10px; font-size: 0.9rem; opacity: 0.9;
+        }
+        .total-price {
+            font-size: 2.2rem; font-weight: 700; margin: 10px 0;
+        }
+        .btn-pay-confirm {
+            background-color: white; color: #1A73E8;
+            border-radius: 50px; padding: 12px; width: 100%;
+            font-weight: 600; border: none; transition: 0.2s;
+        }
+        .btn-pay-confirm:hover { background-color: #F1F3F4; }
 
-.payment-option {
-  border: 1px solid #ccc;
-  padding: 12px;
-  border-radius: 10px;
-  margin-bottom: 10px;
-  cursor: pointer;
-}
-
-.payment-option input {
-  margin-right: 10px;
-}
-
-.hidden {
-  display: none;
-}
-
-button {
-  width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 10px;
-  margin-top: 10px;
-  cursor: pointer;
-}
-
-.btn-primary {
-  background: #3f7de0;
-  color: white;
-}
-
-.btn-secondary {
-  background: #ddd;
-}
-
-.price {
-  font-size: 20px;
-  font-weight: bold;
-  color: #3f7de0;
-}
-</style>
-
-<script>
-function showMethod(method) {
-  document.getElementById("cardForm").classList.add("hidden");
-  document.getElementById("bankForm").classList.add("hidden");
-  document.getElementById("qrForm").classList.add("hidden");
-
-  document.getElementById(method).classList.remove("hidden");
-}
-</script>
-
+        /* Page Transitions */
+        .page-section { display: none; animation: fadeIn 0.3s ease; }
+        .page-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
 </head>
-
 <body>
 
-<div class="wrapper">
+    <div class="container py-5">
+        
+        <div class="stepper">
+            <div class="step-line"></div>
+            <div class="step-item active" id="step1-indicator">
+                <div class="step-circle">1</div>
+                <small class="text-muted">ตรวจสอบข้อมูล</small>
+            </div>
+            <div class="step-item" id="step2-indicator">
+                <div class="step-circle">2</div>
+                <small class="text-muted">ชำระเงิน</small>
+            </div>
+            <div class="step-item" id="step3-indicator">
+                <div class="step-circle"><i class="bi bi-check-lg"></i></div>
+                <small class="text-muted">เสร็จสิ้น</small>
+            </div>
+        </div>
 
-<div class="header">
-<h2>Payment</h2>
-</div>
+        <div id="page-summary" class="page-section active">
+            <div class="d-flex align-items-center mb-4 gap-3">
+                <button onclick="location.href='/home/'" class="btn btn-light rounded-circle border"><i class="bi bi-house"></i></button>
+                <h3 class="fw-bold mb-0">สรุปโครงการวิจัย</h3>
+                <span class="badge bg-secondary ms-2">ID: {{ project_id }}</span>
+            </div>
 
-<div class="content">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="custom-card">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <h5 class="fw-bold mb-1">{{ project.title|default:"ไม่ได้ระบุชื่อโครงการ" }}</h5>
+                                <p class="text-muted mb-0 small">{{ project.org_name|default:"-" }} ({{ project.org_type|default:"-" }})</p>
+                            </div>
+                            <a href="/hire/create-project/?project_id={{ project_id }}" class="edit-badge">
+                                <i class="bi bi-pencil-fill me-1"></i> แก้ไข
+                            </a>
+                        </div>
+                        
+                        <div class="alert alert-light border mb-3">
+                            <small class="text-muted fw-bold">วัตถุประสงค์:</small>
+                            <p class="mb-0 small text-secondary">{{ project.objective|default:"-" }}</p>
+                        </div>
 
-<!-- LEFT SIDE -->
-<div class="left">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="p-2 border rounded bg-light">
+                                    <small class="text-muted d-block">ระยะเวลาเก็บข้อมูล</small>
+                                    <span class="text-primary fw-bold">{{ project.start_date }} ถึง {{ project.deadline }}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="p-2 border rounded bg-light">
+                                    <small class="text-muted d-block">ข้อมูลแบบสอบถาม</small>
+                                    <span class="fw-bold">{{ question_count }} ข้อ</span> <span class="text-muted">|</span> 
+                                    <span class="fw-bold">ประมาณ {{ project.est_minutes|default:"0" }} นาที</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-<div class="card">
-<h3>เลือกช่องทางการชำระเงิน</h3>
+                    <div class="custom-card">
+                        <h6 class="fw-bold mb-3 text-primary"><i class="bi bi-people-fill me-2"></i>กลุ่มเป้าหมาย (Target)</h6>
+                        <div class="row mb-3">
+                            <div class="col-4 border-end">
+                                <small class="text-muted">ช่วงอายุ</small><br>
+                                <strong>{{ project.target_group.age_range|default:"ทุกช่วงอายุ" }} ปี</strong>
+                            </div>
+                            <div class="col-4 border-end">
+                                <small class="text-muted">เพศ</small><br>
+                                <strong>{{ project.target_group.gender|default:"ทุกเพศ" }}</strong>
+                            </div>
+                            <div class="col-4">
+                                <small class="text-muted">พื้นที่</small><br>
+                                <strong>{{ project.target_group.location|default:"ทั่วประเทศ" }}</strong>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <small class="text-muted">อาชีพ:</small> 
+                            <span class="badge bg-info text-dark">{{ project.target_group.occupations|join:", " }}</span>
+                        </div>
+                        <div class="alert alert-primary mb-0 d-flex justify-content-between align-items-center" style="background-color: #F0F7FF; border: 1px solid #CCE5FF;">
+                            <span>จำนวนกลุ่มตัวอย่างที่ต้องการ</span>
+                            <span class="fw-bold fs-5">{{ project.sample_size|default:"0" }} คน</span>
+                        </div>
+                    </div>
+                </div>
 
-<label class="payment-option">
-<input type="radio" name="pay" onclick="showMethod('cardForm')" checked>
-บัตรเครดิต / เดบิต
-</label>
+                <div class="col-lg-4">
+                    <div class="custom-card sticky-top" style="top: 20px;">
+                        <h5 class="fw-bold mb-3">สรุปค่าใช้จ่าย</h5>
+                        
+                        <div class="d-flex justify-content-between mb-2 small">
+                            <span class="text-muted">ค่าตอบแทน ({{ project.sample_size }} คน)</span>
+                            <span>฿{{ pricing.incentive|floatformat:2 }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3 small">
+                            <span class="text-muted">ค่าธรรมเนียมแพลตฟอร์ม</span>
+                            <span>฿{{ pricing.fee|floatformat:2 }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3 small text-danger">
+                            <span>VAT 7%</span>
+                            <span>฿{{ pricing.vat|floatformat:2 }}</span>
+                        </div>
+                        
+                        <hr>
+                        
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="fw-bold">ยอดรวมทั้งสิ้น</span>
+                            <span class="fw-bold text-primary fs-4">฿{{ pricing.total|floatformat:2 }}</span>
+                        </div>
 
-<label class="payment-option">
-<input type="radio" name="pay" onclick="showMethod('bankForm')">
-โอนผ่านธนาคาร
-</label>
+                        <div class="form-check mb-3 bg-light p-2 rounded">
+                            <input class="form-check-input" type="checkbox" id="confirmData">
+                            <label class="form-check-label small" for="confirmData">
+                                ยืนยันข้อมูลถูกต้องครบถ้วน
+                            </label>
+                        </div>
 
-<label class="payment-option">
-<input type="radio" name="pay" onclick="showMethod('qrForm')">
-QR code / Mobile Banking
-</label>
-</div>
+                        <button onclick="goToPaymentPage()" class="btn btn-primary w-100 py-2 rounded-pill shadow-sm">
+                            ดำเนินการชำระเงิน <i class="bi bi-arrow-right ms-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<!-- CARD FORM -->
-<div id="cardForm" class="card">
-<h3>ข้อมูลบัตร</h3>
-<input placeholder="ชื่อบนบัตร" style="width:100%;padding:10px;margin:5px 0;">
-<input placeholder="หมายเลขบัตร" style="width:100%;padding:10px;margin:5px 0;">
-<input placeholder="วันหมดอายุ" style="width:48%;padding:10px;margin:5px 1%;">
-<input placeholder="CCV" style="width:48%;padding:10px;margin:5px 1%;">
-</div>
+        <div id="page-payment" class="page-section">
+            <button onclick="goBackToSummary()" class="btn btn-link text-decoration-none text-muted mb-3 ps-0">
+                <i class="bi bi-arrow-left"></i> ย้อนกลับไปแก้ไข
+            </button>
+            <h3 class="fw-bold mb-4">เลือกช่องทางการชำระเงิน</h3>
 
-<!-- BANK FORM -->
-<div id="bankForm" class="card hidden">
-<h3>โอนผ่านธนาคาร</h3>
-<p>ธนาคาร: ไทยพาณิชย์</p>
-<p>เลขบัญชี: 123-456-7890</p>
-<p>ชื่อบัญชี: บริษัท Target Research</p>
-<input type="file">
-</div>
+            <div class="row">
+                <div class="col-lg-8">
+                    
+                    <div class="payment-method-card active" id="card-option-credit" onclick="selectMethod('credit')">
+                        <div class="radio-custom"></div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi bi-credit-card-2-front fs-5 text-primary"></i>
+                                <span class="fw-bold">บัตรเครดิต / เดบิต</span>
+                            </div>
+                        </div>
+                    </div>
 
-<!-- QR FORM -->
-<div id="qrForm" class="card hidden">
-<h3>QR Code</h3>
-<div style="background:#eee;height:150px;display:flex;align-items:center;justify-content:center;">
-QR CODE
-</div>
-<input type="file">
-</div>
+                    <div class="payment-method-card" id="card-option-transfer" onclick="selectMethod('transfer')">
+                        <div class="radio-custom"></div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi bi-qr-code-scan fs-5 text-primary"></i>
+                                <span class="fw-bold">สแกน QR / โอนเงินผ่านธนาคาร</span>
+                            </div>
+                        </div>
+                    </div>
 
-<div class="card">
-<h3>ยืนยันการทำรายการ</h3>
-<label><input type="checkbox"> ยอมรับเงื่อนไข</label><br>
-<label><input type="checkbox"> ยืนยันข้อมูลถูกต้อง</label>
-</div>
+                    <div id="content-credit" class="mt-4 px-2">
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <label class="form-label text-muted small">หมายเลขบัตร</label>
+                                <input type="text" class="form-control" placeholder="0000 0000 0000 0000">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label text-muted small">ชื่อบนบัตร</label>
+                                <input type="text" class="form-control" placeholder="NAME SURNAME">
+                            </div>
+                            <div class="col-6 col-md-3 mb-3">
+                                <label class="form-label text-muted small">หมดอายุ</label>
+                                <input type="text" class="form-control" placeholder="MM/YY">
+                            </div>
+                            <div class="col-6 col-md-3 mb-3">
+                                <label class="form-label text-muted small">CVV</label>
+                                <input type="text" class="form-control" placeholder="123">
+                            </div>
+                        </div>
+                    </div>
 
-</div>
+                    <div id="content-transfer" class="mt-4 px-2" style="display: none;">
+                        <div class="text-center p-4 border rounded bg-white">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg" alt="QR Code" width="150" class="mb-3">
+                            <h6 class="fw-bold">123-8-99815-4</h6>
+                            <p class="text-muted small">ธนาคารกสิกรไทย (บจก. รีเสิร์ซ แพลตฟอร์ม)</p>
+                            <div class="alert alert-warning d-inline-block py-1 px-3 small">
+                                <i class="bi bi-clock"></i> กรุณาชำระภายใน 15 นาที
+                            </div>
+                        </div>
+                    </div>
 
-<!-- RIGHT SIDE -->
-<div class="right">
+                </div>
 
-<div class="card">
-<h3>สรุปคำสั่งซื้อ</h3>
-<p>ค่าดำเนินการ: ฿125,000</p>
-<p>VAT: ฿10,062</p>
-<hr>
-<p class="price">รวม ฿153,812</p>
-</div>
+                <div class="col-lg-4">
+                    <div class="summary-sidebar shadow">
+                        <h5 class="fw-bold mb-4">รายละเอียดการชำระ</h5>
+                        
+                        <div class="summary-row">
+                            <span>ค่าตอบแทนกลุ่มตัวอย่าง</span>
+                            <span>฿{{ pricing.incentive|floatformat:2 }}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>ค่าธรรมเนียมบริการ</span>
+                            <span>฿{{ pricing.fee|floatformat:2 }}</span>
+                        </div>
+                        <div class="summary-row text-warning">
+                            <span>ภาษีมูลค่าเพิ่ม (7%)</span>
+                            <span>฿{{ pricing.vat|floatformat:2 }}</span>
+                        </div>
+                        
+                        <hr class="border-white opacity-25 my-3">
+                        
+                        <div class="d-flex justify-content-between align-items-end">
+                            <span class="mb-2">ยอดชำระสุทธิ</span>
+                            <div class="total-price">฿{{ pricing.total|floatformat:2 }}</div>
+                        </div>
 
-<button class="btn-primary">ชำระเงินและเปิดโครงการ</button>
-<button class="btn-secondary">ย้อนกลับ</button>
+                        <button onclick="submitPayment()" id="btn-submit" class="btn-pay-confirm mt-3">
+                            <i class="bi bi-lock-fill me-1"></i> ยืนยันชำระเงิน
+                        </button>
 
-</div>
+                        <div class="text-center mt-3 small opacity-75">
+                            <i class="bi bi-shield-lock"></i> SSL Secured Payment
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-</div>
-</div>
+        <div id="page-success" class="page-section" style="padding-top: 50px;">
+            <div class="text-center">
+                <div class="bg-success text-white rounded-circle d-inline-flex p-4 mb-4 shadow">
+                    <i class="bi bi-check-lg" style="font-size: 3rem;"></i>
+                </div>
+                <h2 class="fw-bold text-success mb-2">ชำระเงินสำเร็จ!</h2>
+                <p class="text-muted mb-4">โครงการรหัส #{{ project_id }} ได้รับการอนุมัติแล้ว</p>
+                
+                <button class="btn btn-primary rounded-pill px-5 py-2" onclick="location.href='/home/home-page/'">
+                    ดูโครงการของฉัน
+                </button>
+            </div>
+        </div>
 
+    </div>
+
+    <script>
+        // --- Navigation Logic ---
+        function updateStepper(step) {
+            document.querySelectorAll('.step-item').forEach((el, index) => {
+                el.classList.remove('active', 'completed');
+                const circle = el.querySelector('.step-circle');
+                
+                if (index + 1 < step) {
+                    el.classList.add('completed');
+                    // เปลี่ยนเลขเป็นติ๊กถูกเมื่อผ่านแล้ว (ยกเว้นขั้นตอนสุดท้ายที่ใส่ไว้แล้ว)
+                    if (index < 2) circle.innerHTML = '<i class="bi bi-check-lg"></i>';
+                } else if (index + 1 === step) {
+                    el.classList.add('active');
+                    // คืนค่าตัวเลขถ้าถอยกลับมา
+                    if (index === 0) circle.innerText = '1';
+                    if (index === 1) circle.innerText = '2';
+                }
+            });
+        }
+
+        function goToPaymentPage() {
+            if(!document.getElementById('confirmData').checked) {
+                alert("กรุณายืนยันความถูกต้องของข้อมูลก่อนดำเนินการต่อ");
+                return;
+            }
+            document.getElementById('page-summary').classList.remove('active');
+            document.getElementById('page-payment').classList.add('active');
+            window.scrollTo(0,0);
+            updateStepper(2);
+        }
+
+        function goBackToSummary() {
+            document.getElementById('page-payment').classList.remove('active');
+            document.getElementById('page-summary').classList.add('active');
+            window.scrollTo(0,0);
+            updateStepper(1);
+        }
+
+        function selectMethod(method) {
+            // Reset UI
+            document.querySelectorAll('.payment-method-card').forEach(el => el.classList.remove('active'));
+            document.getElementById('content-credit').style.display = 'none';
+            document.getElementById('content-transfer').style.display = 'none';
+
+            // Active State
+            if (method === 'credit') {
+                document.getElementById('card-option-credit').classList.add('active');
+                document.getElementById('content-credit').style.display = 'block';
+            } else if (method === 'transfer') {
+                document.getElementById('card-option-transfer').classList.add('active');
+                document.getElementById('content-transfer').style.display = 'block';
+            }
+        }
+
+        function submitPayment() {
+            const btn = document.getElementById('btn-submit');
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> กำลังประมวลผล...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                document.getElementById('page-payment').classList.remove('active');
+                document.getElementById('page-success').classList.add('active');
+                window.scrollTo(0,0);
+                updateStepper(3);
+            }, 2000);
+        }
+
+        // Initialize
+        updateStepper(1);
+    </script>
 </body>
 </html>

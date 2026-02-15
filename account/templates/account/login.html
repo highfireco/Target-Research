@@ -132,6 +132,9 @@ const firebaseConfig = {
 
 /* Initialize Firebase */
 firebase.initializeApp(firebaseConfig);
+firebase.auth().signOut().then(() => {
+  console.log("Cleared Firebase Client Session");
+});
 
 /* Login flow */
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
@@ -141,34 +144,36 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     const password = document.getElementById("password").value;
 
     try {
-        // Login with Firebase
-        const userCredential = await firebase.auth()
-            .signInWithEmailAndPassword(email, password);
-
-        // Get ID token
+        // 1. Login with Firebase
+        const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
         const idToken = await userCredential.user.getIdToken();
 
-        // Send token to Django
+        // 2. ดึง CSRF Token จากฟอร์มที่ Django สร้างไว้ให้แบบชัวร์ๆ
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        // 3. Send token to Django (ใช้ URLSearchParams เพื่อความปลอดภัย)
         const response = await fetch("{% url 'verify_token' %}", {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
-                "X-CSRFToken": "{{ csrf_token }}"
+                "X-CSRFToken": csrfToken
             },
-            body: "idToken=" + idToken
+            body: new URLSearchParams({ idToken: idToken })
         });
 
         const data = await response.json();
 
-        // Redirect if success
+        // 4. Redirect if success
         if (data.status === "success") {
-            window.location.href = "{% url 'dashboard_view' %}";
+            // 💡 เปลี่ยนให้กระโดดไปหน้า Home หลักของโปรเจกต์แทน
+            window.location.href = "{% url 'home_page' %}"; 
         } else {
-            alert("Login failed");
+            alert("Login failed by Django: " + data.message);
         }
 
     } catch (error) {
-        alert(error.message);
+        // Error จากฝั่ง Firebase เช่น รหัสผิด หรือยังไม่เปิดใช้งาน Email Auth
+        alert("Firebase Error: " + error.message);
         console.error(error);
     }
 });

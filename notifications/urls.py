@@ -5,10 +5,12 @@ from .views import (
     survey_notification,
     project_progress_notification,
 )
+from Home_Layout.views import home_page
 
 urlpatterns = [
     path("", notification_home, name="notification_home"),
     path("payment/", payment_notification, name="payment_notification"),
     path("survey/", survey_notification, name="survey_notification"),
     path("project-progress/", project_progress_notification, name="project_progress_notification"),
+    path("home_page/",home_page, name="home_page"),
 ]

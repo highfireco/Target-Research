@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-
+from Home_Layout.views import home_page
 urlpatterns = [
     path("signup/", views.signup_email, name="signup"),
     path("verify/", views.verify_pin, name="verify_pin"),
@@ -10,4 +10,5 @@ urlpatterns = [
     path("verify-token/", views.verify_token, name="verify_token"),
     path("dashboard_view/", views.dashboard_view, name="dashboard_view"),
     path("logout/", views.logout_view, name="logout"),
+    path("home-page/", home_page, name="home_page"),
 ]
