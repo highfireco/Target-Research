@@ -16,3 +16,8 @@ def home_page(request):
         'surveys': surveys,
         'first_survey': first_survey
     })
+def setting_page(request):
+    return render(request, 'home/settings.html')
+
+def profile_page(request):
+    return render(request, 'home/edit_profile.html')

@@ -2,108 +2,6 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<<<<<<< HEAD
-<title>Create Research Project</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
-    
-body {
-    font-family: 'Prompt', sans-serif;
-}
-
-/* Gradient animations */
-@keyframes gradient {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-.gradient-bg {
-    background: linear-gradient(-45deg, #EEB1C6, #F5C6D6, #FFD4E5, #EEB1C6);
-    background-size: 400% 400%;
-    animation: gradient 15s ease infinite;
-}
-
-/* Input focus effects */
-input:focus, textarea:focus, select:focus {
-    outline: none;
-    border-color: #EEB1C6;
-    box-shadow: 0 0 0 3px rgba(238, 177, 198, 0.1);
-    transform: translateY(-1px);
-    transition: all 0.3s ease;
-}
-
-/* Button hover effects */
-.btn-hover {
-    transition: all 0.3s ease;
-}
-
-.btn-hover:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-}
-
-.btn-hover:active {
-    transform: translateY(0);
-}
-
-/* Card shadow */
-.card-shadow {
-    box-shadow: 0 20px 60px rgba(238, 177, 198, 0.3);
-}
-
-/* Toast animation */
-@keyframes slideIn {
-    from {
-        transform: translateX(400px);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-.toast-show {
-    animation: slideIn 0.4s ease-out;
-}
-
-/* Label styling */
-label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: #4A4A4A;
-    font-weight: 500;
-}
-
-/* Input styling */
-input, textarea, select {
-    transition: all 0.3s ease;
-    border: 2px solid #E5E5E5;
-}
-
-input::placeholder, textarea::placeholder {
-    color: #BDBDBD;
-}
-
-/* Section divider */
-.section-divider {
-    background: linear-gradient(90deg, transparent, #EEB1C6, transparent);
-    height: 2px;
-    margin: 1.5rem 0;
-    opacity: 0.3;
-}
-
-/* Icon bounce */
-@keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
-}
-
-.icon-bounce:hover {
-    animation: bounce 0.6s ease infinite;
-=======
 <title>สร้างโครงการวิจัย</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
@@ -343,31 +241,12 @@ input::placeholder, textarea::placeholder { color: #BDBDBD; }
 /* ── My Projects button (special teal style) ── */
 .btn-my-projects {
   background: linear-gradient(135deg, #5BA4A4 0%, #3D8080 100%);
->>>>>>> origin/project-refactor
 }
 </style>
 </head>
 
 <body class="min-h-screen flex items-center justify-center gradient-bg py-8">
 
-<<<<<<< HEAD
-<div class="w-[1200px] min-h-[750px] rounded-3xl p-10 card-shadow" style="background:#FFFFFF;">
-
-<!-- TOP BAR WITH ICONS -->
-<div class="flex justify-between items-start mb-8">
-<div>
-<h1 class="text-4xl font-bold mb-2" style="color:#EEB1C6;">Create Research Project</h1>
-<p class="text-gray-500">สร้างโครงการวิจัยของคุณอย่างมืออาชีพ</p>
-</div>
-<div class="flex gap-3">
-<button onclick="goHome()" class="w-12 h-12 rounded-xl bg-white border-2 border-gray-200 flex items-center justify-center text-2xl hover:bg-gray-50 btn-hover icon-bounce" title="Home">
-🏠
-</button>
-<button onclick="goSettings()" class="w-12 h-12 rounded-xl bg-white border-2 border-gray-200 flex items-center justify-center text-2xl hover:bg-gray-50 btn-hover icon-bounce" title="Settings">
-⚙️
-</button>
-</div>
-=======
 <div class="w-[1200px] rounded-3xl p-10 card-shadow" style="background:#FFFFFF;">
 
 <!-- TOP BAR -->
@@ -385,107 +264,10 @@ input::placeholder, textarea::placeholder { color: #BDBDBD; }
       <i data-lucide="settings" class="w-4 h-4"></i>ตั้งค่า
     </button>
   </div>
->>>>>>> origin/project-refactor
 </div>
 
 <div class="section-divider"></div>
 
-<<<<<<< HEAD
-<form id="projectForm" class="grid grid-cols-3 gap-6">
-
-<!-- LEFT SECTION -->
-<div class="col-span-2 p-8 rounded-2xl" style="background: linear-gradient(135deg, #F8EDEC 0%, #FFF5F3 100%);">
-<div class="mb-6">
-<label class="flex items-center gap-2">
-<span class="text-xl">📝</span>
-<span>ชื่อโครงการ</span>
-</label>
-<input id="title" class="w-full p-4 rounded-xl border-2" placeholder="ระบุชื่อโครงการวิจัยของคุณ...">
-</div>
-
-<div class="mb-6">
-<label class="flex items-center gap-2">
-<span class="text-xl">🎯</span>
-<span>วัตถุประสงค์</span>
-</label>
-<textarea id="objective" class="w-full p-4 rounded-xl border-2" rows="3" placeholder="ระบุวัตถุประสงค์ของการวิจัย..."></textarea>
-</div>
-
-<div>
-<label class="flex items-center gap-2">
-<span class="text-xl">📋</span>
-<span>รายละเอียดโครงการ</span>
-</label>
-<textarea id="description" class="w-full p-4 rounded-xl border-2 h-[180px]" placeholder="อธิบายรายละเอียดโครงการวิจัยของคุณ..."></textarea>
-</div>
-</div>
-
-<!-- RIGHT SECTION -->
-<div class="p-8 rounded-2xl flex flex-col gap-4" style="background: linear-gradient(135deg, #F8EDEC 0%, #FFF5F3 100%);">
-
-<div class="mb-2">
-<h3 class="text-lg font-semibold mb-4" style="color:#EEB1C6;">📊 ข้อมูลกลุ่มตัวอย่าง</h3>
-</div>
-
-<div>
-<label class="flex items-center gap-2">
-<span>👥</span>
-<span>ช่วงอายุ</span>
-</label>
-<input id="age_range" class="w-full p-3 rounded-xl border-2" placeholder="เช่น 18-35">
-</div>
-
-<div>
-<label class="flex items-center gap-2">
-<span>⚧</span>
-<span>เพศ</span>
-</label>
-<select id="gender" class="w-full p-3 rounded-xl border-2">
-<option value="all">ทุกเพศ</option>
-<option value="male">ชาย</option>
-<option value="female">หญิง</option>
-</select>
-</div>
-
-<div>
-<label class="flex items-center gap-2">
-<span>📍</span>
-<span>พื้นที่</span>
-</label>
-<input id="location" class="w-full p-3 rounded-xl border-2" placeholder="เช่น Bangkok, Chiang Mai">
-</div>
-
-<div>
-<label class="flex items-center gap-2">
-<span>🔢</span>
-<span>จำนวนกลุ่มตัวอย่าง</span>
-</label>
-<input id="sample_size" type="number" class="w-full p-3 rounded-xl border-2" placeholder="100">
-</div>
-
-<div class="section-divider my-2"></div>
-
-<!-- BUTTONS -->
-<button type="button" onclick="saveDraft()" class="p-4 rounded-xl bg-white border-2 border-gray-300 font-semibold hover:bg-gray-50 btn-hover icon-bounce">
-<span class="text-lg">💾</span> Save Draft
-</button>
-
-<button type="submit" class="p-4 rounded-xl font-semibold text-white btn-hover" style="background: linear-gradient(135deg, #EEB1C6 0%, #E89BB0 100%);">
-<span class="text-lg">✅</span> Create Project
-</button>
-
-<button type="button" onclick="goSurvey()" class="p-4 rounded-xl bg-gradient-to-r from-gray-800 to-black text-white font-semibold btn-hover">
-<span class="text-lg">➡</span> ไปหน้าสร้างแบบสอบถาม
-</button>
-
-<button type="button" onclick="goDraftHistory()" class="p-4 rounded-xl bg-gradient-to-r from-gray-600 to-gray-700 text-white font-semibold btn-hover">
-<span class="text-lg">📂</span> ดูประวัติการเซฟ
-</button>
-
-<button type="button" onclick="goPreview()" class="p-4 rounded-xl bg-gradient-to-r from-purple-500 to-purple-600 text-white font-semibold btn-hover">
-<span class="text-lg">👁️</span> Preview
-</button>
-=======
 <form id="projectForm" class="grid grid-cols-3 gap-6 mt-2">
 
 <!-- LEFT COL (col-span-2) -->
@@ -665,96 +447,12 @@ input::placeholder, textarea::placeholder { color: #BDBDBD; }
   <button type="button" onclick="goDraftHistory()" class="p-4 rounded-xl bg-gradient-to-r from-gray-600 to-gray-700 text-white font-semibold btn-hover flex items-center justify-center gap-2">
     <i data-lucide="folder-open" style="width:17px;height:17px;"></i> ดูประวัติการเซฟ
   </button>
->>>>>>> origin/project-refactor
 
 </div>
 </form>
 
 </div>
 
-<<<<<<< HEAD
-<!-- TOAST NOTIFICATION -->
-<div id="toast" class="fixed top-8 right-8 hidden text-white px-8 py-4 rounded-2xl shadow-2xl font-semibold" style="background: linear-gradient(135deg, #2C2C2C 0%, #1A1A1A 100%);"></div>
-
-<script>
-function showToast(msg){
-const t = document.getElementById("toast");
-t.innerText = msg;
-t.classList.remove("hidden");
-t.classList.add("toast-show");
-setTimeout(()=>{
-t.classList.add("hidden");
-t.classList.remove("toast-show");
-}, 2500);
-}
-
-async function send(status){
-const data = {
-title: title.value,
-objective: objective.value,
-description: description.value,
-age_range: age_range.value,
-gender: gender.value,
-location: location.value,
-sample_size: sample_size.value,
-status: status
-};
-
-const res = await fetch("/hire/create-project-api/",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify(data)
-});
-
-return await res.json();
-}
-
-/* CREATE */
-document.getElementById("projectForm").addEventListener("submit",async e=>{
-e.preventDefault();
-const r = await send("active");
-
-if(r.status==="success"){
-showToast("✅ บันทึกโครงการแล้ว");
-projectForm.reset();
-}else{
-showToast("❌ เกิดข้อผิดพลาด");
-}
-});
-
-/* SAVE DRAFT */
-async function saveDraft(){
-const r = await send("draft");
-
-if(r.status==="success"){
-showToast("💾 บันทึกแบบร่างแล้ว");
-projectForm.reset();
-}else{
-showToast("❌ เซฟไม่สำเร็จ");
-}
-}
-
-/* NAV */
-function goSurvey(){
-window.location.href="/hire/create-survey/";
-}
-
-function goDraftHistory(){
-window.location.href="/hire/draft-history/";
-}
-
-function goHome(){
-window.location.href="/";
-}
-
-function goSettings(){
-window.location.href="/settings/";
-}
-
-function goPreview(){
-window.location.href="/survey/survey-page/";
-}
-=======
 <!-- TOAST -->
 <div id="toast" class="fixed top-8 right-8 hidden text-white px-8 py-4 rounded-2xl shadow-2xl font-semibold" style="background:linear-gradient(135deg,#2C2C2C 0%,#1A1A1A 100%);"></div>
 
@@ -931,11 +629,10 @@ async function saveDraft() {
 }
 
 function goMyProjects()   { window.location.href = "/hire/my-projects/"; }
-function goSurvey()       { window.location.href = "/hire/create-survey/"; }
+function goSurvey()       { window.location.href = "/survey/create-survey/"; }
 function goDraftHistory() { window.location.href = "/hire/drafts/"; }
-function goHome()         { window.location.href = "/"; }
+function goHome()         { window.location.href = "/home/home-page/"; }
 function goSettings()     { window.location.href = "/settings/"; }
->>>>>>> origin/project-refactor
 </script>
 
 </body>

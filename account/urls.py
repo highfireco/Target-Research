@@ -10,5 +10,4 @@ urlpatterns = [
     path("verify-token/", views.verify_token, name="verify_token"),
     path("dashboard_view/", views.dashboard_view, name="dashboard_view"),
     path("logout/", views.logout_view, name="logout"),
-
 ]

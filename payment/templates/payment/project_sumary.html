@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Summary & Expenses</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #FCE7F3; /* พื้นหลังสีชมพูอ่อน */
+            color: #333;
+        }
+
+        /* ส่วนหัวด้านบนสุด */
+        .top-navbar {
+            background-color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            margin: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Container สีขาวหลัก */
+        .main-container {
+            background-color: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 0 20px 40px 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        /* การ์ดข้อมูลย่อย (สีเทาอ่อน/ชมพูจางๆ) */
+        .info-card {
+            background-color: #FAF5F3; /* สีพื้นหลังการ์ด */
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .edit-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #BFDBFE; /* สีฟ้าอ่อน */
+            color: #1E40AF;
+            font-size: 0.8rem;
+            padding: 5px 12px;
+            border-radius: 20px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .edit-badge:hover {
+            background-color: #93C5FD;
+            color: #1E3A8A;
+        }
+
+        /* ส่วนขวามือ (สรุปราคา) */
+        .cost-card {
+            background-color: #FAF5F3;
+            border-radius: 15px;
+            padding: 25px;
+        }
+
+        .price-total {
+            color: #4693A6; /* สีฟ้าเขียว */
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .warning-box {
+            background-color: #FEF3C7; /* สีเหลือง */
+            border: 1px solid #FCD34D;
+            color: #92400E;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-teal {
+            background-color: #4693A6;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 0;
+            width: 100%;
+            font-weight: 500;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 6px rgba(70, 147, 166, 0.3);
+        }
+        
+        .btn-teal:hover {
+            background-color: #3A7D8E;
+            color: white;
+        }
+
+        .btn-outline-custom {
+            border: 1px solid #D1D5DB;
+            background-color: #E5E7EB;
+            color: #374151;
+            border-radius: 50px;
+            padding: 10px 0;
+            width: 100%;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .btn-outline-custom:hover {
+            background-color: #D1D5DB;
+        }
+
+        .blue-highlight-box {
+            background-color: #CFE6ED;
+            color: #333;
+            padding: 10px 20px;
+            border-radius: 50px;
+            display: inline-block;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        label {
+            font-size: 0.9rem;
+            color: #6B7280;
+            margin-bottom: 2px;
+        }
+        
+        p {
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .breadcrumb-text {
+            color: #666;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-navbar">
+        <div class="d-flex align-items-center gap-3">
+            <a href="#" class="btn btn-light rounded-circle"><i class="bi bi-arrow-left"></i></a>
+            <div>
+                <h5 class="mb-0 fw-bold">Project Summary & Expenses</h5>
+                <small class="text-muted">All information about your project</small>
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <button class="btn btn-light rounded-circle"><i class="bi bi-house"></i></button>
+            <button class="btn btn-light rounded-circle"><i class="bi bi-gear"></i></button>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="row">
+            <div class="col-12 mb-4">
+                <h2 class="fw-bold">สรุปโครงการ & ค่าใช้จ่าย</h2>
+                <p class="text-muted">ตรวจสอบรายละเอียดโครงการก่อนชำระเงิน</p>
+            </div>
+
+            <div class="col-lg-8">
+                
+                <div class="info-card">
+                    <a href="#" class="edit-badge"><i class="bi bi-pencil-fill"></i> แก้ไขโครงการ</a>
+                    <h5 class="fw-bold mb-4"><i class="bi bi-file-text me-2"></i>ข้อมูลโครงการวิจัย</h5>
+                    
+                    <div class="mb-3">
+                        <label>ชื่อโครงการ</label>
+                        <p>การศึกษาพฤติกรรมผู้บริโภคในตลาดอีคอมเมิร์ซ</p>
+                    </div>
+                    <div class="mb-3">
+                        <label>วัตถุประสงค์การวิจัย</label>
+                        <p>เพื่อศึกษาพฤติกรรมการซื้อสินค้าออนไลน์และปัจจัยที่มีผลต่อการตัดสินใจซื้อของผู้บริโภคในช่วงอายุ 25-45 ปี</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>ประเภทการวิจัย</label>
+                            <p>Quantitative Research</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label>หมวดอุตสาหกรรม</label>
+                            <p>อีคอมเมิร์ซและการค้าปลีก</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <a href="#" class="edit-badge"><i class="bi bi-pencil-fill"></i> แก้ไขกลุ่มเป้าหมาย</a>
+                    <h5 class="fw-bold mb-4"><i class="bi bi-person-lines-fill me-2"></i>กลุ่มเป้าหมาย</h5>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>อายุ</label>
+                            <p>25 - 45 ปี</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label>เพศ</label>
+                            <p>ทุกเพศ</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label>พื้นที่</label>
+                            <p>กรุงเทพฯ และปริมณฑล</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label>การศึกษา / อาชีพ</label>
+                            <p>ปริญญาตรีขึ้นไป / พนักงานบริษัท</p>
+                        </div>
+                    </div>
+                    <div class="blue-highlight-box">
+                        จำนวนกลุ่มตัวอย่างทั้งหมด: 500 คน
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <a href="#" class="edit-badge"><i class="bi bi-pencil-fill"></i> แก้ไขแบบสอบถาม</a>
+                    <h5 class="fw-bold mb-4"><i class="bi bi-ui-checks me-2"></i>สรุปแบบสอบถาม</h5>
+                    
+                    <div class="mb-3">
+                        <label>จำนวนคำถามทั้งหมด</label>
+                        <p>25 คำถาม</p>
+                    </div>
+                    <div class="mb-3">
+                        <label>ประเภทคำถาม</label>
+                        <p>5 ปรนัย, 15 มาตราส่วน, 5 ปลายเปิด</p>
+                    </div>
+                    <div class="mb-3">
+                        <label>เวลาเฉลี่ยในการตอบ</label>
+                        <p>12-15 นาที</p>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h5 class="fw-bold mb-3"><i class="bi bi-calendar-event me-2"></i>ระยะเวลาโครงการ</h5>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <label>วันที่เริ่มต้น - สิ้นสุด</label>
+                            <p class="mb-0">1 มีนาคม 2567 – 31 มีนาคม 2567</p>
+                        </div>
+                        <span class="badge rounded-pill border text-dark fw-normal px-3 py-2" style="background: white;">Draft (ยังไม่เปิดโครงการ)</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-lg-4">
+                <div class="cost-card position-sticky" style="top: 20px;">
+                    <h5 class="fw-bold mb-4">สรุปค่าใช้จ่าย</h5>
+                    
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">ค่าตอบแทนกลุ่มตัวอย่าง</span>
+                        <span>฿25,000</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="text-muted">ค่าธรรมเนียมแพลตฟอร์ม</span>
+                        <span>฿5,000</span>
+                    </div>
+                    
+                    <hr>
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="fw-bold">ยอดรวมทั้งสิ้น</span>
+                        <span class="price-total">฿30,000</span>
+                    </div>
+
+                    <div class="warning-box">
+                        <i class="bi bi-exclamation-circle-fill"></i>
+                        <div>ค่าใช้จ่ายอาจเปลี่ยนแปลงได้หากมีการแก้ไขโครงการหรือแบบสอบถาม</div>
+                    </div>
+
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" type="checkbox" value="" id="confirmCheck">
+                        <label class="form-check-label" for="confirmCheck" style="font-size: 0.85rem;">
+                            ข้าพเจ้ายืนยันว่าข้อมูลโครงการถูกต้องครบถ้วน
+                        </label>
+                    </div>
+
+                    <button class="btn btn-teal mb-3">ไปชำระเงิน <i class="bi bi-arrow-right"></i></button>
+
+                    <p class="text-center text-muted" style="font-size: 0.75rem;">คุณจะถูกนำไปยังหน้าชำระเงินในขั้นตอนถัดไป</p>
+                    <p class="text-center text-muted mb-4" style="font-size: 0.75rem;">โครงการจะเริ่มเปิดรับกลุ่มตัวอย่างหลังชำระเงินสำเร็จ</p>
+
+                    <button class="btn btn-outline-custom"><i class="bi bi-arrow-left"></i> ย้อนกลับไปแก้ไข</button>
+                    <button class="btn btn-outline-custom"><i class="bi bi-save"></i> บันทึกเป็น Draft</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

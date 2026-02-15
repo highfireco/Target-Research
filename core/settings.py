@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'Home_Layout',
     "account",
     "notifications",
+    'payment'
 ]
 
 MIDDLEWARE = [
