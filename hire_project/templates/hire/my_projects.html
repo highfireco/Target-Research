@@ -3,9 +3,8 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<title>ประวัติแบบร่าง</title>
+<title>โครงการของฉัน</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
 
@@ -74,6 +73,7 @@ body { font-family: 'Prompt', sans-serif; margin: 0; }
   display: flex;
   gap: 12px;
   margin-bottom: 1.75rem;
+  flex-wrap: wrap;
 }
 .stat-pill {
   display: inline-flex;
@@ -93,7 +93,7 @@ body { font-family: 'Prompt', sans-serif; margin: 0; }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-.draft-card {
+.project-card {
   background: linear-gradient(135deg, #FFF8F9 0%, #FFFBFC 100%);
   border: 1.5px solid #F0DDE5;
   border-radius: 20px;
@@ -104,27 +104,30 @@ body { font-family: 'Prompt', sans-serif; margin: 0; }
   transition: all 0.3s ease;
   animation: fadeUp 0.4s ease both;
 }
-.draft-card::before {
+.project-card::before {
   content: '';
   position: absolute;
   left: 0; top: 0; bottom: 0;
   width: 4px;
-  background: linear-gradient(180deg, #EEB1C6, #E89BB0);
   border-radius: 4px 0 0 4px;
 }
-.draft-card:hover {
+.project-card.status-active::before   { background: linear-gradient(180deg, #5BA4A4, #3D8080); }
+.project-card.status-completed::before { background: linear-gradient(180deg, #7EBC7E, #5A9E5A); }
+.project-card.status-closed::before   { background: linear-gradient(180deg, #BBBBBB, #999999); }
+
+.project-card:hover {
   border-color: #EEB1C6;
   box-shadow: 0 8px 28px rgba(238,177,198,0.2);
   transform: translateY(-2px);
 }
 
-.draft-card:nth-child(1) { animation-delay: 0.05s; }
-.draft-card:nth-child(2) { animation-delay: 0.10s; }
-.draft-card:nth-child(3) { animation-delay: 0.15s; }
-.draft-card:nth-child(4) { animation-delay: 0.20s; }
-.draft-card:nth-child(5) { animation-delay: 0.25s; }
+.project-card:nth-child(1) { animation-delay: 0.05s; }
+.project-card:nth-child(2) { animation-delay: 0.10s; }
+.project-card:nth-child(3) { animation-delay: 0.15s; }
+.project-card:nth-child(4) { animation-delay: 0.20s; }
+.project-card:nth-child(5) { animation-delay: 0.25s; }
 
-.draft-header {
+.project-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -132,7 +135,7 @@ body { font-family: 'Prompt', sans-serif; margin: 0; }
   margin-bottom: 0.6rem;
 }
 
-.draft-title {
+.project-title {
   font-size: 1.05rem;
   font-weight: 600;
   color: #3A3A3A;
@@ -148,11 +151,11 @@ body { font-family: 'Prompt', sans-serif; margin: 0; }
   border-radius: 999px;
   letter-spacing: 0.03em;
 }
-/* draft เป็น status เดียวที่ ResearchDraft มี (อีกอันคือ submitted) */
-.status-draft     { background: rgba(238,177,198,0.2); color: #C47898; border: 1px solid rgba(238,177,198,0.4); }
-.status-submitted { background: rgba(91,164,164,0.15); color: #3D8080; border: 1px solid rgba(91,164,164,0.3); }
+.badge-active    { background: rgba(91,164,164,0.15);  color: #3D8080; border: 1px solid rgba(91,164,164,0.3); }
+.badge-completed { background: rgba(126,188,126,0.15); color: #4A8A4A; border: 1px solid rgba(126,188,126,0.3); }
+.badge-closed    { background: rgba(180,180,180,0.15); color: #777777; border: 1px solid rgba(180,180,180,0.3); }
 
-.draft-desc {
+.project-desc {
   font-size: 0.83rem;
   color: #888;
   margin: 0 0 1rem;
@@ -164,7 +167,7 @@ body { font-family: 'Prompt', sans-serif; margin: 0; }
   overflow: hidden;
 }
 
-.draft-meta {
+.project-meta {
   display: flex;
   align-items: center;
   gap: 16px;
@@ -180,13 +183,27 @@ body { font-family: 'Prompt', sans-serif; margin: 0; }
 }
 .meta-item svg { color: #EEB1C6; }
 
-.draft-actions {
+/* sample size pill */
+.sample-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: rgba(238,177,198,0.1);
+  color: #C47898;
+  border: 1px solid rgba(238,177,198,0.25);
+}
+
+.project-actions {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
 }
 
-.btn-convert {
+.btn-view {
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -203,27 +220,9 @@ body { font-family: 'Prompt', sans-serif; margin: 0; }
   transition: all 0.25s;
   box-shadow: 0 4px 14px rgba(238,177,198,0.35);
 }
-.btn-convert:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(238,177,198,0.45); }
+.btn-view:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(238,177,198,0.45); }
 
-.btn-delete {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 10px 18px;
-  border-radius: 12px;
-  background: #fff;
-  color: #E07070;
-  font-family: 'Prompt', sans-serif;
-  font-size: 0.83rem;
-  font-weight: 500;
-  text-decoration: none;
-  border: 1.5px solid #F5CECE;
-  cursor: pointer;
-  transition: all 0.25s;
-}
-.btn-delete:hover { background: #FFF0F0; border-color: #E07070; transform: translateY(-2px); }
-
-.btn-edit {
+.btn-secondary {
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -239,8 +238,9 @@ body { font-family: 'Prompt', sans-serif; margin: 0; }
   cursor: pointer;
   transition: all 0.25s;
 }
-.btn-edit:hover { background: #F8F8F8; border-color: #CCC; color: #555; transform: translateY(-2px); }
+.btn-secondary:hover { background: #F8F8F8; border-color: #CCC; color: #555; transform: translateY(-2px); }
 
+/* empty state */
 .empty-state {
   text-align: center;
   padding: 4rem 2rem;
@@ -289,6 +289,29 @@ body { font-family: 'Prompt', sans-serif; margin: 0; }
   gap: 12px;
 }
 .bottom-hint { font-size: 0.78rem; color: #CCCCCC; }
+
+/* tab filter */
+.filter-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+.filter-btn {
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-family: 'Prompt', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  border: 1.5px solid #E5E5E5;
+  background: #fff;
+  color: #999;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+.filter-btn:hover,
+.filter-btn.active { background: rgba(238,177,198,0.15); border-color: #EEB1C6; color: #C47898; }
 </style>
 </head>
 
@@ -299,8 +322,8 @@ body { font-family: 'Prompt', sans-serif; margin: 0; }
   <!-- TOP BAR -->
   <div class="top-bar">
     <div>
-      <h1 class="page-title">📋 ประวัติแบบร่าง</h1>
-      <p class="page-sub">โครงการที่บันทึกไว้ยังไม่เสร็จสมบูรณ์</p>
+      <h1 class="page-title">🗂️ โครงการของฉัน</h1>
+      <p class="page-sub">โครงการที่เปิดใช้งานและดำเนินการอยู่</p>
     </div>
     <a href="/" class="btn-back">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
@@ -318,43 +341,73 @@ body { font-family: 'Prompt', sans-serif; margin: 0; }
     <div class="stat-pill">
       <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none"
            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-        <polyline points="14 2 14 8 20 8"/>
+        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
       </svg>
-      แบบร่างทั้งหมด {{ drafts|length }} รายการ
+      โครงการทั้งหมด {{ projects|length }} รายการ
     </div>
-    {% if drafts %}
+    {% if projects %}
     <div class="stat-pill">
       <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none"
            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
       </svg>
-      บันทึกล่าสุด {{ drafts.0.created_at|date:"d M Y" }}
+      ล่าสุด {{ projects.0.created_at|date:"d M Y" }}
     </div>
+    {# Count active projects #}
+    {% with active_count=projects|length %}
+    <div class="stat-pill">
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 11 12 14 22 4"/>
+        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+      </svg>
+      กำลังดำเนินการ
+    </div>
+    {% endwith %}
     {% endif %}
   </div>
 
-  <!-- DRAFT LIST -->
-  {% for draft in drafts %}
-  <div class="draft-card">
-    <div class="draft-header">
-      <h3 class="draft-title">{{ draft.title|default:"(ไม่มีชื่อโครงการ)" }}</h3>
-      <span class="status-badge status-{{ draft.status }}">
-        {% if draft.status == "draft" %}แบบร่าง
-        {% elif draft.status == "submitted" %}ส่งแล้ว
-        {% else %}{{ draft.status }}{% endif %}
+  <!-- FILTER ROW -->
+  {% if projects %}
+  <div class="filter-row">
+    <a href="{% url 'my_projects' %}" class="filter-btn active">ทั้งหมด</a>
+    <a href="{% url 'draft_history' %}" class="filter-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+           style="display:inline;vertical-align:middle;margin-right:3px">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+      </svg>
+      แบบร่าง
+    </a>
+  </div>
+  {% endif %}
+
+  <!-- PROJECT LIST -->
+  {% for project in projects %}
+  <div class="project-card status-{{ project.status }}">
+    <div class="project-header">
+      <h3 class="project-title">{{ project.title|default:"(ไม่มีชื่อโครงการ)" }}</h3>
+      <span class="status-badge
+        {% if project.status == 'active' %}badge-active
+        {% elif project.status == 'completed' %}badge-completed
+        {% else %}badge-closed{% endif %}">
+        {% if project.status == 'active' %}กำลังดำเนินการ
+        {% elif project.status == 'completed' %}เสร็จสิ้น
+        {% elif project.status == 'closed' %}ปิดแล้ว
+        {% else %}{{ project.status }}{% endif %}
       </span>
     </div>
 
-    {% if draft.description %}
-    <p class="draft-desc">{{ draft.description }}</p>
-    {% elif draft.objective %}
-    <p class="draft-desc">{{ draft.objective }}</p>
+    {% if project.description %}
+    <p class="project-desc">{{ project.description }}</p>
+    {% elif project.objective %}
+    <p class="project-desc">{{ project.objective }}</p>
     {% else %}
-    <p class="draft-desc" style="color:#DDD;font-style:italic;">ยังไม่มีรายละเอียด</p>
+    <p class="project-desc" style="color:#DDD;font-style:italic;">ยังไม่มีรายละเอียด</p>
     {% endif %}
 
-    <div class="draft-meta">
+    <div class="project-meta">
       <span class="meta-item">
         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -362,59 +415,61 @@ body { font-family: 'Prompt', sans-serif; margin: 0; }
           <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
           <line x1="3" y1="10" x2="21" y2="10"/>
         </svg>
-        {{ draft.created_at|date:"d M Y, H:i" }}
+        สร้าง {{ project.created_at|date:"d M Y, H:i" }}
       </span>
-      {% if draft.org_name %}
+
+      {% if project.org_name %}
       <span class="meta-item">
         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
           <polyline points="9 22 9 12 15 12 15 22"/>
         </svg>
-        {{ draft.org_name }}
+        {{ project.org_name }}
       </span>
       {% endif %}
-      {% if draft.deadline %}
+
+      {% if project.deadline %}
       <span class="meta-item">
         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
         </svg>
-        หมดเขต {{ draft.deadline }}
+        หมดเขต {{ project.deadline }}
+      </span>
+      {% endif %}
+
+      {% if project.sample_size %}
+      <span class="sample-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        {{ project.sample_size }} คน
       </span>
       {% endif %}
     </div>
 
-    <div class="draft-actions">
-      <a href="{% url 'convert_to_project' draft.id %}" class="btn-convert">
+    <div class="project-actions">
+      <a href="#" class="btn-view">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
              stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="9 11 12 14 22 4"/>
-          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+          <circle cx="12" cy="12" r="3"/>
         </svg>
-        เปิดใช้งานโครงการ
+        ดูโครงการ
       </a>
 
-      <a href="{% url 'create_project' %}?draft={{ draft.id }}" class="btn-edit">
+      <a href="{% url 'draft_history' %}" class="btn-secondary">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
         </svg>
-        แก้ไข
-      </a>
-
-      <a href="{% url 'delete_draft' draft.id %}"
-         class="btn-delete"
-         onclick="return confirm('ลบแบบร่างนี้? ไม่สามารถกู้คืนได้')">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="3 6 5 6 21 6"/>
-          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-          <path d="M10 11v6"/><path d="M14 11v6"/>
-          <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
-        </svg>
-        ลบ
+        ดูแบบร่าง
       </a>
     </div>
   </div>
@@ -425,29 +480,36 @@ body { font-family: 'Prompt', sans-serif; margin: 0; }
     <div class="empty-icon">
       <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
            stroke="#EEB1C6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-        <polyline points="14 2 14 8 20 8"/>
-        <line x1="12" y1="18" x2="12" y2="12"/>
-        <line x1="9" y1="15" x2="15" y2="15"/>
+        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
       </svg>
     </div>
-    <p class="empty-title">ยังไม่มีแบบร่าง</p>
-    <p class="empty-sub">สร้างโครงการแล้วกด "บันทึกแบบร่าง" เพื่อเก็บไว้ที่นี่</p>
-    <a href="{% url 'create_project' %}" class="btn-create">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-           stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-      </svg>
-      สร้างโครงการใหม่
-    </a>
+    <p class="empty-title">ยังไม่มีโครงการ</p>
+    <p class="empty-sub">สร้างโครงการแรกของคุณ หรือเปิดใช้งานจากแบบร่างที่บันทึกไว้</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <a href="{% url 'create_project' %}" class="btn-create">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        สร้างโครงการใหม่
+      </a>
+      <a href="{% url 'draft_history' %}" class="btn-secondary" style="padding:13px 24px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+        </svg>
+        ดูแบบร่าง
+      </a>
+    </div>
   </div>
 
   {% endfor %}
 
   <!-- BOTTOM BAR -->
-  {% if drafts %}
+  {% if projects %}
   <div class="bottom-bar">
-    <span class="bottom-hint">แบบร่างจะถูกลบอัตโนมัติเมื่อเปิดใช้งานโครงการแล้ว</span>
+    <span class="bottom-hint">โครงการที่เปิดใช้งานแล้วจะปรากฏที่นี่</span>
     <a href="{% url 'create_project' %}" class="btn-create">
       <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">

@@ -110,7 +110,22 @@ def _firestore_doc(payload: dict, django_id=None) -> dict:
 # ═══════════════════════════════════════════════
 
 def create_project_view(request):
-    return render(request, "hire/create_project.html")
+    """
+    GET /hire/create-project/             → form ว่าง
+    GET /hire/create-project/?draft=<id> → โหลดค่า ResearchDraft เก่ามาใส่ form
+    """
+    draft = None
+    draft_id = request.GET.get("draft")
+
+    if draft_id:
+        owner_id = _get_owner_id(request)
+        try:
+            # ดึง draft เฉพาะของ owner คนนี้เท่านั้น (ป้องกัน IDOR)
+            draft = ResearchDraft.objects.get(id=draft_id, owner_id=owner_id)
+        except ResearchDraft.DoesNotExist:
+            pass  # draft ไม่พบ หรือไม่ใช่ของ user → เปิด form ว่างปกติ
+
+    return render(request, "hire/create_project.html", {"draft": draft})
 
 def draft_history_view(request):
     owner_id = _get_owner_id(request)
@@ -163,34 +178,61 @@ def create_project_api(request):
     status  = data.get("status", "draft")
     payload = _build_payload(data, owner_id, status)
 
+    # draft_id จาก hidden input — มีเมื่อแก้ไขของเดิม
+    existing_draft_id = data.get("draft_id")
+
     try:
         db = get_firebase_db()
 
         if status == "draft":
-            # บันทึก Django
-            draft = ResearchDraft.objects.create(
-                title          = payload["title"],
-                objective      = payload["objective"],
-                description    = payload["description"] or "",
-                org_name       = payload["org_name"],
-                org_type       = payload["org_type"],
-                org_dept       = payload["org_dept"],
-                start_date     = payload["start_date"],
-                deadline       = payload["deadline"],
-                age_range      = payload["age_range"],
-                gender         = payload["gender"],
-                occupations    = payload["occupations"],
-                location       = payload["location"],
-                sample_size    = payload["sample_size"] or 0,
-                question_count = payload["question_count"],
-                est_minutes    = payload["est_minutes"],
-                status         = "draft",
-                owner_id       = owner_id,
-            )
-            # Sync Firestore → collection "drafts"
-            doc = _firestore_doc(payload, django_id=draft.id)
-            doc["created_at"] = timezone.now().isoformat()  # drafts ใช้ string
-            db.collection("drafts").add(doc)
+
+            if existing_draft_id:
+                # ── อัปเดต ResearchDraft เดิม ──
+                try:
+                    draft = ResearchDraft.objects.get(id=existing_draft_id, owner_id=owner_id)
+                    draft.title          = payload["title"]
+                    draft.objective      = payload["objective"]
+                    draft.description    = payload["description"] or ""
+                    draft.org_name       = payload["org_name"]
+                    draft.org_type       = payload["org_type"]
+                    draft.org_dept       = payload["org_dept"]
+                    draft.start_date     = payload["start_date"]
+                    draft.deadline       = payload["deadline"]
+                    draft.age_range      = payload["age_range"]
+                    draft.gender         = payload["gender"]
+                    draft.occupations    = payload["occupations"]
+                    draft.location       = payload["location"]
+                    draft.sample_size    = payload["sample_size"] or 0
+                    draft.question_count = payload["question_count"]
+                    draft.est_minutes    = payload["est_minutes"]
+                    draft.save()
+                except ResearchDraft.DoesNotExist:
+                    return JsonResponse({"status": "error", "message": "ไม่พบแบบร่างนี้"}, status=404)
+            else:
+                # ── สร้าง ResearchDraft ใหม่ ──
+                draft = ResearchDraft.objects.create(
+                    title          = payload["title"],
+                    objective      = payload["objective"],
+                    description    = payload["description"] or "",
+                    org_name       = payload["org_name"],
+                    org_type       = payload["org_type"],
+                    org_dept       = payload["org_dept"],
+                    start_date     = payload["start_date"],
+                    deadline       = payload["deadline"],
+                    age_range      = payload["age_range"],
+                    gender         = payload["gender"],
+                    occupations    = payload["occupations"],
+                    location       = payload["location"],
+                    sample_size    = payload["sample_size"] or 0,
+                    question_count = payload["question_count"],
+                    est_minutes    = payload["est_minutes"],
+                    status         = "draft",
+                    owner_id       = owner_id,
+                )
+                # Sync Firestore เฉพาะตอนสร้างใหม่
+                doc = _firestore_doc(payload, django_id=draft.id)
+                doc["created_at"] = timezone.now().isoformat()
+                db.collection("drafts").add(doc)
 
             return JsonResponse({"status": "success", "draft_id": draft.id, "message": "บันทึกแบบร่างแล้ว"})
 
@@ -218,6 +260,10 @@ def create_project_api(request):
             # Sync Firestore → collection "projects"
             db.collection("projects").add(_firestore_doc(payload, django_id=project.id))
 
+            # ลบ draft เดิมถ้ามี (กด "สร้างโครงการ" จากหน้าแก้ไข draft)
+            if existing_draft_id:
+                ResearchDraft.objects.filter(id=existing_draft_id, owner_id=owner_id).delete()
+
             return JsonResponse({"status": "success", "project_id": project.id, "message": "สร้างโครงการแล้ว"})
 
     except Exception as e:
@@ -229,10 +275,13 @@ def create_project_api(request):
 # ═══════════════════════════════════════════════
 
 def convert_to_project(request, draft_id):
+    owner_id = _get_owner_id(request)
+    if not owner_id:
+        return redirect("login")
     try:
-        draft = ResearchDraft.objects.get(id=draft_id)
+        draft = ResearchDraft.objects.get(id=draft_id, owner_id=owner_id)
     except ResearchDraft.DoesNotExist:
-        return JsonResponse({"status": "error", "message": "ไม่พบ draft"}, status=404)
+        return redirect("draft_history")
 
     project = ResearchProject.objects.create(
         title=draft.title, objective=draft.objective,
@@ -271,8 +320,11 @@ def convert_to_project(request, draft_id):
 # ═══════════════════════════════════════════════
 
 def delete_draft(request, draft_id):
+    owner_id = _get_owner_id(request)
+    if not owner_id:
+        return redirect("login")
     try:
-        ResearchDraft.objects.get(id=draft_id).delete()
+        ResearchDraft.objects.get(id=draft_id, owner_id=owner_id).delete()
     except ResearchDraft.DoesNotExist:
         pass
     return redirect("draft_history")
