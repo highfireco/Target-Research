@@ -30,6 +30,19 @@ input:focus, textarea:focus, select:focus {
   transition: all 0.3s ease;
 }
 
+/* ── Field error state ── */
+input.field-error, textarea.field-error, select.field-error {
+  border-color: #F87171 !important;
+  box-shadow: 0 0 0 3px rgba(248,113,113,0.12) !important;
+}
+.error-hint {
+  font-size: 0.7rem;
+  color: #EF4444;
+  margin-top: 4px;
+  display: none;
+}
+.error-hint.show { display: block; }
+
 .btn-hover { transition: all 0.3s ease; }
 .btn-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
 .btn-hover:active { transform: translateY(0); }
@@ -238,14 +251,125 @@ input::placeholder, textarea::placeholder { color: #BDBDBD; }
 }
 .occ-tag-remove:hover { opacity: 1; }
 
-/* ── My Projects button (special teal style) ── */
+/* ── My Projects button ── */
 .btn-my-projects {
   background: linear-gradient(135deg, #5BA4A4 0%, #3D8080 100%);
 }
+
+/* ══════════════════════════════════════════════
+   SUCCESS MODAL
+══════════════════════════════════════════════ */
+#successModal {
+  position: fixed; inset: 0; z-index: 999;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(6px);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+#successModal.show {
+  opacity: 1; pointer-events: all;
+}
+
+.modal-box {
+  background: #fff;
+  border-radius: 24px;
+  padding: 44px 40px 36px;
+  max-width: 420px; width: 90%;
+  text-align: center;
+  box-shadow: 0 32px 80px rgba(238,177,198,0.35), 0 8px 32px rgba(0,0,0,0.1);
+  transform: scale(0.88) translateY(20px);
+  transition: transform 0.35s cubic-bezier(.22,.68,0,1.2);
+  position: relative; overflow: hidden;
+}
+#successModal.show .modal-box {
+  transform: scale(1) translateY(0);
+}
+
+/* Pink top strip */
+.modal-box::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 5px;
+  background: linear-gradient(90deg, #EEB1C6, #e68fb0, #EEB1C6);
+}
+
+.modal-icon {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: linear-gradient(135deg, rgba(238,177,198,0.2), rgba(238,177,198,0.1));
+  border: 2px solid rgba(238,177,198,0.4);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px;
+  animation: popIn 0.5s 0.2s cubic-bezier(.22,.68,0,1.4) both;
+}
+@keyframes popIn {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+.modal-icon svg { width: 34px; height: 34px; stroke: #EEB1C6; stroke-width: 2; fill: none; }
+
+.modal-title {
+  font-size: 1.35rem; font-weight: 700;
+  color: #1a1a1a; margin-bottom: 10px;
+}
+.modal-sub {
+  font-size: 0.875rem; color: #888;
+  line-height: 1.65; margin-bottom: 28px;
+}
+.modal-sub strong { color: #C47898; }
+
+.modal-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #EEB1C6 0%, #E89BB0 100%);
+  color: #fff; border: none;
+  font-family: 'Prompt', sans-serif;
+  font-size: 0.95rem; font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(238,177,198,0.45);
+  transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.modal-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(238,177,198,0.55);
+}
+
+/* Decorative petal dots */
+.modal-dots {
+  display: flex; justify-content: center; gap: 5px; margin-top: 16px;
+}
+.modal-dots span { width: 5px; height: 5px; border-radius: 50%; background: rgba(238,177,198,0.3); }
+.modal-dots span:nth-child(2) { background: #EEB1C6; width: 14px; border-radius: 3px; }
 </style>
 </head>
 
 <body class="min-h-screen flex items-center justify-center gradient-bg py-8">
+
+<!-- ══════════════════════════════════════════════
+     SUCCESS MODAL
+══════════════════════════════════════════════ -->
+<div id="successModal">
+  <div class="modal-box">
+    <div class="modal-icon">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+        <polyline points="22 4 12 14.01 9 11.01"/>
+      </svg>
+    </div>
+    <div class="modal-title">🎉 สร้างโครงการสำเร็จ!</div>
+    <div class="modal-sub">
+      โครงการวิจัยของคุณถูกสร้างแล้ว<br>
+      ขั้นตอนถัดไปคือ <strong>สร้างแบบสอบถาม</strong><br>
+      เพื่อเริ่มเก็บข้อมูลจากกลุ่มเป้าหมาย
+    </div>
+    <button class="modal-btn" onclick="goToSurvey()">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      ตกลง — ไปสร้างแบบสอบถาม
+    </button>
+    <div class="modal-dots"><span></span><span></span><span></span></div>
+  </div>
+</div>
 
 <div class="w-[1200px] rounded-3xl p-10 card-shadow" style="background:#FFFFFF;">
 
@@ -268,7 +392,7 @@ input::placeholder, textarea::placeholder { color: #BDBDBD; }
 
 <div class="section-divider"></div>
 
-<form id="projectForm" class="grid grid-cols-3 gap-6 mt-2">
+<form id="projectForm" class="grid grid-cols-3 gap-6 mt-2" novalidate>
 
 <!-- LEFT COL (col-span-2) -->
 <div class="col-span-2 flex flex-col gap-5">
@@ -282,10 +406,12 @@ input::placeholder, textarea::placeholder { color: #BDBDBD; }
     <div class="mb-4">
       <label>ชื่อโครงการ <span style="color:#EEB1C6;">*</span></label>
       <input id="title" class="w-full p-3 rounded-xl border-2" placeholder="ระบุชื่อโครงการวิจัยของคุณ...">
+      <p class="error-hint" id="err-title">⚠ กรุณาระบุชื่อโครงการ</p>
     </div>
     <div class="mb-4">
       <label>วัตถุประสงค์ <span style="color:#EEB1C6;">*</span></label>
       <textarea id="objective" class="w-full p-3 rounded-xl border-2" rows="2" placeholder="ระบุวัตถุประสงค์ของการวิจัย..."></textarea>
+      <p class="error-hint" id="err-objective">⚠ กรุณาระบุวัตถุประสงค์</p>
     </div>
     <div>
       <label>รายละเอียดโครงการ</label>
@@ -303,6 +429,7 @@ input::placeholder, textarea::placeholder { color: #BDBDBD; }
       <div>
         <label>ชื่อองค์กร / หน่วยงาน <span style="color:#EEB1C6;">*</span></label>
         <input id="org_name" class="w-full p-3 rounded-xl border-2" placeholder="เช่น มหาวิทยาลัยเชียงใหม่">
+        <p class="error-hint" id="err-org_name">⚠ กรุณาระบุชื่อองค์กร</p>
       </div>
       <div>
         <label>ประเภทสังกัด</label>
@@ -334,11 +461,13 @@ input::placeholder, textarea::placeholder { color: #BDBDBD; }
       <div>
         <label>วันเริ่มรับข้อมูล <span style="color:#EEB1C6;">*</span></label>
         <input id="start_date" type="date" class="w-full p-3 rounded-xl border-2">
+        <p class="error-hint" id="err-start_date">⚠ กรุณาเลือกวันเริ่มต้น</p>
         <p class="hint">ใช้คำนวณ progress bar ของโครงการ</p>
       </div>
       <div>
         <label>วันหมดเขต <span style="color:#EEB1C6;">*</span></label>
         <input id="deadline" type="date" class="w-full p-3 rounded-xl border-2">
+        <p class="error-hint" id="err-deadline">⚠ กรุณาเลือกวันหมดเขต</p>
         <p class="hint">แสดงเป็น countdown ในหน้ารายละเอียด</p>
       </div>
     </div>
@@ -426,7 +555,7 @@ input::placeholder, textarea::placeholder { color: #BDBDBD; }
 
   <div class="section-divider"></div>
 
-  <!-- ── ปุ่ม ── -->
+  <!-- ── ปุ่ม (ลบปุ่มไปหน้าสร้างแบบสอบถามออกแล้ว) ── -->
   <button type="button" onclick="saveDraft()" class="p-4 rounded-xl bg-white border-2 border-gray-300 font-semibold text-gray-600 hover:bg-gray-50 btn-hover icon-bounce flex items-center justify-center gap-2">
     <i data-lucide="save" style="width:17px;height:17px;"></i> บันทึกแบบร่าง
   </button>
@@ -435,11 +564,7 @@ input::placeholder, textarea::placeholder { color: #BDBDBD; }
     <i data-lucide="check-circle" style="width:17px;height:17px;"></i> สร้างโครงการ
   </button>
 
-  <button type="button" onclick="goSurvey()" class="p-4 rounded-xl bg-gradient-to-r from-gray-800 to-black text-white font-semibold btn-hover flex items-center justify-center gap-2">
-    <i data-lucide="arrow-right" style="width:17px;height:17px;"></i> ไปหน้าสร้างแบบสอบถาม
-  </button>
-
-  <!-- ปุ่ม My Projects (ใหม่) -->
+  <!-- ปุ่ม My Projects -->
   <button type="button" onclick="goMyProjects()" class="p-4 rounded-xl text-white font-semibold btn-hover flex items-center justify-center gap-2 btn-my-projects">
     <i data-lucide="folder-kanban" style="width:17px;height:17px;"></i> โครงการของฉัน
   </button>
@@ -453,13 +578,15 @@ input::placeholder, textarea::placeholder { color: #BDBDBD; }
 
 </div>
 
-<!-- TOAST -->
-<div id="toast" class="fixed top-8 right-8 hidden text-white px-8 py-4 rounded-2xl shadow-2xl font-semibold" style="background:linear-gradient(135deg,#2C2C2C 0%,#1A1A1A 100%);"></div>
+<!-- TOAST (ใช้สำหรับ draft / error เท่านั้น) -->
+<div id="toast" class="fixed top-8 right-8 hidden text-white px-8 py-4 rounded-2xl shadow-2xl font-semibold z-50" style="background:linear-gradient(135deg,#2C2C2C 0%,#1A1A1A 100%);"></div>
 
 <script>
 lucide.createIcons();
 
-/* ── Occupation options ── */
+/* ══════════════════════════════════════
+   OCCUPATION MULTI-SELECT
+══════════════════════════════════════ */
 const OCC_OPTIONS = [
   { value: "Government",       label: "ข้าราชการ / รัฐวิสาหกิจ" },
   { value: "Private Employee", label: "พนักงานเอกชน" },
@@ -505,8 +632,8 @@ function toggleSelectAll() {
 
 function updateSelectAll() {
   const check = document.getElementById("selectAllCheck");
-  const all = selectedOcc.size === OCC_OPTIONS.length;
-  const none = selectedOcc.size === 0;
+  const all   = selectedOcc.size === OCC_OPTIONS.length;
+  const none  = selectedOcc.size === 0;
   check.style.background  = all ? "#EEB1C6" : none ? "#fff" : "rgba(238,177,198,0.4)";
   check.style.borderColor = (all || !none) ? "#EEB1C6" : "#DDD";
   check.innerHTML = all
@@ -562,7 +689,79 @@ document.addEventListener("click", e => {
   }
 });
 
-/* ── Toast ── */
+/* ══════════════════════════════════════
+   VALIDATION
+══════════════════════════════════════ */
+const REQUIRED_FIELDS = [
+  { id: "title",      errId: "err-title" },
+  { id: "objective",  errId: "err-objective" },
+  { id: "org_name",   errId: "err-org_name" },
+  { id: "start_date", errId: "err-start_date" },
+  { id: "deadline",   errId: "err-deadline" },
+];
+
+function validateForm() {
+  let valid = true;
+
+  REQUIRED_FIELDS.forEach(({ id, errId }) => {
+    const el  = document.getElementById(id);
+    const err = document.getElementById(errId);
+    if (!el.value.trim()) {
+      el.classList.add("field-error");
+      err.classList.add("show");
+      valid = false;
+    } else {
+      el.classList.remove("field-error");
+      err.classList.remove("show");
+    }
+  });
+
+  // ตรวจ deadline ต้องไม่ก่อน start_date
+  const sd = document.getElementById("start_date").value;
+  const dl = document.getElementById("deadline").value;
+  if (sd && dl && dl < sd) {
+    const errDl = document.getElementById("err-deadline");
+    document.getElementById("deadline").classList.add("field-error");
+    errDl.textContent = "⚠ วันหมดเขตต้องอยู่หลังวันเริ่มต้น";
+    errDl.classList.add("show");
+    valid = false;
+  }
+
+  // scroll ไปที่ error แรก
+  if (!valid) {
+    const firstErr = document.querySelector(".field-error");
+    if (firstErr) firstErr.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
+  return valid;
+}
+
+// ล้าง error เมื่อ user แก้ไข
+REQUIRED_FIELDS.forEach(({ id, errId }) => {
+  const el = document.getElementById(id);
+  el.addEventListener("input", () => {
+    if (el.value.trim()) {
+      el.classList.remove("field-error");
+      document.getElementById(errId).classList.remove("show");
+    }
+  });
+});
+
+/* ══════════════════════════════════════
+   MODAL
+══════════════════════════════════════ */
+function showSuccessModal() {
+  const modal = document.getElementById("successModal");
+  modal.classList.add("show");
+}
+
+function goToSurvey() {
+  window.location.href = "/survey/create-survey/";
+}
+
+/* ══════════════════════════════════════
+   TOAST
+══════════════════════════════════════ */
 function showToast(msg) {
   const t = document.getElementById("toast");
   t.innerText = msg;
@@ -577,7 +776,9 @@ function resetOcc() {
   renderTags(); updateTriggerLabel(); updateSelectAll();
 }
 
-/* ── Gather data ── */
+/* ══════════════════════════════════════
+   GATHER DATA
+══════════════════════════════════════ */
 function getData(status) {
   return {
     title:          document.getElementById("title").value,
@@ -608,28 +809,51 @@ async function send(status) {
   return await res.json();
 }
 
+/* ══════════════════════════════════════
+   FORM SUBMIT — สร้างโครงการ
+══════════════════════════════════════ */
 document.getElementById("projectForm").addEventListener("submit", async e => {
   e.preventDefault();
-  const r = await send("active");
-  if (r.status === "success") {
-    showToast("✅ สร้างโครงการแล้ว");
-    projectForm.reset();
-    resetOcc();
-    // redirect ไป My Projects หลัง toast หาย
-    setTimeout(() => { window.location.href = "/hire/my-projects/"; }, 2600);
-  } else {
-    showToast("❌ เกิดข้อผิดพลาด");
+
+  // 1. Validate ก่อนทุกครั้ง
+  if (!validateForm()) return;
+
+  // 2. ส่ง API
+  try {
+    const r = await send("active");
+    if (r.status === "success") {
+      document.getElementById("projectForm").reset();
+      resetOcc();
+      // แสดง modal แทน toast + redirect
+      showSuccessModal();
+    } else {
+      showToast("❌ เกิดข้อผิดพลาด กรุณาลองอีกครั้ง");
+    }
+  } catch (err) {
+    showToast("❌ ไม่สามารถเชื่อมต่อ server ได้");
   }
 });
 
+/* ══════════════════════════════════════
+   DRAFT SAVE
+══════════════════════════════════════ */
 async function saveDraft() {
-  const r = await send("draft");
-  if (r.status === "success") { showToast("💾 บันทึกแบบร่างแล้ว"); projectForm.reset(); resetOcc(); }
-  else { showToast("❌ เซฟไม่สำเร็จ"); }
+  try {
+    const r = await send("draft");
+    if (r.status === "success") {
+      showToast("💾 บันทึกแบบร่างแล้ว");
+      document.getElementById("projectForm").reset();
+      resetOcc();
+    } else {
+      showToast("❌ เซฟไม่สำเร็จ");
+    }
+  } catch {
+    showToast("❌ ไม่สามารถเชื่อมต่อ server ได้");
+  }
 }
 
+/* ── Navigation ── */
 function goMyProjects()   { window.location.href = "/hire/my-projects/"; }
-function goSurvey()       { window.location.href = "/survey/create-survey/"; }
 function goDraftHistory() { window.location.href = "/hire/drafts/"; }
 function goHome()         { window.location.href = "/home/home-page/"; }
 function goSettings()     { window.location.href = "/settings/"; }
