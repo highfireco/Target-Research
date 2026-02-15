@@ -71,9 +71,21 @@ def set_password(request):
             return render(request, "account/set_password.html",
                           {"error": "Passwords do not match"})
 
-        user = auth.create_user(email=email, password=password)
-        request.session["firebase_uid"] = user.uid
-        return redirect("create_account")
+        try:
+            # 1. 🚨 ลองสร้าง User ใน Firebase Auth
+            user = auth.create_user(email=email, password=password)
+            
+            # 2. บันทึก UID ลง Session และบังคับ Save ทันที
+            request.session["firebase_uid"] = user.uid
+            request.session.modified = True 
+            
+            # 3. ส่งไปหน้ากรอกประวัติ
+            return redirect("create_account")
+            
+        except Exception as e:
+            # 🚨 ถ้าสร้างไม่ได้ (เช่น เมลซ้ำ, รหัสสั้นไป) ให้โชว์ Error บนหน้าเว็บ
+            print(f"🔥 Firebase Create User Error: {e}")
+            return render(request, "account/set_password.html", {"error": str(e)})
 
     return render(request, "account/set_password.html")
 
@@ -83,26 +95,39 @@ def create_account(request):
     email = request.session.get("signup_email")
 
     if not uid:
+        print("❌ ไม่มี UID ใน Session! กำลังเด้งกลับไปหน้า Signup")
         return redirect("signup")
 
     if request.method == "POST":
-        name = request.POST.get("name")
-        tel = request.POST.get("tel")
-        age_range = request.POST.get("age_range")
-        gender = request.POST.get("gender")
-        occupation = request.POST.get("occupation")
-        province = request.POST.get("province")
+        try:
+            name = request.POST.get("name")
+            tel = request.POST.get("tel")
+            age_range = request.POST.get("age_range")
+            gender = request.POST.get("gender")
+            occupation = request.POST.get("occupation")
+            province = request.POST.get("province")
 
-        db.collection("users").document(uid).set({
-            "name": name,
-            "tel": tel,
-            "age_range": age_range,
-            "gender": gender,
-            "occupation": occupation,
-            "province": province
-        })
+            # 🚨 ดักจับ Error ตอนบันทึกลงฐานข้อมูล Firestore
+            db.collection("users").document(uid).set({
+                "name": name,
+                "email": email,  # แนะนำให้เก็บอีเมลไว้ใน DB ด้วยครับ
+                "tel": tel,
+                "age_range": age_range,
+                "gender": gender,
+                "occupation": occupation,
+                "province": province
+            })
 
-        return redirect("login")
+            # สร้างโปรไฟล์เสร็จ ให้ล้างข้อมูลสมัครออกแล้วไปหน้า Login
+            request.session.pop("signup_email", None)
+            request.session.pop("email_verified", None)
+            request.session.pop("firebase_uid", None)
+            
+            return redirect("login")
+            
+        except Exception as e:
+            print(f"🔥 Firestore Save Error: {e}")
+            return render(request, "account/create_account.html", {"error": "ไม่สามารถบันทึกข้อมูลได้"})
 
     return render(request, "account/create_account.html")
 
@@ -115,13 +140,20 @@ def login_view(request):
 # verify Firebase token
 def verify_token(request):
     id_token = request.POST.get("idToken")
+    
+    # ดักจับกรณีไม่มี Token ส่งมา
+    if not id_token:
+        print("❌ No token received!")
+        return JsonResponse({"status": "error", "message": "No token provided"})
 
     try:
         decoded = auth.verify_id_token(id_token)
         request.session["uid"] = decoded["uid"]
         return JsonResponse({"status": "success"})
-    except Exception:
-        return JsonResponse({"status": "error"})
+    except Exception as e:
+        # พิมพ์ Error ออกมาดูว่า Firebase บ่นอะไร
+        print(f"🔥 Firebase Token Error: {e}") 
+        return JsonResponse({"status": "error", "message": str(e)})
     
 
 def dashboard_view(request):
