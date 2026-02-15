@@ -23,10 +23,12 @@
 
         <!-- Menu -->
         <div class="ml-10 space-x-6 hidden md:flex">
-            <a href="#" 
+            {% if first_survey %}
+            <a href="{% url 'survey_dashboard' survey_id=first_survey.id %}" 
                class="text-gray-600 hover:text-[#EEB1C6]">
                 Dashboard
             </a>
+            {% endif %}
             <a href="{% url 'create_project' %}" 
                class="text-gray-600 hover:text-[#EEB1C6]">
                 Hire / Create Project
@@ -42,6 +44,7 @@
 
             <!-- Notification Bell -->
             <div class="relative cursor-pointer">
+                <a href ="{% url 'notification_home' %}">
                 <svg xmlns="http://www.w3.org/2000/svg" 
                      class="h-9 w-9 text-gray-600 hover:text-[#EEB1C6]" 
                      fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -55,6 +58,7 @@
                              1.436L4 17h5m6 0a3 
                              3 0 11-6 0m6 0H9" />
                 </svg>
+                </a>
             </div>
 
             <!-- Profile Dropdown -->

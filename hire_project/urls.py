@@ -1,14 +1,4 @@
 from django.urls import path
-<<<<<<< HEAD
-from hire_project.views import (
-    create_project_view,
-    create_project_api,
-)
-urlpatterns = [
-    path('create-project/', create_project_view, name='create_project'),
-    path('create-project-api/', create_project_api, name='create_project_api'),
-]
-=======
 from . import views
 
 urlpatterns = [
@@ -20,4 +10,3 @@ urlpatterns = [
     path("my-projects/",                   views.my_projects_view,     name="my_projects"),
     path("project-list/",                  views.project_list_view,    name="project_list"),
 ]
->>>>>>> origin/project-refactor

@@ -39,21 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'hire_project',
     'survey_builder',
-<<<<<<< HEAD
     'dashboard_page',
-<<<<<<< HEAD
     'Home_Layout',
-<<<<<<< HEAD
-    'notifications',
-=======
->>>>>>> origin/project-refactor
-=======
     "account",
->>>>>>> origin/account
-=======
-    'dashboard_page',
-
->>>>>>> 12bdc58dca73a90cc65b09fab8d55c25632dd2bc
+    "notifications",
 ]
 
 MIDDLEWARE = [
@@ -71,18 +60,11 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-<<<<<<< HEAD
-        'DIRS': [BASE_DIR / 'html'],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-=======
         'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
->>>>>>> origin/project-refactor
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -103,14 +85,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-FIREBASE_CREDENTIALS = BASE_DIR / "Firebase.json"
-
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "highfire.co@gmail.com"
-EMAIL_HOST_PASSWORD = "pphocdklrzxswyxz"
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
@@ -146,8 +120,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-<<<<<<< HEAD
-STATIC_URL = '/static/'
-=======
 STATIC_URL = 'static/'
->>>>>>> origin/project-refactor
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',  # ✅ ต้องมีบรรทัดนี้
+]
