@@ -120,7 +120,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
+import os # อย่าลืม import os ไว้ด้านบนสุดของไฟล์ด้วยนะครับ
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',  # ✅ ต้องมีบรรทัดนี้
+    BASE_DIR / 'static', # โฟลเดอร์ที่เก็บไฟล์ Picture, CSS, JS
 ]

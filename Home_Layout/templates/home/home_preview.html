@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
     <title>Target Research</title>
@@ -10,169 +11,167 @@
 
 <body class="bg-[#FFF5F9] font-sans">
 
-<nav class="bg-white shadow-sm">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center">
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center">
 
-        <!-- Logo -->
-        <div class="flex items-center space-x-3">
-            <img src="{% static 'Picture/icon.png' %}" class="w-10 h-10">
-            <span class="text-2xl font-bold text-[#EEB1C6]">
-                Target Research
-            </span>
-        </div>
+            <!-- Logo -->
+            <div class="flex items-center space-x-3">
+                <img src="{% static 'Picture/icon.png' %}" class="w-10 h-10">
+                <span class="text-2xl font-bold text-[#EEB1C6]">
+                    Target Research
+                </span>
+            </div>
 
-        <!-- Menu -->
-        <div class="ml-10 space-x-6 hidden md:flex">
-            {% if first_survey %}
-            <a href="{% url 'survey_dashboard' survey_id=first_survey.id %}" 
-               class="text-gray-600 hover:text-[#EEB1C6]">
-                Dashboard
-            </a>
-            {% endif %}
-            <a href="{% url 'create_project' %}" 
-               class="text-gray-600 hover:text-[#EEB1C6]">
-                Hire / Create Project
-            </a>
-            <a href="#tasks" 
-               class="text-gray-600 hover:text-[#EEB1C6]">
-                Tasks
-            </a>
-        </div>
+            <!-- Menu -->
+            <div class="ml-10 space-x-6 hidden md:flex">
+                <a href="{% if first_survey %}{% url 'survey_dashboard' survey_id=first_survey.id %}{% else %}#{% endif %}"
+                    class="text-gray-600 hover:text-[#EEB1C6]">
+                    Dashboard
+                </a>
+                <a href="{% url 'create_project' %}" class="text-gray-600 hover:text-[#EEB1C6]">
+                    Hire / Create Project
+                </a>
+                <a href="#MyResearch" class="text-gray-600 hover:text-[#EEB1C6]">
 
-        <!-- Right Side -->
-        <div class="ml-auto flex items-center space-x-6">
+                </a>
+                <a href="#MyResearch" class="text-gray-600 hover:text-[#EEB1C6]">
+                    My Research
+                </a>
+            </div>
 
-            <!-- Notification Bell -->
-            <div class="relative cursor-pointer">
-                <a href ="{% url 'notification_home' %}">
-                <svg xmlns="http://www.w3.org/2000/svg" 
-                     class="h-9 w-9 text-gray-600 hover:text-[#EEB1C6]" 
-                     fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" 
-                          stroke-linejoin="round" 
-                          stroke-width="2" 
-                          d="M15 17h5l-1.405-1.405A2.032 
+            <!-- Right Side -->
+            <div class="ml-auto flex items-center space-x-6">
+
+                <!-- Notification Bell -->
+                <div class="relative cursor-pointer">
+                    <a href="{% url 'notification_home' %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9 text-gray-600 hover:text-[#EEB1C6]"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 
                              2.032 0 0118 14.158V11a6 
                              6 0 10-12 0v3.159c0 
                              .538-.214 1.055-.595 
                              1.436L4 17h5m6 0a3 
                              3 0 11-6 0m6 0H9" />
-                </svg>
-                </a>
-            </div>
+                        </svg>
+                    </a>
+                </div>
 
-            <!-- Profile Dropdown -->
-            <div class="relative">
-                <button id="profileBtn">
-                    <img src="https://i.pravatar.cc/40"
-                         class="w-13 h-13 rounded-full object-cover cursor-pointer 
+                <!-- Profile Dropdown -->
+                <div class="relative">
+                    <button id="profileBtn">
+                        <img src="https://i.pravatar.cc/40" class="w-13 h-13 rounded-full object-cover cursor-pointer 
                                 border-2 border-gray-300 hover:border-[white]">
-                </button>
+                    </button>
 
-                <div id="profileMenu"
-                     class="hidden absolute right-0 mt-3 w-44 bg-white 
+                    <div id="profileMenu" class="hidden absolute right-0 mt-3 w-44 bg-white 
                             rounded-xl shadow-lg border py-2 z-50">
 
-                    <a href="{% url 'profile_page' %}"
-                       class="block px-4 py-2 text-sm text-gray-700 
+                        <a href="{% url 'edit_profile' %}" class="block px-4 py-2 text-sm text-gray-700 
                               hover:bg-gray-100">
-                        Edit Profile
-                    </a>
+                            Edit Profile
+                        </a>
 
-                    <a href="{% url 'setting_page' %}"
-                       class="block px-4 py-2 text-sm text-gray-700 
+                        <a href="{% url 'settings' %}" class="block px-4 py-2 text-sm text-gray-700 
                               hover:bg-gray-100">
-                        Settings
-                    </a>
+                            Settings
+                        </a>
 
-                    <hr class="my-2">
+                        <hr class="my-2">
 
-                    <a href="#"
-                       class="block px-4 py-2 text-sm text-red-500 
+                        <a href="#" class="block px-4 py-2 text-sm text-red-500 
                               hover:bg-red-50">
-                        Logout
-                    </a>
+                            Logout
+                        </a>
 
+                    </div>
                 </div>
+
             </div>
 
         </div>
-
-    </div>
-</nav>
+    </nav>
 
 
-<!-- Hero Section -->
-<section class="bg-[#EEB1C6] text-white py-28 text-center">
-    <h1 class="text-5xl font-bold mb-6">
-        Start Your Research with Target Research
-    </h1>
-    <p class="text-lg mb-9 opacity-90">
-        Connect with top developers, manage projects and 
-        drive your research forward.
-    </p>
-</section>
+    <!-- Hero Section -->
+    <section class="bg-[#EEB1C6] text-white py-28 text-center">
+        <h1 class="text-5xl font-bold mb-6">
+            Welcome back!
+        </h1>
+        <p class="text-lg mb-9 opacity-90">
+            Manage and track your research projects here.
+        </p>
+    </section>
 
-<!-- Tasks Section -->
-<section id="tasks" class="py-20">
-    <div class="text-center mb-14">
-        <h2 class="text-4xl font-bold text-[#EEB1C6]">
-            Tasks
-        </h2>
-    </div>
-
-    <!-- Feature Cards -->
-    <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-8 px-6">
-
-        <div class="bg-white p-8 rounded-2xl shadow-md hover:shadow-lg transition">
-            <h3 class="text-xl font-bold text-[#EEB1C6] mb-4">
-                Dashboard
-            </h3>
-            <p class="text-gray-600">
-                Track your projects, analytics and performance.
-            </p>
+    <!-- My Research Section -->
+    <section id="MyResearch" class="py-20">
+        <div class="text-center mb-14">
+            <h2 class="inline-block bg-[#EEB1C6] text-white text-4xl font-bold px-10 py-4 rounded-2xl shadow-md">
+                My Research
+            </h2>
         </div>
 
-        <div class="bg-white p-8 rounded-2xl shadow-md hover:shadow-lg transition">
-            <h3 class="text-xl font-bold text-[#EEB1C6] mb-4">
-                Hire / Create Project
-            </h3>
-            <p class="text-gray-600">
-                Find top talent or start your own project today.
-            </p>
+        <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-8 px-6">
+
+            {% for research in researches %}
+            <div class="bg-white p-8 rounded-2xl shadow-md hover:shadow-lg transition">
+
+                <h3 class="text-xl font-bold text-[#EEB1C6] mb-4">
+                    {{ research.title }}
+                </h3>
+
+                <p class="text-gray-600 mb-4">
+                    {{ research.description|truncatechars:120 }}
+                </p>
+
+                <p class="text-sm text-gray-400 mb-3">
+                    Created: {{ research.created_at}}
+                </p>
+
+                <a href="#" class="text-sm text-[#EEB1C6] hover:underline">
+                    View Details →
+                </a>
+
+            </div>
+
+            {% empty %}
+            <div class="col-span-3 text-center text-gray-500">
+                You haven't created any research yet.
+            </div>
+            {% endfor %}
+
         </div>
+    </section>
 
-        <div class="bg-white p-8 rounded-2xl shadow-md hover:shadow-lg transition">
-            <h3 class="text-xl font-bold text-[#EEB1C6] mb-4">
-                Research Management
-            </h3>
-            <p class="text-gray-600">
-                Organize and manage your research projects efficiently.
-            </p>
-        </div>
+    <!-- Dropdown Script -->
+    <script>
+        const profileBtn = document.getElementById('profileBtn');
+        const profileMenu = document.getElementById('profileMenu');
 
-    </div>
+        profileBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            profileMenu.classList.toggle('hidden');
+        });
 
-</section>
+        document.addEventListener('click', function (e) {
+            if (!profileMenu.contains(e.target)) {
+                profileMenu.classList.add('hidden');
+            }
+        });
+    </script>
 
+    <script>
+        // เช็คค่าจาก localStorage แล้วเปลี่ยนสี body ทันทีที่โหลดหน้า
+        const body = document.body;
+        const savedDarkMode = localStorage.getItem('darkMode') === 'enabled';
 
-
-<!-- Dropdown Script -->
-<script>
-    const profileBtn = document.getElementById('profileBtn');
-    const profileMenu = document.getElementById('profileMenu');
-
-    profileBtn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        profileMenu.classList.toggle('hidden');
-    });
-
-    document.addEventListener('click', function (e) {
-        if (!profileMenu.contains(e.target)) {
-            profileMenu.classList.add('hidden');
+        if (savedDarkMode) {
+            body.classList.remove('bg-[#FFF5F9]');
+            body.classList.add('bg-gray-900', 'text-white');
+            // ถ้า Title มีส่วนอื่นที่อยากให้เปลี่ยนสี (เช่น Navbar) ให้สั่งเพิ่มตรงนี้ได้ครับ
         }
-    });
-</script>
+    </script>
 
 </body>
+
 </html>
