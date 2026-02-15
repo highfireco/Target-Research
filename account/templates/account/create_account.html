@@ -77,6 +77,7 @@
         }
     </style>
 </head>
+
 <body>
 
 <div class="card">
@@ -87,12 +88,13 @@
 
         <div class="input-group">
             <label>Name</label>
-            <input type="text" name="name" required>
+            <input type="text" name="name" id="name" maxlength="120" 
+            pattern="^[A-Za-zก-๙\s]+$" title="Only letters allowed" required>
         </div>
 
         <div class="input-group">
             <label>Telephone</label>
-            <input type="text" name="tel" required>
+            <input type="text" id="tel" name="tel" maxlength="10" pattern="[0-9]*" inputmode="numeric" required>
         </div>
 
         <div class="input-group">
@@ -119,7 +121,7 @@
 
         <div class="input-group">
             <label>Occupation</label>
-            <select name="occupation" required>
+            <select name="occupation" id="occupation" required>
                 <option value="">Select occupation</option>
                 <option value="Government">Government</option>
                 <option value="Private Employee">Private Employee</option>
@@ -131,6 +133,15 @@
                 <option value="Unemployed">Unemployed</option>
                 <option value="Other">Other</option>
             </select>
+
+            <input
+                type="text"
+                id="occupation-other"
+                name="occupation_other"
+                placeholder="Please specify occupation"
+                style="display:none; margin-top:8px;"
+            >
+
         </div>
 
 
@@ -226,10 +237,51 @@
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
 
 <script>
-    new TomSelect("#province-select", {
-        create: false,
-        sortField: { field: "text", direction: "asc" }
-    });
+document.addEventListener("DOMContentLoaded", function () {
+
+    // Name input restriction
+    const nameInput = document.getElementById("name");
+    if (nameInput) {
+        nameInput.addEventListener("input", () => {
+            nameInput.value = nameInput.value.replace(/[^A-Za-zก-๙\s]/g, "");
+        });
+    }
+
+    // Telephone numbers only
+    const telInput = document.getElementById("tel");
+    if (telInput) {
+        telInput.addEventListener("input", () => {
+            telInput.value = telInput.value.replace(/[^0-9]/g, "");
+        });
+    }
+
+    // Occupation "Other" toggle
+    const occupationSelect = document.getElementById("occupation");
+    const otherInput = document.getElementById("occupation-other");
+
+    if (occupationSelect && otherInput) {
+        occupationSelect.addEventListener("change", () => {
+            if (occupationSelect.value === "Other") {
+                otherInput.style.display = "block";
+                otherInput.required = true;
+            } else {
+                otherInput.style.display = "none";
+                otherInput.required = false;
+                otherInput.value = "";
+            }
+        });
+    }
+
+    // Initialize searchable province dropdown
+    const provinceSelect = document.getElementById("province-select");
+    if (provinceSelect) {
+        new TomSelect("#province-select", {
+            create: false,
+            sortField: { field: "text", direction: "asc" }
+        });
+    }
+
+});
 </script>
 
 </body>

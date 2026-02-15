@@ -162,7 +162,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
 
         // Redirect if success
         if (data.status === "success") {
-            window.location.href = "{% url 'dashboard_view' %}";
+            window.location.href = "{% url 'home_page' %}";
         } else {
             alert("Login failed");
         }

@@ -8,6 +8,5 @@ urlpatterns = [
     path("create_account/", views.create_account, name="create_account"),
     path("login/", views.login_view, name="login"),
     path("verify-token/", views.verify_token, name="verify_token"),
-    path("dashboard_view/", views.dashboard_view, name="dashboard_view"),
     path("logout/", views.logout_view, name="logout"),
 ]

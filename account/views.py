@@ -6,12 +6,22 @@ from .models import EmailVerification
 from .utils import generate_pin, send_pin_email
 from firebase_admin import auth
 from core.firebase_config import db
+import re
 
 
 # enter email
 def signup_email(request):
     if request.method == "POST":
         email = request.POST.get("email")
+
+        # Check if email already exists in Firebase
+        try:
+            auth.get_user_by_email(email)
+            return render(request, "account/signup.html", {
+                "error": "This email is already registered. Please login instead."
+            })
+        except auth.UserNotFoundError:
+            pass  # email is available
 
         pin = generate_pin()
         EmailVerification.objects.update_or_create(
@@ -67,10 +77,38 @@ def set_password(request):
         password = request.POST.get("password")
         confirm = request.POST.get("confirm_password")
 
-        if password != confirm:
-            return render(request, "account/set_password.html",
-                          {"error": "Passwords do not match"})
+        # password rules
+        if len(password) < 12 or len(password) > 16:
+            return render(request, "account/set_password.html", {
+                "error": "Password must be 12–16 characters long"
+            })
 
+        if not re.search(r"[A-Z]", password):
+            return render(request, "account/set_password.html", {
+                "error": "Password must include at least one uppercase letter"
+            })
+
+        if not re.search(r"[a-z]", password):
+            return render(request, "account/set_password.html", {
+                "error": "Password must include at least one lowercase letter"
+            })
+
+        if not re.search(r"\d", password):
+            return render(request, "account/set_password.html", {
+                "error": "Password must include at least one number"
+            })
+
+        if not re.search(r"[!@#$%^&*(),.?\":{}|<>_\-+=/\\\[\]]", password):
+            return render(request, "account/set_password.html", {
+                "error": "Password must include at least one symbol"
+            })
+
+        if password != confirm:
+            return render(request, "account/set_password.html", {
+                "error": "Passwords do not match"
+            })
+        
+        # create Firebase user
         user = auth.create_user(email=email, password=password)
         request.session["firebase_uid"] = user.uid
         return redirect("create_account")
@@ -87,10 +125,21 @@ def create_account(request):
 
     if request.method == "POST":
         name = request.POST.get("name")
+        if not name or not re.match(r'^[A-Za-zก-๙\s]+$', name):
+            return render(request, "account/create_account.html", {
+                "error": "Name must contain only letters"
+            })
         tel = request.POST.get("tel")
+        if not re.match(r'^[0-9]{9,10}$', tel):
+            return render(request, "account/create_account.html", {
+                "error": "Telephone must be 9–10 digits"
+            })
         age_range = request.POST.get("age_range")
         gender = request.POST.get("gender")
         occupation = request.POST.get("occupation")
+        occupation_other = request.POST.get("occupation_other")
+        if occupation == "Other" and occupation_other:
+            occupation = occupation_other
         province = request.POST.get("province")
 
         db.collection("users").document(uid).set({
@@ -124,10 +173,10 @@ def verify_token(request):
         return JsonResponse({"status": "error"})
     
 
-def dashboard_view(request):
+def home_preview(request):
     if not request.session.get("uid"):
         return redirect("login")
-    return render(request, "account/dashboard_view.html")
+    return render(request, "home/home_preview.html")
 
 
 def logout_view(request):
