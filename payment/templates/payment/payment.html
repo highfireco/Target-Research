@@ -1,185 +1,366 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<title>Payment</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สรุปโครงการและการชำระเงิน | Target Research</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
-<style>
-body {
-  margin: 0;
-  font-family: "Segoe UI", sans-serif;
-  background: #f6dce2;
-}
+    <style>
+        :root {
+            --primary-color: #4285F4;
+            --secondary-teal: #4A99AD;
+            --bg-color: #FDF2F8;
+            --border-radius: 16px;
+        }
 
-.wrapper {
-  max-width: 1200px;
-  margin: 40px auto;
-  background: white;
-  padding: 30px;
-  border-radius: 20px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-}
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: var(--bg-color);
+            color: #333;
+            min-height: 100vh;
+        }
 
-.header {
-  background: #f3f3f3;
-  padding: 15px 25px;
-  border-radius: 50px;
-  margin-bottom: 25px;
-}
+        .main-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 30px 15px;
+        }
 
-.content {
-  display: flex;
-  gap: 20px;
-}
+        .custom-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            border: none;
+            position: relative;
+        }
 
-.left { flex: 2; }
-.right { flex: 1; }
+        .header-bar {
+            background: white;
+            border-radius: 50px;
+            padding: 15px 25px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
 
-.card {
-  background: #f7eaea;
-  padding: 20px;
-  border-radius: 15px;
-  margin-bottom: 15px;
-}
+        .btn-teal {
+            background-color: var(--secondary-teal);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: 0.2s;
+            box-shadow: 0 4px 10px rgba(74, 153, 173, 0.3);
+        }
 
-.payment-option {
-  border: 1px solid #ccc;
-  padding: 12px;
-  border-radius: 10px;
-  margin-bottom: 10px;
-  cursor: pointer;
-}
+        .btn-teal:hover {
+            background-color: #3b7d8f;
+            color: white;
+            transform: translateY(-2px);
+        }
 
-.payment-option input {
-  margin-right: 10px;
-}
+        .btn-pay {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 500;
+            box-shadow: 0 4px 10px rgba(66, 133, 244, 0.3);
+        }
 
-.hidden {
-  display: none;
-}
+        .summary-box-bg {
+            background-color: #FAF5F0;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
 
-button {
-  width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 10px;
-  margin-top: 10px;
-  cursor: pointer;
-}
+        .edit-badge {
+            background: #E0E7FF;
+            color: #4338CA;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            float: right;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.2s;
+        }
 
-.btn-primary {
-  background: #3f7de0;
-  color: white;
-}
+        .edit-badge:hover { background: #ced5f2; }
 
-.btn-secondary {
-  background: #ddd;
-}
+        .payment-option {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            border: 1px solid #E5E7EB;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+        }
 
-.price {
-  font-size: 20px;
-  font-weight: bold;
-  color: #3f7de0;
-}
-</style>
+        .payment-option.active {
+            border: 2px solid var(--primary-color);
+            background-color: #F0F9FF;
+        }
 
-<script>
-function showMethod(method) {
-  document.getElementById("cardForm").classList.add("hidden");
-  document.getElementById("bankForm").classList.add("hidden");
-  document.getElementById("qrForm").classList.add("hidden");
+        .radio-indicator {
+            width: 20px; height: 20px; border-radius: 50%;
+            border: 2px solid #D1D5DB; margin-right: 15px;
+            display: flex; align-items: center; justify-content: center;
+        }
 
-  document.getElementById(method).classList.remove("hidden");
-}
-</script>
+        .payment-option.active .radio-indicator { border-color: var(--primary-color); }
+        .payment-option.active .radio-indicator::after {
+            content: ''; width: 10px; height: 10px;
+            background-color: var(--primary-color); border-radius: 50%;
+        }
 
+        .page-section { display: none; animation: fadeIn 0.4s ease; }
+        .page-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
 </head>
-
 <body>
 
-<div class="wrapper">
+    <div class="main-container">
 
-<div class="header">
-<h2>Payment</h2>
-</div>
+        <div id="page-summary" class="page-section active">
+            <div class="header-bar">
+                <div class="d-flex align-items-center gap-3">
+                    <button onclick="window.history.back()" class="btn btn-light rounded-circle border"><i class="bi bi-arrow-left"></i></button>
+                    <div>
+                        <h5 class="mb-0 fw-bold">Project Summary & Expenses</h5>
+                        <small class="text-muted">ตรวจสอบข้อมูลก่อนเริ่มโครงการ</small>
+                    </div>
+                </div>
+                <div class="d-flex gap-2">
+                    <button onclick="location.href='/home/'" class="btn btn-light rounded-circle border"><i class="bi bi-house"></i></button>
+                </div>
+            </div>
 
-<div class="content">
+            <div class="text-start mb-4">
+                <h3 class="fw-bold">สรุปโครงการ & ค่าใช้จ่าย</h3>
+                <p class="text-muted">รหัสโครงการ: {{ project_id }}</p>
+            </div>
 
-<!-- LEFT SIDE -->
-<div class="left">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="custom-card summary-box-bg border">
+                        <div class="d-flex justify-content-between mb-3">
+                            <h6 class="fw-bold">ข้อมูลโครงการวิจัย</h6>
+                            <a href="/hire/create-project/?project_id={{ project_id }}" class="edit-badge">
+                                <i class="bi bi-pencil-fill me-1"></i> แก้ไขโครงการ
+                            </a>
+                        </div>
+                        <div class="mb-3">
+                            <small class="text-muted fw-bold uppercase">ชื่อโครงการ</small>
+                            <p class="mb-0 fw-medium">{{ project.title|default:"ไม่ได้ระบุชื่อ" }}</p>
+                        </div>
+                        <div class="mb-3">
+                            <small class="text-muted fw-bold">วัตถุประสงค์การวิจัย</small>
+                            <p class="mb-0 text-secondary small">{{ project.objective|default:"-" }}</p>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <small class="text-muted fw-bold">สังกัด/องค์กร</small>
+                                <p class="small">{{ project.org_name|default:"-" }} ({{ project.org_type|default:"-" }})</p>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted fw-bold">ระยะเวลาเก็บข้อมูล</small>
+                                <p class="small text-primary fw-bold">{{ project.start_date }} ถึง {{ project.deadline }}</p>
+                            </div>
+                        </div>
+                    </div>
 
-<div class="card">
-<h3>เลือกช่องทางการชำระเงิน</h3>
+                    <div class="custom-card summary-box-bg border">
+                        <h6 class="fw-bold"><i class="bi bi-person me-2"></i>กลุ่มเป้าหมาย</h6>
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <small class="text-muted">ช่วงอายุ</small><br>
+                                <strong>{{ project.target_group.age_range|default:"ทุกช่วงอายุ" }} ปี</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">เพศ</small><br>
+                                <strong>{{ project.target_group.gender|default:"ทุกเพศ" }}</strong>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <small class="text-muted">พื้นที่เป้าหมาย</small><br>
+                                <strong>{{ project.target_group.location|default:"ทั่วประเทศ" }}</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">อาชีพ</small><br>
+                                <strong class="text-primary">{{ project.target_group.occupations|join:", " }}</strong>
+                            </div>
+                        </div>
+                        <div class="alert alert-primary mb-0 border-0" style="background-color: #D6E4F0;">
+                            <strong>จำนวนกลุ่มตัวอย่างทั้งหมด: {{ project.sample_size|default:"0" }} คน</strong>
+                        </div>
+                    </div>
 
-<label class="payment-option">
-<input type="radio" name="pay" onclick="showMethod('cardForm')" checked>
-บัตรเครดิต / เดบิต
-</label>
+                    <div class="custom-card summary-box-bg border">
+                        <h6 class="fw-bold"><i class="bi bi-file-text me-2"></i>สรุปแบบสอบถาม</h6>
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <small class="text-muted">จำนวนคำถามจริงในระบบ</small>
+                                <p class="fw-bold fs-5 text-success">{{ question_count }} คำถาม</p>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <small class="text-muted">เวลาประมาณการที่ใช้ตอบ</small>
+                                <p class="fw-bold fs-5">{{ project.est_minutes|default:"0" }} นาที</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-<label class="payment-option">
-<input type="radio" name="pay" onclick="showMethod('bankForm')">
-โอนผ่านธนาคาร
-</label>
+                <div class="col-lg-4">
+                    <div class="custom-card p-0 overflow-hidden sticky-top" style="top: 20px;">
+                        <div class="p-3" style="background-color: #FAF5F0;">
+                            <h6 class="fw-bold mb-0">สรุปค่าใช้จ่าย</h6>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between mb-2 small text-secondary">
+                                <span>ค่าตอบแทนกลุ่มตัวอย่าง ({{ project.sample_size }} x ฿50)</span>
+                                <span>฿{{ pricing.incentive|floatformat:2 }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3 small text-secondary">
+                                <span>ค่าธรรมเนียมแพลตฟอร์ม</span>
+                                <span>฿{{ pricing.fee|floatformat:2 }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-1 small text-muted">
+                                <span>VAT 7%</span>
+                                <span>฿{{ pricing.vat|floatformat:2 }}</span>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <span class="fw-bold text-dark">ยอดรวมทั้งสิ้น</span>
+                                <span class="fw-bold text-primary fs-4">฿{{ pricing.total|floatformat:2 }}</span>
+                            </div>
 
-<label class="payment-option">
-<input type="radio" name="pay" onclick="showMethod('qrForm')">
-QR code / Mobile Banking
-</label>
-</div>
+                            <div class="form-check mb-3 p-3 rounded bg-light border">
+                                <input class="form-check-input" type="checkbox" id="confirmData">
+                                <label class="form-check-label small" for="confirmData">
+                                    ข้าพเจ้ายืนยันว่าข้อมูลโครงการถูกต้องครบถ้วน
+                                </label>
+                            </div>
 
-<!-- CARD FORM -->
-<div id="cardForm" class="card">
-<h3>ข้อมูลบัตร</h3>
-<input placeholder="ชื่อบนบัตร" style="width:100%;padding:10px;margin:5px 0;">
-<input placeholder="หมายเลขบัตร" style="width:100%;padding:10px;margin:5px 0;">
-<input placeholder="วันหมดอายุ" style="width:48%;padding:10px;margin:5px 1%;">
-<input placeholder="CCV" style="width:48%;padding:10px;margin:5px 1%;">
-</div>
+                            <button onclick="goToPaymentPage()" class="btn btn-teal mb-3">
+                                ไปชำระเงิน <i class="bi bi-arrow-right ms-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<!-- BANK FORM -->
-<div id="bankForm" class="card hidden">
-<h3>โอนผ่านธนาคาร</h3>
-<p>ธนาคาร: ไทยพาณิชย์</p>
-<p>เลขบัญชี: 123-456-7890</p>
-<p>ชื่อบัญชี: บริษัท Target Research</p>
-<input type="file">
-</div>
+        <div id="page-payment" class="page-section">
+            <div class="header-bar">
+                <div class="d-flex align-items-center gap-3">
+                    <button class="btn btn-light rounded-circle border" onclick="goBackToSummary()"><i class="bi bi-arrow-left"></i></button>
+                    <h5 class="mb-0 fw-bold">เลือกช่องทางการชำระเงิน</h5>
+                </div>
+            </div>
 
-<!-- QR FORM -->
-<div id="qrForm" class="card hidden">
-<h3>QR Code</h3>
-<div style="background:#eee;height:150px;display:flex;align-items:center;justify-content:center;">
-QR CODE
-</div>
-<input type="file">
-</div>
+            <div class="row justify-content-center">
+                <div class="col-lg-7">
+                    <div class="custom-card">
+                        <div class="payment-option active" onclick="switchTab('credit', event)">
+                            <div class="radio-indicator"></div>
+                            <i class="bi bi-credit-card-2-front me-2 fs-5"></i>
+                            <span class="fw-medium">บัตรเครดิต / เดบิต</span>
+                        </div>
+                        <div class="payment-option" onclick="switchTab('transfer', event)">
+                            <div class="radio-indicator"></div>
+                            <i class="bi bi-bank me-2 fs-5"></i>
+                            <span class="fw-medium">โอนเงินผ่านธนาคาร</span>
+                        </div>
 
-<div class="card">
-<h3>ยืนยันการทำรายการ</h3>
-<label><input type="checkbox"> ยอมรับเงื่อนไข</label><br>
-<label><input type="checkbox"> ยืนยันข้อมูลถูกต้อง</label>
-</div>
+                        <hr class="my-4 opacity-25">
 
-</div>
+                        <div id="tab-credit" class="tab-content-box">
+                            <div class="mb-3"><label class="form-label">ชื่อบนบัตร</label><input type="text" class="form-control"></div>
+                            <div class="mb-3"><label class="form-label">หมายเลขบัตร</label><input type="text" class="form-control" placeholder="0000 0000 0000 0000"></div>
+                        </div>
 
-<!-- RIGHT SIDE -->
-<div class="right">
+                        <div id="tab-transfer" class="tab-content-box" style="display:none;">
+                             <div class="p-3 rounded border bg-light mb-3 text-center">
+                                <p class="mb-1 text-muted small fw-bold">เลขที่บัญชี: <span class="text-dark fs-5">123-8-99815-4</span></p>
+                                <p class="mb-0 small text-secondary">ธนาคารกสิกรไทย (บจก. รีเสิร์ซ แพลตฟอร์ม)</p>
+                             </div>
+                        </div>
+                        
+                        <button id="btn-submit" onclick="submitPayment()" class="btn btn-pay mt-4">
+                            ชำระเงิน ฿{{ pricing.total|floatformat:2 }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<div class="card">
-<h3>สรุปคำสั่งซื้อ</h3>
-<p>ค่าดำเนินการ: ฿125,000</p>
-<p>VAT: ฿10,062</p>
-<hr>
-<p class="price">รวม ฿153,812</p>
-</div>
+        <div id="page-success" class="page-section" style="display: none; text-align: center; padding: 50px 0;">
+            <div class="custom-card mx-auto" style="max-width: 500px;">
+                <div class="check-icon-circle bg-success text-white rounded-circle d-inline-flex p-4 mb-4">
+                    <i class="bi bi-check-lg fs-1"></i>
+                </div>
+                <h2 class="fw-bold mb-2">ชำระเงินสำเร็จ!</h2>
+                <p class="text-muted mb-4">โครงการของคุณได้รับการเปิดใช้งานแล้ว ระบบจะเริ่มเก็บข้อมูลทันที</p>
+                <button class="btn btn-primary rounded-pill py-3 w-100" onclick="location.href='/hire/my-projects/'">ดูโครงการของฉัน</button>
+            </div>
+        </div>
 
-<button class="btn-primary">ชำระเงินและเปิดโครงการ</button>
-<button class="btn-secondary">ย้อนกลับ</button>
+    </div>
 
-</div>
+    <script>
+        function goToPaymentPage() {
+            if(!document.getElementById('confirmData').checked) {
+                alert("กรุณายืนยันข้อมูลก่อนดำเนินการต่อ");
+                return;
+            }
+            document.getElementById('page-summary').style.display = 'none';
+            document.getElementById('page-payment').style.display = 'block';
+            document.getElementById('page-payment').classList.add('active');
+        }
 
-</div>
-</div>
+        function goBackToSummary() {
+            document.getElementById('page-payment').style.display = 'none';
+            document.getElementById('page-summary').style.display = 'block';
+        }
 
+        function switchTab(method, event) {
+            document.querySelectorAll('.payment-option').forEach(el => el.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-content-box').forEach(el => el.style.display = 'none');
+            document.getElementById('tab-' + method).style.display = 'block';
+        }
+
+        function submitPayment() {
+            const btn = document.getElementById('btn-submit');
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> กำลังประมวลผล...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                document.getElementById('page-payment').style.display = 'none';
+                document.getElementById('page-success').style.display = 'block';
+            }, 2000);
+        }
+    </script>
 </body>
 </html>
