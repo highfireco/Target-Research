@@ -22,11 +22,16 @@ def signup_email(request):
                 "created_at": timezone.now()
             }
         )
-
-        send_pin_email(email, pin)
-        request.session["signup_email"] = email
-        return redirect("verify_pin")
-
+        try:
+            send_pin_email(email, pin)
+            request.session["signup_email"] = email
+            return redirect("verify_pin")
+        except: Exception as e:
+            print(f"email error {e}")
+            return render(request, "account/signup.html", {
+                "error": "ไม่สามารถส่งอีเมลได้ในขณะนี้ กรุณาลองใหม่อีกครั้ง"
+            })
+        
     return render(request, "account/signup.html")
 
 
