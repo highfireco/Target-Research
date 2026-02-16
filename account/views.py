@@ -26,7 +26,7 @@ def signup_email(request):
             send_pin_email(email, pin)
             request.session["signup_email"] = email
             return redirect("verify_pin")
-        except: Exception as e:
+        except Exception as e:
             print(f"email error {e}")
             return render(request, "account/signup.html", {
                 "error": "ไม่สามารถส่งอีเมลได้ในขณะนี้ กรุณาลองใหม่อีกครั้ง"
