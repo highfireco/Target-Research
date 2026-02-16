@@ -140,7 +140,8 @@ STATICFILES_DIRS = [
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 import os # ถ้าด้านบนยังไม่ได้ import os ให้ใส่ด้วย
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # ส่วนนี้สำหรับให้ WhiteNoise บีบอัดไฟล์ให้เว็บโหลดเร็วขึ้น
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
