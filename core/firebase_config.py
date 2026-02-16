@@ -14,27 +14,27 @@ def initialize_firebase():
 
         if firebase_env:
             # --- กรณีรันบน Render: ดึงข้อมูล JSON จาก Environment Variable ---
-            print("--- DEBUG: ใช้งาน Firebase จาก Environment Variable (Render) ---")
+            print("--- DEBUG: Using Firebase from Environment Variable (Render) ---")
             cred_dict = json.loads(firebase_env)
             cred = credentials.Certificate(cred_dict)
         else:
             # --- กรณีรันในเครื่อง: ดึงจาก Path ไฟล์ JSON ปกติ ---
             cred_path = os.getenv('FIREBASE_ACCOUNT_KEY_PATH')
-            print(f"--- DEBUG: ใช้งาน Firebase จากไฟล์ในเครื่อง: {cred_path} ---")
+            print(f"--- DEBUG: Current Firebase Path: {cred_path} ---")
 
             if not cred_path or not os.path.exists(cred_path):
                 raise FileNotFoundError(f"ไม่พบไฟล์ JSON หรือตัวแปรสภาพแวดล้อมสำหรับ Firebase")
 
             cred = credentials.Certificate(cred_path)
 
-        # 🌟 2. เริ่มต้น Firebase Admin SDK (เปิดเครื่อง)
+        # 🌟 2. นี่คือจุดที่ทำการ initialize_app (เปิดเครื่อง)
         if not firebase_admin._apps:
-            app = firebase_admin.initialize_app(cred)
-            print(f"--- DEBUG: เชื่อมต่อ Project ID: {app.project_id} สำเร็จ ---")
+            app = firebase_admin.initialize_app(cred)  # <--- บรรทัดสำคัญที่ระบบแจ้งเตือนครับ
+            print(f"--- DEBUG: Connected to Project ID: {app.project_id} ---")
 
         return firestore.client()
     except Exception as e:
-        print(f"🔥 เกิดข้อผิดพลาดในการเชื่อมต่อ Firebase: {e}")
+        print(f"เกิดข้อผิดพลาดในการเชื่อมต่อ Firebase: {e}")
         return None
 
 #สร้างตัวแปร db ไว้ใช้งาน
