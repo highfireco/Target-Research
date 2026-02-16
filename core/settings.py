@@ -137,7 +137,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static', # โฟลเดอร์ที่เก็บไฟล์ Picture, CSS, JS
 ]
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 import os # ถ้าด้านบนยังไม่ได้ import os ให้ใส่ด้วย
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
