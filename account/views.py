@@ -6,6 +6,7 @@ from .models import EmailVerification
 from .utils import generate_pin, send_pin_email
 from firebase_admin import auth
 from core.firebase_config import db
+from django.views.decorators.csrf import csrf_exempt
 
 
 # enter email
@@ -138,6 +139,7 @@ def login_view(request):
 
 
 # verify Firebase token
+@csrf_exempt
 def verify_token(request):
     id_token = request.POST.get("idToken")
     
